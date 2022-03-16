@@ -1,0 +1,48 @@
+/* CĂ´ng ty cá»• pháº§n Angkorich
+ * Bootstrap v3.3.7
+ * Copyright 2019 by Angkorich
+ * Edit code bootstrap by linhlv.akr@gmail.com
+ */
+.container{padding-right:5px;padding-left:5px;margin-right:auto;margin-left:auto;width:100%}
+.Wrapper{
+    width: 100%;
+    margin: 0 auto;
+    max-width: 768px;
+}
+
+/* CĂ´ng ty cá»• pháº§n Angkorich
+ * Bootstrap v3.3.7
+ * Copyright 2018 by Angkorich
+ * Edit code bootstrap by linhlv.akr@gmail.com
+ */
+/*------------------------ Mobile ------------------------------*/
+@media (max-width : 380px) {
+    .content-main section.ctgr_prduc_home .list_item_prd li .item .info_item ul {
+        padding: 0;
+        font-size: 11px;
+        padding-left: 0;
+        margin: 0 0 10px 0;
+        list-style: none;
+        line-height: 1.6;
+        text-transform: capitalize;
+    }
+}
+/*------------------------ iphone ----------------------------*/
+@media (min-width: 320px) {
+}
+/*------------------------ mobile and ipad ---------------------*/
+@media (max-width: 768px) {
+}
+/*------------------------ ipad chiá»u dá»c ----------------------*/
+@media (min-width: 768px) and (max-width: 991px) {
+}
+/*------------------------ ipad chiá»u ngang ----------------------*/
+@media (min-width: 992px) and (max-width: 1280px) {
+}
+/*------------------------ PC ----------------------*/
+@media (min-width: 1281px) {
+}
+/*custom css*/
+/*!
+ * css For Code Akr
+*/
