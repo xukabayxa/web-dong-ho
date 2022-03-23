@@ -72,7 +72,6 @@ class BannerController extends Controller
             $request->all(),
             [
                 'title' => 'required',
-                'position' => 'required|max:255',
                 'image' => 'required|file|mimes:jpg,jpeg,png,gif|max:3000',
             ]
         );
@@ -92,16 +91,12 @@ class BannerController extends Controller
 
             $object->title = $request->title;
             $object->link = $request->link;
-            $object->position = $request->position;
+            $object->intro = $request->intro;
             $object->created_by = auth()->id();
             $object->save();
 
             if ($request->image) {
-                if ($request->position == 'left') {
-                    FileHelper::uploadFile($request->image, 'banners', $object->id, ThisModel::class, 'image', 6);
-                } else {
-                    FileHelper::uploadFile($request->image, 'banners', $object->id, ThisModel::class, 'image', 7);
-                }
+                FileHelper::uploadFile($request->image, 'banners', $object->id, ThisModel::class, 'image', 6);
             }
 
             DB::commit();
@@ -130,7 +125,6 @@ class BannerController extends Controller
             $request->all(),
             [
                 'title' => 'required',
-                'position' => 'required|max:255',
                 'image' => 'nullable|file|mimes:jpg,jpeg,png|max:3000',
             ]
         );
@@ -148,7 +142,7 @@ class BannerController extends Controller
             $object = ThisModel::findOrFail($id);
             $object->title = $request->title;
             $object->link = $request->link;
-            $object->position = $request->position;
+            $object->intro = $request->intro;
 
             $object->save();
 
@@ -158,12 +152,8 @@ class BannerController extends Controller
                     FileHelper::forceDeleteFiles($object->image->id, $object->id, ThisModel::class, 'image');
                 }
 
-                if ($request->position == 'left') {
-                    FileHelper::uploadFile($request->image, 'banners', $object->id, ThisModel::class, 'image', 6);
-                } else {
-                    FileHelper::uploadFile($request->image, 'banners', $object->id, ThisModel::class, 'image', 7);
-                }
 
+                FileHelper::uploadFile($request->image, 'banners', $object->id, ThisModel::class, 'image', 6);
             }
 
             DB::commit();

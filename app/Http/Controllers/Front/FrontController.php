@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers\Front;
 
+use App\Http\Traits\ResponseTrait;
 use App\Model\Admin\Banner;
 use App\Model\Admin\CategorySpecial;
+use App\Model\Admin\Contact;
 use App\Model\Admin\Manufacturer;
 use App\Model\Admin\Origin;
 use App\Model\Admin\Policy;
 use App\Model\Admin\PostCategorySpecial;
 use App\Model\Admin\Store;
+use App\Model\Admin\Tag;
+use App\Model\Admin\Tagable;
+use App\Services\CategoryService;
 use Illuminate\Http\Request;
 use Jenssegers\Agent\Agent;
 use Vanthao03596\HCVN\Models\Province;
@@ -32,240 +37,88 @@ use SluggableScopeHelpers;
 
 class FrontController extends Controller
 {
-    protected $view;
+    use ResponseTrait;
 
-    public function __construct(Agent $agent)
+    public $categoryService;
+
+    public function __construct(CategoryService $categoryService)
     {
-        $this->view = 'front2';
-        if ($agent->isMobile()) {
-            $this->view .= '.mobiles';
-        }
+        $this->categoryService = $categoryService;
     }
 
-    /** trang chủ
+    /**
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
-        $reviews = Review::orderBy('created_at')->get();
+        $banners = Banner::query()->latest()->get();
+        $categoriesSpecial = CategorySpecial::query()->with('products')->where([
+            'type' => CategorySpecial::PRODUCT,
+            'show_home_page' => 1,
+        ])->whereNotNull('order_number')->orderBy('order_number')->get();
 
-        // lấy danh mục có show_home_page = 1 (chỉ có những danh mục parent_id = 0 mới chỉnh được show_home_page)
-        $categories = Category::query()
-            ->where('show_home_page', true)
-            ->orderBy('order_number')->get();
+        // bài viết mới nhất
+        $postsRecent = Post::query()->where('status', 1)->latest()->take(3)->get();
 
-        // lấy danh mục sản phẩm đổ ra trang chủ (lấy 6 sp)
-        $categories = $categories->map(function ($cate) {
-            $cate->products = Product::query()
-                ->where(function ($q) use ($cate){
-                    $q->whereIn('cate_id', $cate->getChilds()->pluck('id'))
-                        ->orWhere('cate_id', $cate->id);
-                })
-                ->where('status', 1)->latest()->limit(6)->get();
-            return $cate;
-        });
-
-        // banner trái
-        $bannersLeft = Banner::query()->where(['position' => 'left'])->latest()->take(4)->get();
-
-        // banner phải
-        $bannersRight = Banner::query()->where(['position' => 'right'])->latest()->take(3)->get();
-
-        // danh mục sản phẩm cho mobile
-        $productCategories = Category::query()->with(['childs', 'manufacturers', 'image'])
-            ->where(['type' => 1, 'parent_id' => 0, 'show_home_page' => 1])
-            ->latest()
-            ->get();
-        // lấy tin tức cho mobile
-        $postCategorySpecial = CategorySpecial::query()->with('posts')
-            ->where(['type' => 20, 'show_home_page' => 1])->orderBy('order_number')->get();
-
-        // lấy danh mục đặc biệt
-        $categorySpecial = CategorySpecial::query()->with('products')
-            ->where(['type' => 10, 'show_home_page' => 1])->orderBy('order_number')->get();
-
-        return view($this->view . '.index', compact('reviews', 'categories', 'bannersLeft',
-            'bannersRight', 'productCategories', 'categorySpecial', 'postCategorySpecial'));
+        return view('site.index', compact('banners', 'categoriesSpecial', 'postsRecent'));
     }
-
 
     /**
      * trang danh mục sản phẩm
      * @param Request $request
-     * @param $parent_slug
-     * @param null $code_manufacturer
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     *
      */
-    public function getCategory(Request $request, $parent_slug, $code_manufacturer = null)
+    public function getCategory(Request $request, $categorySlug = null)
     {
-        // check nếu slug này có con thì trả về view con, ko có thì view cha
-        $cate = Category::findBySlug($parent_slug);
-        $origins = Origin::getForSelect();
+        $viewList = $request->get('viewList');
+        $viewGrid = $request->get('viewGrid') ? : 'true';
+        $sort = $request->get('sort') ? : 'lasted';
+        $minPrice = $request->get('minPrice') ?? 0;
+        $maxPrice = $request->get('maxPrice') ?? 0;
 
-        // cho mobile
-        $bannersRight = Banner::query()->where(['position' => 'right'])->latest()->take(3)->get();
+        $categories = Category::parent()->with('products')->orderBy('sort_order')->get();
 
-        // th ko có cate con
-        if ($cate->getChilds()->isEmpty()) {
-            $cateParent = Category::query()->where('id', $cate->parent_id)->first();
+        $categories = $categories->map(function($cate) {
+            // áp dụng cho category cha
+            $cate->child_categories = $this->categoryService->getChildCategory($cate, 1);
+            $cate->products_count = $cate->child_categories->sum('products_count');
+            return $cate;
+        });
 
-            if (!$cateParent) {
-                $manufacturers = $cate->manufacturers;
-                return view($this->view . '.product_category', compact('cate', 'manufacturers',
-                    'origins', 'bannersRight'));
-            }
+        $tags = Tag::query()->where('type', Tag::TYPE_PRODUCT)->latest()->get();
 
-            $manufacturers = $cateParent->manufacturers;
-
-            if ($code_manufacturer) {
-                $manu = Manufacturer::query()->where('code', $code_manufacturer)->first();
-
-                return view($this->view . '.product_category', compact('cate', 'manufacturers',
-                    'manu', 'origins', 'bannersRight'));
-            }
-
-            return view($this->view . '.product_category', compact('cate', 'manufacturers',
-                'origins', 'bannersRight'));
-        } else {
-            // lấy ra tất cả cate con (hiện tại dừng lại level 2)
-            $childCategories = $cate->getChilds();
-
-            $manufacturers = $cate->manufacturers;
-
-            if ($code_manufacturer) {
-                $manu = Manufacturer::query()->where('code', $code_manufacturer)->first();
-
-                return view($this->view . '.product_category', compact('cate', 'manufacturers', 'manu',
-                    'origins', 'bannersRight'));
-            }
-
-            return view($this->view . '.product_category_v2', compact('childCategories', 'cate',
-                'manufacturers', 'origins', 'bannersRight'));
-        }
-    }
-
-    /** load more sản phẩm
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Throwable
-     */
-    public function loadMoreProduct(Request $request)
-    {
-        $cate = Category::query()->find($request->cate_id);
-        $childCateIds = $cate->getChilds()->pluck('id');
-
-        if ($request->id > 0) {
-            $products = Product::filter($request->filters)
-                ->where('id', '<', $request->id);
-        } else {
-            $products = Product::filter($request->filters);
-        }
-
-        $products = $products->where(function ($q) use ($childCateIds, $request) {
-            $q->where('cate_id', $request->cate_id)
-                ->orWhereIn('cate_id', $childCateIds);
-        })->latest('id')->limit(15)->get();
-
-        $html = '';
-        if ($products->isNotEmpty()) {
-            foreach ($products as $product) {
-                $html .= view($this->view . '.partials.load_more_product', compact('product', 'cate'))->render();
-                $p_last_id = $product->id;
+        if($categorySlug) {
+            $category = Category::findBySlug($categorySlug);
+            // nếu có slug, check xem cate này là cha hay con, nếu cate cha thì trả về tất cả sản phẩm của cate con
+            // trường hợp là cate cha, có các cate con level 1
+            if($category->childs()->count() > 0) {
+                $child_categories = $this->categoryService->getChildCategory($category, 1);
+                $products = Product::filter($request)->whereIn('cate_id', $child_categories->pluck('id'))->paginate(9);
+            } else {
+                $product_ids = $category->products->pluck('id');
+                $products = Product::filter($request)->whereIn('id', $product_ids)->paginate(9);
             }
         } else {
-            $p_last_id = null;
+            // trường hợp không có category_slug, lấy toàn bộ các sản phẩm mới nhất
+            $products = Product::filter($request)->where('status', 1)->paginate(9);
         }
 
-        return Response::json([
-            'html' => $html,
-            'p_id' => $p_last_id,
-        ]);
+        return view('site.product_category', compact('categories', 'products', 'viewGrid', 'viewList',
+            'categorySlug', 'sort', 'tags', 'minPrice', 'maxPrice'));
     }
 
     /**
-     * @param Request $request
-     * @return string
-     * @throws \Throwable
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function filterProductCategoryV2(Request $request)
-    {
-        // lấy ra tất cả cate con
-        $cate = Category::find($request->cate_id);
-        $query = Category::query()->with(['image', 'products'])->where('parent_id', $request->cate_id)
-            ->orderBy('sort_order', 'asc');
+    public function getDataProduct($id) {
+        $product = Product::getDataForEdit($id);
 
-        if ($request->filters) {
-            $filters = array_merge(...array_values($request->filters));
-            if (@$filters['child_cate_ids']) {
-                $childCateIds = $filters['child_cate_ids'];
-                $query->whereIn('id', $childCateIds);
-            }
+        $json = new stdclass();
+        $json->success = true;
+        $json->data = $product;
+        $json->html = view('site.partials.product_detail_modal', ['product' => $product])->render();
 
-            if (@$filters['manu']) {
-                $manu_ids = $filters['manu'];
-                $query->with(['products' => function ($q) use ($manu_ids) {
-                    $q->whereIn('manufacturer_id', $manu_ids);
-                }]);
-            }
-
-            if (@$filters['origin']) {
-                $origin_ids = $filters['origin'];
-                $query->with(['products' => function ($q) use ($origin_ids) {
-                    $q->whereIn('origin_id', $origin_ids);
-                }]);
-            }
-
-            if (@$filters['prices']) {
-                $prices = $filters['prices'];
-                $query->with(['products' => function ($q) use ($prices) {
-                    $q->where(function ($q) use ($prices) {
-                        foreach ($prices as $price) {
-                            $price = json_decode($price, true);
-                            if (count($price) > 1) {
-                                $q->orWhere(function ($q) use ($price) {
-                                    $q->where('price', '>=', $price[0])
-                                        ->where('price', '<=', $price[1]);
-                                });
-                            } else {
-                                if ($price[0] == 16000000) {
-                                    $q->orWhere('price', '>=', 15000000);
-                                } else {
-                                    $q->orWhere('price', '<=', $price[0]);
-                                }
-                            }
-                        }
-                    });
-                }]);
-            }
-
-            if (@$filters['sorts']) {
-                $sorts = $filters['sorts'];
-                $query->with(['products' => function ($q) use ($sorts) {
-                    if(in_array('new_asc', $sorts)) {
-                        $q->orderBy('products.created_at', 'desc');
-                    }
-                    if(in_array('price_asc', $sorts)) {
-                        $q->orderBy('products.price', 'asc');
-                    }
-                    if(in_array('price_desc', $sorts)) {
-                        $q->orderBy('products.price', 'desc');
-                    }
-                }]);
-            }
-
-        }
-
-        $output = '';
-
-        foreach ($query->get()->map(function ($cate) {
-            $cate->products = $cate->products->take(6);
-            return $cate;
-        }) as $category) {
-            $output .= view($this->view . '.partials.result_filter_product_v2', compact('category', 'cate'))->render();
-        }
-
-        return $output;
+        return Response::json($json);
     }
 
     /**
@@ -273,20 +126,23 @@ class FrontController extends Controller
      * @param $slug
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function getProduct($slug)
+    public function detailProduct($slug)
     {
         $product = Product::findSlug($slug);
+        $product_category = $product->category->products()->whereNotIn('id', [$product->id])->orderBy('created_at', 'desc')->get();
+        $tag_ids = $product->tags->pluck('id')->toArray();
+        $product_tag_ids = Tagable::query()
+            ->where('tagable_type', Product::class)
+            ->whereIn('tag_id', $tag_ids)->whereNotIn('tagable_id', [$product->id])->pluck('tagable_id')->toArray();
+        $product_tag = $product->whereIn('id', $product_tag_ids)->orderBy('created_at', 'desc')->get();
 
-        $cate = $product->category;
-        $relate_products = Product::getRelate($product->id, $cate->id);
-        $stores = Store::query()->latest()->get();
-        $config = Config::query()->first();
+        // sản phẩm liên quan (cùng danh mục, cùng tag)
+        $product_related = $product_category->merge($product_tag);
 
-        // cho mobile
-        $bannersRight = Banner::query()->where(['position' => 'right'])->latest()->take(3)->get();
+        // sản phẩm giảm giá
+        $product_sell = Product::query()->whereNotIn('id', [$product->id])->where('base_price', '>', 0)->latest()->get();
 
-        return view($this->view . '.product_detail', compact('product', 'cate',
-            'relate_products', 'stores', 'config', 'bannersRight'));
+        return view('site.product_detail', compact('product', 'product_related', 'product_sell'));
     }
 
     /** trang danh mục tin tức
@@ -295,53 +151,28 @@ class FrontController extends Controller
      * @param null $slug
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function getPostCategory(Request $request, $parent_slug, $slug = null)
+    public function getPostCategory(Request $request, $slug = null, $postSlug = null)
     {
-        // list danh mục tin tức bên phải
-        $categories = PostCategory::query()
-            ->where(['parent_id' => 0, 'show_home_page' => 1])
-            ->orderBy('order_number')->get();
-
-        // bài viết mới nhất
-        $postsLatest = Post::query()->latest()->take(5)->get();
-
-        // lấy danh mục đặc biệt
-        $categoryPostSpecial = CategorySpecial::query()->with('posts')
-            ->where(['type' => 20, 'show_home_page' => 1])
-            ->orderBy('order_number')->get();
-
-        $categoryPostSpecial = $categoryPostSpecial->map(function ($cate) {
-            $cate->posts = $cate->posts->take(5);
-            return $cate;
-        });
-
-        // cho mobile
-        $bannersRight = Banner::query()->where(['position' => 'right'])->latest()->take(3)->get();
-
-        if ($slug) {
-            // danh mục cha
-            $parent = PostCategory::findBySlug($parent_slug);
-
-            // danh mục con
-            $cate = PostCategory::findBySlug($slug);
-
-            // bài viết danh mục con
-            $postCateSecond = $cate->posts()->paginate(1);
-
-            return view($this->view . '.news', compact('postCateSecond', 'cate', 'categories',
-                'postsLatest',
-                'categoryPostSpecial', 'bannersRight'));
-        } else {
-            $cate = PostCategory::findBySlug($parent_slug);
-            if (!$cate) {
-                $cate = CategorySpecial::findBySlug($parent_slug);
+        $categories = PostCategory::query()->where(['parent_id' => 0, 'show_home_page' => 1])->latest()->get();
+        if(! $postSlug) {
+            if($slug) {
+                $category = PostCategory::findBySlug($slug);
+                $posts = $category->posts()->paginate(9);
+            } else {
+                $posts = Post::query()->with(['category'])->where('status',1)->latest()->paginate(9);
             }
+            return view('site.news', compact('categories', 'posts'));
+        } else {
+            $post = Post::findBySlug($postSlug);
             // bài viết mới nhất
-            $postCateSecond = $cate->posts()->paginate(1);
+            $postsRecent = Post::query()->where('status', 1)->latest()->take(3)->get();
+            // bài viết liên quan
+            $postsRelated = Post::query()->where('cate_id', $post->category->id)
+                ->whereNotIn('id', [$post->id])->latest()->take(3)->get();
 
-            return view($this->view . '.news', compact('cate', 'postCateSecond', 'categoryPostSpecial',
-                'categories', 'postsLatest', 'bannersRight'));
+            return view('site.news_detail', compact('post', 'postsRecent', 'postsRelated', 'categories'));
         }
+
     }
 
     /**
@@ -351,134 +182,77 @@ class FrontController extends Controller
      */
     public function getPost($slug)
     {
-        $categories = PostCategory::query()
-            ->where(['parent_id' => 0, 'show_home_page' => 1])
-            ->orderBy('order_number')->get();
-
-        // bài viết mới nhất
-        $postsLatest = Post::query()->latest()->take(5)->get();
-
-        // lấy danh mục đặc biệt
-        $categoryPostSpecial = CategorySpecial::query()->with('posts')
-            ->where(['type' => 20, 'show_home_page' => 1])
-            ->orderBy('order_number')->get();
-
-        $categoryPostSpecial = $categoryPostSpecial->map(function ($cate) {
-            $cate->posts = $cate->posts->take(5);
-            return $cate;
-        });
-
+        $categories = PostCategory::query()->where(['parent_id' => 0, 'show_home_page' => 1])->latest()->get();
         $post = Post::findBySlug($slug);
 
-        $relate_posts = $post->getRelate();
-        $cate = $post->category;
-
-        // cho mobile
-        $bannersRight = Banner::query()->where(['position' => 'right'])->latest()->take(3)->get();
-
-        return view($this->view.'.news_detail', compact('post', 'cate',
-            'relate_posts', 'categories', 'categoryPostSpecial', 'postsLatest', 'bannersRight'));
-    }
-
-    public function showContact()
-    {
-        return view('front.contact');
-    }
-
-    public function postSupport(Request $request)
-    {
-        $validate = Validator::make(
-            $request->all(),
-            [
-                'name' => 'required|max:255',
-                'mobile' => 'required|regex:/^(0)[0-9]{9,11}$/',
-                'address' => 'nullable|max:255',
-                'content' => 'required',
-            ]
-        );
-        $json = new stdClass();
-
-        if ($validate->fails()) {
-            $json->success = false;
-            $json->errors = $validate->errors();
-            $json->message = "Thao tác thất bại!";
-            return Response::json($json);
-        }
-
-        DB::beginTransaction();
-        try {
-            $data['name'] = $request->name;
-            $data['mobile'] = $request->mobile;
-            $data['address'] = $request->address;
-            $data['content'] = $request->content;
-            // send email
-            $config = Config::where('id', 1)->first();
-
-            Mail::send('front.support_mail', ['data' => $data], function ($msg) use ($data, $config) {
-                $msg->from('namdangit@gmail.com', $config->site_title);
-                $msg->to($config->email, 'Yêu cầu hỗ trợ')->subject('Yêu cầu hỗ trợ từ website ' . $config->site_title . ' !');
-            });
-
-            DB::commit();
-            $json->success = true;
-            $json->message = "Thao tác thành công!";
-            $json->data = $object;
-            return Response::json($json);
-        } catch (Exception $e) {
-            DB::rollBack();
-            throw new Exception($e->getMessage());
-        }
-    }
-
-    public function posts()
-    {
-        $categories = PostCategory::query()
-            ->where(['parent_id' => 0, 'show_home_page' => 1])
-            ->orderBy('order_number')->get();
-
-        // hàng list bên dưới lấy tất cả bài viết
-        $postCateSecond = Post::query()->paginate(1);
-
         // bài viết mới nhất
-        $postsLatest = Post::query()->latest()->take(5)->get();
+        $postsRecent = Post::query()->where('status', 1)->latest()->take(3)->get();
+        // bài viết liên quan
+        $postsRelated = Post::query()->where('cate_id', $post->category->id)
+            ->whereNotIn('id', [$post->id])->latest()->take(3)->get();
 
-        // lấy danh mục đặc biệt
-        $categoryPostSpecial = CategorySpecial::query()->with('posts')
-            ->where(['type' => 20, 'show_home_page' => 1])
-            ->orderBy('order_number')->get();
+        return view('site.news_detail', compact('post', 'postsRecent', 'postsRelated', 'categories'));
+    }
 
-        $categoryPostSpecial = $categoryPostSpecial->map(function ($cate) {
-            $cate->posts = $cate->posts->take(5);
+
+
+    /**
+     * trang danh mục sản phẩm
+     * @param Request $request
+     */
+    public function search(Request $request, $categorySlug = null)
+    {
+        $keyword = $request->keyword;
+        $category_id = $request->category_id;
+        $viewList = $request->get('viewList');
+        $viewGrid = $request->get('viewGrid') ? : 'true';
+        $sort = $request->get('sort') ? : 'lasted';
+        $minPrice = $request->get('minPrice') ?? 0;
+        $maxPrice = $request->get('maxPrice') ?? 0;
+
+        $categories = Category::parent()->with('products')->orderBy('sort_order')->get();
+        $categories = $categories->map(function($cate) {
+            // áp dụng cho category cha
+            $cate->child_categories = $this->categoryService->getChildCategory($cate, 1);
             return $cate;
         });
 
-        // cho mobile
-        $bannersRight = Banner::query()->where(['position' => 'right'])->latest()->take(3)->get();
+        $tags = Tag::query()->where('type', Tag::TYPE_PRODUCT)->latest()->get();
 
-        return view($this->view . '.news', compact('postCateSecond', 'categories',
-            'postsLatest', 'categoryPostSpecial', 'bannersRight'));
-    }
+        if($request->category_id == 'all') {
+            $products = Product::query()
+                ->where('status', 1)
+                ->where(function($q) use ($keyword) {
+                    $q->where('name', 'like', '%' . $keyword . '%')
+                        ->orWhereHas('manufacturer', function ($q) use ($keyword) {
+                            $q->where('manufacturers.name', 'like', '%' . $keyword . '%');
+                        });
+                })
+                ->latest()->paginate(9);
+        } else {
+            $category = Category::query()->where('id', $request->category_id)->first();
+            $child_category_ids = $this->categoryService->getChildCategory($category, 1)->pluck('id')->toArray();
 
-    public function search(Request $request)
-    {
-        $keyword = $request->keyword;
+            $products = Product::query()->whereIn('cate_id', array_merge([$category->id], $child_category_ids))
+                ->where('status', 1)
+                ->where(function($q) use ($keyword) {
+                    $q->where('name', 'like', '%' . $keyword . '%')
+                        ->orWhereHas('manufacturer', function ($q) use ($keyword) {
+                            $q->where('manufacturers.name', 'like', '%' . $keyword . '%');
+                        });
+                })
+                ->latest()->paginate(9);
+        }
 
-        $products = Product::query()
-            ->where('name', 'like', '%' . $keyword . '%')
-            ->orWhereHas('manufacturer', function ($q) use ($keyword) {
-                $q->where('manufacturers.name', 'like', '%' . $keyword . '%');
-            })->latest()->get();
 
-        return view($this->view . '.search', compact('keyword', 'products'));
-
+        return view('site.search', compact('categories', 'products', 'viewGrid', 'viewList',
+          'categorySlug', 'sort', 'tags', 'minPrice', 'maxPrice', 'keyword', 'category_id'));
     }
 
     public function introduction() {
-        // cho mobile
-        $bannersRight = Banner::query()->where(['position' => 'right'])->latest()->take(3)->get();
-
         $config = Config::query()->first();
-        return view($this->view.'.about', compact('config', 'bannersRight'));
+
+        return view('site.about', compact('config'));
     }
 
     public function policy(Request $request, $id) {
@@ -487,5 +261,55 @@ class FrontController extends Controller
         $policy = Policy::query()->where('status', true)->find($id);
 
         return view($this->view.'.policy', compact('policy', 'bannersRight'));
+    }
+
+    public function contact(Request $request) {
+        $config = Config::query()->get()->first();
+
+        return view('site.contact', compact('config'));
+    }
+
+    public function sendContact(Request $request) {
+
+        $rule = [
+            'user_name' => 'required',
+            'email' => 'required|email',
+            'phone_number' => 'required|regex:/^(0)[0-9]{9,11}$/',
+            'content' => 'required',
+        ];
+
+        $translate =
+            [
+                'user_name.required' => 'Vui lòng nhập họ tên',
+                'email.email' => 'Email không hợp lệ',
+                'phone_number.required' => 'Vui lòng nhập số điện thoại',
+                'phone_number.regex' => 'Số điện thoại không hợp lệ',
+                'content.required' => 'Vui lòng nhập nội dung liên hệ',
+            ];
+
+        $validate = Validator::make(
+            $request->all(),
+            $rule,
+            $translate
+        );
+
+        $json = new stdClass();
+
+        if ($validate->fails()) {
+            $json->success = false;
+            $json->errors = $validate->errors();
+            return Response::json($json);
+        }
+
+        $contact = new Contact();
+        $contact->user_name = $request->user_name;
+        $contact->email = $request->email;
+        $contact->phone_number = $request->phone_number;
+        $contact->content = $request->content;
+        $contact->address = $request->address;
+
+        $contact->save();
+
+        return $this->responseSuccess();
     }
 }

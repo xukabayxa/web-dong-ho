@@ -4,6 +4,7 @@ namespace App\Http\View\Composers;
 
 use App\Model\Admin\Banner;
 use App\Model\Admin\Category;
+use App\Model\Admin\PostCategory;
 use Illuminate\View\View;
 
 class MenuHomePageComposer
@@ -16,11 +17,11 @@ class MenuHomePageComposer
     {
         $productCategories = Category::query()->with(['childs', 'manufacturers'])
             ->where(['type' => 1, 'parent_id' => 0, 'show_home_page' => 1])
-            ->latest()
+            ->orderBy('sort_order')
             ->get();
 
-        $bannerTop = Banner::query()->where(['position' => 'top'])->latest()->first();
+        $postCategories = PostCategory::query()->where(['parent_id' => 0, 'show_home_page' => 1])->latest()->get();
 
-        $view->with(['productCategories' => $productCategories, 'bannerTop' => $bannerTop]);
+        $view->with(['productCategories' => $productCategories, 'postCategories' => $postCategories]);
     }
 }

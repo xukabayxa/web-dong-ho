@@ -12,26 +12,19 @@
             </div>
 
             <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="form-group custom-group">
+                <label class="form-label">Nội dung</label>
+                <textarea id="editor" class="form-control" ck-editor ng-model="form.intro" rows="3"></textarea>
+            </div>
+            </div>
+
+            <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="form-group custom-group">
                     <label class="form-label">Link</label>
                     <input class="form-control " type="text" ng-model="form.link">
                 </div>
             </div>
 
-            <div class="col-md-12 col-sm-12 col-xs-12">
-                <div class="form-group custom-group">
-                    <label class="form-label">Vị trí</label>
-                    <select class="form-control" ng-model="form.position">
-                        <option value="">Chọn vị trí</option>
-                        <option ng-repeat="p in positions" ng-value="p.value" ng-selected="p.value == form.position">
-                            <% p.name %>
-                        </option>
-                    </select>
-                    <span class="invalid-feedback d-block" role="alert">
-                        <strong><% errors.position[0] %></strong>
-                    </span>
-                </div>
-            </div>
 
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <label class="form-label">Ảnh</label>

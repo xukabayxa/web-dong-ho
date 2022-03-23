@@ -54,22 +54,16 @@ class FileHelper
             // Type = 3 =>> Bài viết
             // Type = 4 =>> Danh mục bài viết
             // Type = 5 =>> Logo thương hiệu sản phẩm
-            // Type = 6 =>> banners trái
-            // Type = 7 =>> banners phải
-            // Type = 8 =>> logo hãng sx
+            // Type = 6 =>> banners
 
             if ($type == 1) {
                 Image::make($file)->resize(600, 600)->save($destinationPath . DIRECTORY_SEPARATOR . $destinationFile);
             } else if ($type == 3) {
-                Image::make($file)->resize(500, 500)->save($destinationPath . DIRECTORY_SEPARATOR . $destinationFile);
+                Image::make($file)->resize(473, 358)->save($destinationPath . DIRECTORY_SEPARATOR . $destinationFile);
             } else if ($type == 5) {
                 Image::make($file)->resize(115, 75)->save($destinationPath . DIRECTORY_SEPARATOR . $destinationFile);
             } else if ($type == 6) {
-                Image::make($file)->resize(1030, 340)->save($destinationPath . DIRECTORY_SEPARATOR . $destinationFile);
-            } else if ($type == 7) {
-                Image::make($file)->resize(350, 150)->save($destinationPath . DIRECTORY_SEPARATOR . $destinationFile);
-            } else if ($type == 8) {
-                Image::make($file)->resize(100, 28)->save($destinationPath . DIRECTORY_SEPARATOR . $destinationFile);
+                Image::make($file)->resize(1920, 700)->save($destinationPath . DIRECTORY_SEPARATOR . $destinationFile);
             } else {
                 $file->move($destinationPath, $destinationFile);
             }

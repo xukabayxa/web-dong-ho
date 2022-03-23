@@ -34,6 +34,7 @@
                 facebook: this.facebook,
                 hotline: this.hotline,
                 zalo: this.zalo,
+                address: this.address,
                 location: this.location,
                 click_call: this.click_call,
                 facebook_chat: this.facebook_chat,

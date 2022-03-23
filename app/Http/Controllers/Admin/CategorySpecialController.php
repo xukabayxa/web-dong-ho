@@ -75,7 +75,6 @@ class CategorySpecialController extends Controller
                 'code' => 'required|max:255|unique:category_special,code',
                 'type' => 'required',
                 'show_home_page' => 'required'
-
             ]
         );
         $json = new stdClass();
@@ -91,6 +90,18 @@ class CategorySpecialController extends Controller
         try {
             $object = new ThisModel();
 
+            if($request->order_number) {
+                $category_exists = CategorySpecial::query()->where([
+                    'order_number' => $request->order_number,
+                    'type' => $request->type
+                ]);
+                if($category_exists->exists()) {
+                    $category_exists = $category_exists->first();
+                    $category_exists->order_number = CategorySpecial::query()->where('type', $request->type)->count();
+                    $category_exists->save();
+                }
+            }
+
             $object->name = $request->name;
             $object->code = $request->code;
             $object->type = $request->type;
@@ -98,7 +109,6 @@ class CategorySpecialController extends Controller
             $object->show_home_page = $request->show_home_page;
 
             $object->save();
-
 
             DB::commit();
             $json->success = true;
@@ -141,6 +151,17 @@ class CategorySpecialController extends Controller
 
         DB::beginTransaction();
         try {
+            if($request->order_number) {
+                $category_exists = CategorySpecial::query()->where([
+                    'order_number' => $request->order_number,
+                    'type' => $request->type
+                ]);
+                if($category_exists->exists()) {
+                    $category_exists = $category_exists->first();
+                    $category_exists->order_number = CategorySpecial::query()->where('type', $request->type)->count();
+                    $category_exists->save();
+                }
+            }
             $object = ThisModel::findOrFail($id);
             $object->code = $request->code;
             $object->name = $request->name;

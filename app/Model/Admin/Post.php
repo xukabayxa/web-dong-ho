@@ -17,6 +17,8 @@ class Post extends BaseModel
     use Sluggable;
     use SluggableScopeHelpers;
 
+    protected $dates = ['created_at', 'updated_at'];
+
     public function sluggable(): array
     {
         return [

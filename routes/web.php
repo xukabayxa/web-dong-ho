@@ -71,6 +71,15 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         Route::post('/nested-sort', 'Admin\PostCategoryController@nestedSort')->name('PostCategory.nestedSort');
         Route::post('/add-home-page', 'Admin\PostCategoryController@addToHomepage')->name('PostCategory.add.home.page');
     });
+
+    // danh mục liên hệ
+    Route::group(['prefix' => 'contacts'], function () {
+        Route::get('/', 'Admin\ContactController@index')->name('contacts.index');
+        Route::get('/searchData', 'Admin\ContactController@searchData')->name('contacts.searchData');
+        Route::get('/{id}/detail', 'Admin\ContactController@getContactDetail')->name('contacts.detail');
+        Route::get('/{id}/delete', 'Admin\ContactController@delete')->name('contacts.delete');
+    });
+
      // Bài viết
     Route::group(['prefix' => 'posts'], function () {
         Route::get('/', 'Admin\PostController@index')->name('Post.index');
@@ -182,6 +191,16 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         Route::post('/{id}/update', 'Admin\BannerController@update')->name('banners.update');
         Route::get('/{id}/delete', 'Admin\BannerController@delete')->name('banners.delete');
         Route::get('/{id}/getDataForEdit', 'Admin\BannerController@getDataForEdit')->name('banners.getDataForEdit');
+    });
+
+    // tags
+    Route::group(['prefix' => 'tags'], function () {
+        Route::get('/', 'Admin\TagController@index')->name('tags.index');
+        Route::get('/searchData', 'Admin\TagController@searchData')->name('tags.searchData');
+        Route::post('', 'Admin\TagController@store')->name('tags.store');
+        Route::get('/{id}/getDataForEdit/', 'Admin\TagController@getDataForEdit')->name('tags.edit');
+        Route::put('/{id}/update', 'Admin\TagController@update')->name('tags.update');
+        Route::get('/{id}/delete', 'Admin\TagController@delete')->name('tags.delete');
     });
 
     // quản lý cửa hàng

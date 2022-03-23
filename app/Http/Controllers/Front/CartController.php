@@ -22,24 +22,12 @@ use Jenssegers\Agent\Agent;
 
 class CartController extends Controller
 {
-    protected $view;
-
-    public function __construct(Agent $agent)
-    {
-        $this->view = 'front2';
-        if ($agent->isMobile()) {
-            $this->view .= '.mobiles';
-        }
-    }
-
     public function index()
     {
         $cartCollection = \Cart::getContent();
         $total = \Cart::getTotal();
-        // cho mobile
-        $bannersRight = Banner::query()->where(['position' => 'right'])->latest()->take(3)->get();
 
-        return view($this->view . '.cart', compact('cartCollection', 'total', 'bannersRight'));
+        return view( 'site.cart', compact('cartCollection', 'total'));
     }
 
     public function addItem(Request $request, $productId)
@@ -50,13 +38,13 @@ class CartController extends Controller
             'id' => $product->id,
             'name' => $product->name,
             'price' => $product->price,
-            'quantity' => 1,
+            'quantity' => $request->qty ? (int)$request->qty : 1,
             'attributes' => [
                 'image' => $product->image->path ?? ''
             ]
         ]);
 
-        return \Response::json(['success' => true]);
+        return \Response::json(['success' => true, 'items' => \Cart::getContent(), 'total' => \Cart::getTotal()]);
     }
 
     public function updateItem(Request $request)
@@ -79,7 +67,14 @@ class CartController extends Controller
         return \Response::json(['success' => true, 'items' => \Cart::getContent(), 'total' => \Cart::getTotal()]);
     }
 
-    public function checkout(Request $request)
+    public function checkout(Request $request) {
+        $cartCollection = \Cart::getContent();
+        $total = \Cart::getTotal();
+
+        return view('site.checkout', compact('cartCollection', 'total'));
+    }
+
+    public function checkoutSubmit(Request $request)
     {
         DB::beginTransaction();
         try {
@@ -139,7 +134,7 @@ class CartController extends Controller
             $config = Config::query()->first();
 
             // gửi mail đặt hàng thành công cho khách hàng
-            Mail::to($request->customer_email)->send(new NewOrder($order, $config, 'customer'));
+//            Mail::to($request->customer_email)->send(new NewOrder($order, $config, 'customer'));
 
 //            // gửi mail thông báo có đơn hàng mới cho admin
 //            $users = User::query()->where('status', 1)->get();

@@ -42,42 +42,22 @@ class AppServiceProvider extends ServiceProvider
 		});
 
         View::composer(
-            'front2.partials.header',
+            'site.partials.header',
             MenuHomePageComposer::class
         );
 
         View::composer(
-            'front2.mobiles.partials.menu_mobile',
-            MenuHomePageComposer::class
-        );
-
-        View::composer(
-            'front2.mobiles.partials.header',
-            MenuHomePageComposer::class
-        );
-
-        View::composer(
-            'front2.partials.footer',
+            'site.partials.footer',
             FooterComposer::class
         );
 
         View::composer(
-            'front2.mobiles.partials.bottom',
-            FooterComposer::class
-        );
-
-        View::composer(
-            'front2.mobiles.partials.footer',
-            FooterComposer::class
-        );
-
-        View::composer(
-            'front2.partials.header',
+            'site.partials.header',
             HeaderComposer::class
         );
 
         View::composer(
-            'front2.mobiles.partials.header',
+            'site.layouts.master',
             HeaderComposer::class
         );
     }

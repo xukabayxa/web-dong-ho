@@ -9,6 +9,7 @@ use App\Model\Admin\Manufacturer;
 use App\Model\Admin\Post;
 use App\Model\Admin\Product;
 use App\Model\Admin\ProductCategorySpecial;
+use App\Model\Admin\Tag;
 use Illuminate\Http\Request;
 use App\Model\Admin\Product as ThisModel;
 use App\Model\Common\Unit;
@@ -91,9 +92,9 @@ class ProductController extends Controller
 
 	public function create()
 	{
-        $postRelateds = Post::query()->latest()->get();
+        $tags = Tag::query()->where('type', Tag::TYPE_PRODUCT)->latest()->get();
 
-		return view($this->view.'.create', compact('postRelateds'));
+		return view($this->view.'.create', compact('tags'));
 	}
 
 	public function store(ProductStoreRequest $request)
@@ -133,12 +134,11 @@ class ProductController extends Controller
                 }
             }
 
-            if(isset($request->all()['post_ids'])) {
-                $object->posts()->sync($request->all()['post_ids']);
+            if(isset($request->all()['tag_ids'])) {
+                $object->addTags($request->all()['tag_ids']);
             }
 
 			DB::commit();
-			ActivityLog::createRecord("Thêm mới hàng hóa thành công", route('Product.edit', $object->id, false));
 			$json->success = true;
 			$json->message = "Thao tác thành công!";
 			return Response::json($json);
@@ -151,11 +151,10 @@ class ProductController extends Controller
 	public function edit($id)
 	{
 		$object = ThisModel::getDataForEdit($id);
-        $postRelateds = Post::query()->latest()->get();
+        $tags = Tag::query()->where('type', Tag::TYPE_PRODUCT)->latest()->get();
+        $object->tag_ids = $object->tags->pluck('id')->toArray();
 
-        $object->post_ids = $object->posts->pluck('id')->toArray();
-
-        return view($this->view.'.edit', compact('object','postRelateds'));
+        return view($this->view.'.edit', compact('object','tags'));
 	}
 
 	public function update(ProductUpdateRequest $request, $id)
@@ -209,10 +208,10 @@ class ProductController extends Controller
                 }
             }
 
-            if(isset($request->all()['post_ids'])) {
-                $object->posts()->sync($request->all()['post_ids']);
+            if(isset($request->all()['tag_ids'])) {
+                $object->updateTags($request->all()['tag_ids']);
             } else {
-                $object->posts()->detach();
+                $object->deleteTags();
             }
 
 			DB::commit();

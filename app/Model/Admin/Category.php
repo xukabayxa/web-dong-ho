@@ -84,12 +84,14 @@ class Category extends BaseModel
         return $this->hasMany('App\Model\Admin\Product', 'cate_id', 'id')->orderBy('created_at', 'desc');
     }
 
-
     public function manufacturers()
     {
         return $this->hasMany(Manufacturer::class, 'category_id');
     }
 
+    public function scopeParent($query) {
+        return $query->where('parent_id', 0);
+    }
     public function canEdit()
     {
         return $this->created_by == Auth::user()->id;
@@ -190,20 +192,5 @@ class Category extends BaseModel
             ->firstOrFail();
     }
 
-
-    public function send()
-    {
-        foreach ($this->g7Info->users as $user) {
-            $notification = new Notification();
-            $notification->url = route("Post.show", $this->id, false);
-            $notification->content = "Có đặt lịch mới từ hệ thống G7 Autocare";
-            $notification->status = 0;
-            $notification->receiver_id = $user->id;
-            $notification->created_by = Auth::user()->id;
-            $notification->save();
-
-            $notification->send();
-        }
-    }
 
 }

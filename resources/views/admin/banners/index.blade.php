@@ -51,7 +51,6 @@ Quản lý banner trang chủ
             {data: 'title', title: 'Tiêu đề'},
             {data: 'image', title: 'Ảnh'},
             {data: 'link', title: 'Link'},
-            {data: 'position', title: 'Vị trí'},
             {data: 'updated_at', title: 'Ngày cập nhật'},
             {data: 'updated_by', title: 'Người cập nhật'},
             {data: 'action', orderable: false, title: "Hành động"}

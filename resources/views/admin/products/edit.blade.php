@@ -20,12 +20,15 @@
 
 @section('script')
     @include('admin.products.Product')
+    @include('admin.products.createTagGroup')
+
     <script>
         app.controller('EditProduct', function ($scope, $http) {
             $scope.manufacturers = @json(\App\Model\Admin\Manufacturer::getForSelect());
             $scope.origins = @json(\App\Model\Admin\Origin::getForSelect());
             $scope.attributes = @json(\App\Model\Admin\Attribute::getForSelect());
-            $scope.postRelateds = @json($postRelateds);
+            $scope.tags = @json($tags);
+            $scope.arrayInclude = arrayInclude;
 
             $scope.form = new Product(@json($object), {scope: $scope});
 

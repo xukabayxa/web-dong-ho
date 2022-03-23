@@ -100,20 +100,25 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="form-group custom-group mb-4">
-                    <label class="form-label">Chọn bài viết liên quan</label>
-                    <ui-select remove-selected="false" multiple ng-model="form.post_ids">
-                        <ui-select-match placeholder="Chọn bài viết liên quan">
-                            <% $item.name %>
-                        </ui-select-match>
-                        <ui-select-choices
-                            repeat="item.id as item in (postRelateds | filter: $select.search)">
-                            <span ng-bind="item.name"></span>
-                        </ui-select-choices>
-                    </ui-select>
-                    <span class="invalid-feedback d-block" role="alert">
-                        <strong>
-                            <% errors.posts[0] %>
-                        </strong>
+                    <label class="form-label">Chọn thẻ tag</label>
+                    <select select2 class="select2 form-control" name="tag_group_id[]"
+                            ng-model="form.tag_ids"
+                            ng-class="{'is-invalid': errors && errors.tag_ids}"
+                            multiple>
+                        <option ng-repeat="t in tags"
+                                value="<% t.id %>"
+                                ng-selected="arrayInclude(form.tag_ids, t.id)"><% t.name %></option>
+
+                    </select>
+
+                    <style>
+                        .btn-addon {
+                            border: 1px solid #c4cdd5 !important;
+                            background-color: #fff!important;
+                        }
+                    </style>
+                    <span class="input-group-btn">
+                        <button class="btn btn-addon" type="button" data-toggle="modal" data-target="#createTag"><i class="fa fa-plus"></i></button>
                     </span>
                 </div>
 

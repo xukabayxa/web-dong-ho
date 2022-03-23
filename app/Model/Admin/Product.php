@@ -6,6 +6,7 @@ use App\Model\BaseModel;
 use App\Model\Common\ProductCategory;
 use App\Model\G7\G7Product;
 use App\Model\G7\G7ProductPrice;
+use App\Model\Traits\HasTagTrait;
 use Illuminate\Database\Eloquent\Model;
 use App\Model\Common\File;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +17,8 @@ use App\Helpers\FileHelper;
 
 class Product extends BaseModel
 {
+    use HasTagTrait;
+
     protected $fillable = ['name', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at',
         'price', 'cate_id', 'base_price', 'body', 'intro', 'slug', 'short_des', 'manufacturer_id', 'origin_id'];
 
@@ -57,10 +60,6 @@ class Product extends BaseModel
         return Auth::user()->type == User::SUPER_ADMIN || Auth::user()->type == User::QUAN_TRI_VIEN;
     }
 
-    public function g7_products()
-    {
-        return $this->hasMany(G7Product::class, 'root_product_id', 'id');
-    }
 
     public function image()
     {
@@ -102,14 +101,10 @@ class Product extends BaseModel
         return $this->belongsToMany(CategorySpecial::class, 'product_category_special', 'product_id', 'category_special_id');
     }
 
-    public function g7_price()
+    public function getLinkAttribute()
     {
-        return $this->hasOne(G7ProductPrice::class, 'product_id')->where('g7_id', Auth::user()->g7_id);
-    }
-
-    public function getLinkAttribute() {
-        if($this->use_url_custom) {
-            return '/san-pham/'.$this->url_custom;
+        if ($this->use_url_custom) {
+            return '/san-pham/' . $this->url_custom;
         }
         return route('Product', $this->slug);
     }
@@ -176,6 +171,8 @@ class Product extends BaseModel
             return $attribute;
         });
 
+        $product->tags_str = $product->tags->implode('name', ', ');
+
         return $product;
     }
 
@@ -183,7 +180,7 @@ class Product extends BaseModel
     {
         $object = self::findBySlug($slug);
 
-        if(!$object) {
+        if (!$object) {
             $object = self::query()->where('url_custom', $slug)->first();
         }
 
@@ -251,57 +248,28 @@ class Product extends BaseModel
         }
     }
 
-    public function scopeFilter($query, $filters)
+    public function scopeFilter($query, $request)
     {
-        $query = self::query();
-        if ($filters) {
-            $filters = array_merge(...array_values($filters));
-            if (@$filters['manu']) {
-                $query->whereIn('manufacturer_id', $filters['manu']);
+        if ($sort = $request->get('sort')) {
+            if ($sort == 'lasted') {
+                $query->orderBy('created_at', 'desc');
+            } else if ($sort == 'priceAsc') {
+                $query->orderBy('price', 'asc');
+            } else if ($sort == 'priceDesc') {
+                $query->orderBy('price', 'desc');
             }
-            if (@$filters['origin']) {
-                $query->whereIn('origin_id', $filters['origin']);
-            }
-
-            if (@$filters['prices']) {
-                $prices = $filters['prices'];
-
-                $query->where(function ($q) use ($prices) {
-                    foreach ($prices as $price) {
-                        $price = json_decode($price, true);
-                        if (count($price) > 1) {
-                            $q->orWhere(function ($q) use ($price) {
-                                $q->where('price', '>=', $price[0])
-                                    ->where('price', '<=', $price[1]);
-                            });
-                        } else {
-                            if ($price[0] == 16000000) {
-                                $q->orWhere('price', '>=', 15000000);
-                            } else {
-                                $q->orWhere('price', '<=', $price[0]);
-                            }
-                        }
-                    }
-                });
-            }
-
-            if (@$filters['sorts']) {
-                $sorts = $filters['sorts'];
-
-                if (in_array('new_asc', $sorts)) {
-                    $query->orderBy('created_at', 'desc');
-                }
-                if (in_array('price_asc', $sorts)) {
-                    $query->orderBy('price', 'asc');
-                }
-                if (in_array('price_desc', $sorts)) {
-                    $query->orderBy('price', 'desc');
-                }
-
-            }
+        } else {
+            $query->orderBy('created_at', 'desc');
         }
 
-        return $query;
+        if($request->get('minPrice')) {
+            $query->where('price', '>=',  $request->get('minPrice'));
+        }
+
+        if($request->get('maxPrice')) {
+            $query->where('price', '<=',  $request->get('maxPrice'));
+        }
+
     }
 
     public function scopeFilterV2($query, $filters)

@@ -28,7 +28,7 @@
             let data = {
                 title: this.title,
                 link: this.link,
-                position: this.position,
+                intro: this.intro,
             }
 
             data = jsonToFormData(data);

@@ -104,6 +104,14 @@
             this._origin_id = value || null;
         }
 
+        // get tag_ids() {
+        //     return this._tag_ids;
+        // }
+        //
+        // set tag_ids(value) {
+        //     this._tag_ids = (value || []).map(val => val.id);
+        // }
+
         get submit_data() {
             let data = {
                 cate_id: this.cate_id,
@@ -120,7 +128,7 @@
                 content_seo: this.content_seo,
                 use_url_custom: this.use_url_custom,
                 url_custom: this.url_custom,
-                post_ids: this.post_ids,
+                tag_ids: this.tag_ids,
                 attributes: this.attribute_values.map(val => val.submit_data)
             }
 

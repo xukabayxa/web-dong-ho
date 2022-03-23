@@ -64,6 +64,7 @@ class ConfigController extends Controller
 			$object->youtube = $request->youtube;
 			$object->location = $request->location;
 			$object->introduction = $request->introduction;
+			$object->address = $request->address;
 
 			$object->click_call = $request->click_call;
 			$object->facebook_chat = $request->facebook_chat;

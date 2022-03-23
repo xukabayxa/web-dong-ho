@@ -15,8 +15,10 @@ class HeaderComposer
      */
     public function compose(View $view)
     {
-       $config = Config::query()->get()->first();
+        $config = Config::query()->get()->first();
+        $cartCollection = \Cart::getContent();
+        $total = \Cart::getTotal();
 
-       $view->with('config', $config);
+        $view->with(['config' => $config, 'cartItems' => $cartCollection, 'totalCart' => $total]);
     }
 }

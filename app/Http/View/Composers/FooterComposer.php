@@ -16,12 +16,9 @@ class FooterComposer
      */
     public function compose(View $view)
     {
-        $stores = Store::query()->latest()->get()->groupBy(function ($item) {
-            return $item->province->name;
-        });
         $config = Config::query()->get()->first();
         $policies = Policy::query()->where('status', true)->latest()->get();
 
-        $view->with(['stores' => $stores, 'config' => $config, 'policies' => $policies]);
+        $view->with(['config' => $config, 'policies' => $policies]);
     }
 }
