@@ -89,7 +89,7 @@
 
                                 <li class="subtotal-box">
                                     <div class="subtotal-title">
-                                        <h3>Tổng :</h3><span><% cart.totalCost | number %> đ</span>
+                                        <h3>Tổng :</h3><span><% cart.total | number %> đ</span>
                                     </div>
                                 </li>
 

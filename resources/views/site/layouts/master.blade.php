@@ -51,12 +51,9 @@
 <script src="https://cdn.tutorialjinni.com/jquery-toast-plugin/1.3.2/jquery.toast.min.js"></script>
 
 <script>
-    app.controller('headerPartial', function ($scope) {
-        $scope.cart = {};
-        $scope.cart.items = @json($cartItems);
-        $scope.cart.count = Object.keys($scope.cart.items).length;
-        $scope.cart.totalCost = {{$totalCart}};
+    app.controller('headerPartial', function ($rootScope, $scope, cartItemSync, $interval) {
         $scope.checkCart = true;
+        $scope.cart = cartItemSync;
 
         $scope.removeItem = function (product_id) {
             $.ajax({
@@ -70,6 +67,15 @@
                         $scope.cart.items = response.items;
                         $scope.cart.count = Object.keys($scope.cart.items).length;
                         $scope.cart.totalCost = response.total;
+
+                        $interval.cancel($rootScope.promise);
+
+                        $rootScope.promise = $interval(function(){
+                            cartItemSync.items = response.items;
+                            cartItemSync.total = response.total;
+                            cartItemSync.count = response.count;
+                        }, 1000);
+
                         if ($scope.cart.count == 0) {
                             $scope.checkCart = false;
                         }
@@ -95,9 +101,20 @@
                 return;
             }
 
-            location.href = '/tim-kiem?keyword=' + (keyword) +'&category_id='+$scope.search.category_id;
+            location.href = '/tim-kiem?keyword=' + (keyword) + '&category_id=' + $scope.search.category_id;
         }
-    })
+    });
+
+    app.factory('cartItemSync', function ($interval) {
+        var cart = {items: null, total: null};
+
+        cart.items = @json($cartItems);
+        cart.count = {{$cartItems->sum('quantity')}};
+        cart.total = {{$totalCart}};
+
+        return cart;
+    });
+
 </script>
 
 @stack('scripts')

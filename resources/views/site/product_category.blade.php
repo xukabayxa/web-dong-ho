@@ -255,7 +255,7 @@
 @endsection
 @push('scripts')
     <script>
-        app.controller('ListProducts', function ($scope) {
+        app.controller('ListProducts', function ($rootScope, $scope, $interval, cartItemSync) {
             $scope.viewGrid = {{$viewGrid}};
             $scope.viewList = null;
             $scope.sort_type = null;
@@ -415,6 +415,7 @@
                 } else {
                     quantity =  parseInt($scope.qty)
                 }
+
                 $.ajax({
                     type: 'POST',
                     url: url,
@@ -427,6 +428,14 @@
                     success: function (response) {
                         if (response.success) {
                             $.toast('Đã thêm vào giỏ hàng');
+
+                            $interval.cancel($rootScope.promise);
+
+                            $rootScope.promise = $interval(function(){
+                                cartItemSync.items = response.items;
+                                cartItemSync.total = response.total;
+                                cartItemSync.count = response.count;
+                            }, 1000);
                         }
                     },
                     error: function () {

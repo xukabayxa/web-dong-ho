@@ -26,7 +26,7 @@
                     <div class="search-error-wrapper">
                         <h1>404</h1>
                         <h2>Không tìm thấy yêu cầu</h2>
-                        <p class="home-link">BACK TO HOME PAGE
+                        <p class="home-link">
                             Xin lỗi trang bạn đang tìm không tồn tại, đã bị xóa, đổi tên hoặc tạm thời không có.
                         </p>
                         <form action="#" class="error-form">

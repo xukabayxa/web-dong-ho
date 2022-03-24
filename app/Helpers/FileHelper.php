@@ -58,6 +58,8 @@ class FileHelper
 
             if ($type == 1) {
                 Image::make($file)->resize(600, 600)->save($destinationPath . DIRECTORY_SEPARATOR . $destinationFile);
+            } else if ($type == 2) {
+                Image::make($file)->resize(75, 75)->save($destinationPath . DIRECTORY_SEPARATOR . $destinationFile);
             } else if ($type == 3) {
                 Image::make($file)->resize(473, 358)->save($destinationPath . DIRECTORY_SEPARATOR . $destinationFile);
             } else if ($type == 5) {

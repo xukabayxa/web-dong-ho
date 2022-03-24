@@ -2,14 +2,10 @@
 
 namespace App\Http\Controllers\Front;
 
-use App\Mail\NewOrder;
-use App\Model\Admin\Banner;
 use App\Model\Admin\Config;
 use App\Model\Admin\Order;
 use App\Model\Admin\OrderDetail;
 use App\Model\Admin\Product;
-use App\Model\Common\User;
-use Darryldecode\Cart\Cart;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
@@ -17,8 +13,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
-use Jenssegers\Agent\Agent;
-
 
 class CartController extends Controller
 {
@@ -44,7 +38,8 @@ class CartController extends Controller
             ]
         ]);
 
-        return \Response::json(['success' => true, 'items' => \Cart::getContent(), 'total' => \Cart::getTotal()]);
+        return \Response::json(['success' => true, 'items' => \Cart::getContent(), 'total' => \Cart::getTotal(),
+            'count' => \Cart::getContent()->sum('quantity')]);
     }
 
     public function updateItem(Request $request)
@@ -56,7 +51,8 @@ class CartController extends Controller
             ),
         ));
 
-        return \Response::json(['success' => true, 'items' => \Cart::getContent(), 'total' => \Cart::getTotal()]);
+        return \Response::json(['success' => true, 'items' => \Cart::getContent(), 'total' => \Cart::getTotal(),
+            'count' => \Cart::getContent()->sum('quantity')]);
 
     }
 
@@ -64,7 +60,8 @@ class CartController extends Controller
     {
         \Cart::remove($request->product_id);
 
-        return \Response::json(['success' => true, 'items' => \Cart::getContent(), 'total' => \Cart::getTotal()]);
+        return \Response::json(['success' => true, 'items' => \Cart::getContent(), 'total' => \Cart::getTotal(),
+            'count' => \Cart::getContent()->sum('quantity')]);
     }
 
     public function checkout(Request $request) {

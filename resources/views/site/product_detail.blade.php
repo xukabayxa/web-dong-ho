@@ -72,7 +72,7 @@
                                             <input type="number" class="input-text" name="quantity" ng-model="qty2" min="1" title="Qty">
                                         </div>
                                     </div>
-                                    <button class="add-to-cart" type="button" ng-click="addToCart2()">Add To Cart</button>
+                                    <button class="add-to-cart" type="button" ng-click="addToCart2()">Thêm vào giỏ hàng</button>
                                 </form>
                             </div>
                             <ul class="single-add-actions">
@@ -234,7 +234,7 @@
     <script src="https://cdn.tutorialjinni.com/jquery-toast-plugin/1.3.2/jquery.toast.min.js"></script>
 
     <script>
-        app.controller('ProductDetail', function ($scope) {
+        app.controller('ProductDetail', function ($rootScope, $scope, $interval, cartItemSync) {
             $scope.qty = 1;
             $scope.qty2 = 1;
 
@@ -285,9 +285,19 @@
             // end
 
             // add to cart
-            $scope.addToCart = function () {
+            $scope.addToCart = function (productId = null, qty = null) {
                 url = "{{route('cart.add.item', ['productId' => 'productId'])}}";
-                url = url.replace('productId', $scope.product.id);
+                if (productId) {
+                    url = url.replace('productId', productId);
+                } else {
+                    url = url.replace('productId', $scope.product.id);
+                }
+
+                if(qty) {
+                    quantity = qty;
+                } else {
+                    quantity =  parseInt($scope.qty)
+                }
 
                 $.ajax({
                     type: 'POST',
@@ -296,11 +306,19 @@
                         'X-CSRF-TOKEN': "{{csrf_token()}}"
                     },
                     data: {
-                        'qty': parseInt($scope.qty)
+                        'qty': quantity
                     },
                     success: function(response) {
                         if (response.success) {
-                            $.toast('Đã thêm vào giỏ hàng')
+                            $.toast('Đã thêm vào giỏ hàng');
+
+                            $interval.cancel($rootScope.promise);
+
+                            $rootScope.promise = $interval(function(){
+                                cartItemSync.items = response.items;
+                                cartItemSync.total = response.total;
+                                cartItemSync.count = response.count;
+                            }, 1000);
                         }
                     },
                     error: function() {
@@ -328,7 +346,16 @@
                     },
                     success: function(response) {
                         if (response.success) {
-                            $.toast('Đã thêm vào giỏ hàng')
+                            $.toast('Đã thêm vào giỏ hàng');
+                            $interval.cancel($rootScope.promise);
+
+                            $rootScope.promise = $interval(function(){
+                                cartItemSync.items = response.items;
+                                cartItemSync.total = response.total;
+                                cartItemSync.count = response.count;
+                            }, 1000);
+
+
                         }
                     },
                     error: function() {

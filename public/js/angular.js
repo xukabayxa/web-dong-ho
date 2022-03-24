@@ -7,6 +7,13 @@ var app = angular.module(
     }
 );
 
+// app.factory('cartItemSync', function($interval) {
+//     var cart = {items: null, total: null};
+//
+//     return cart;
+// });
+
+
 app.run(function($rootScope) {
 
 	$rootScope.calculateTime = function(time) {

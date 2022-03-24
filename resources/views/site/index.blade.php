@@ -32,6 +32,102 @@
         </div>
         <!-- Hero Section End -->
 
+        <style>
+            .tgdh-sale, .banner-cs, .fs-bnord, .section-box, .fs-bxh, .category-container, .main.main-wrapper:before, .main.main-wrapper:after {
+                z-index: 2!important;
+            }
+            .st-cate .cate-box .row-flex {
+                border-radius: 6px;
+            }
+            .main-wrapper .col-border {
+                 border-right: 1px solid rgba(0,0,0,.05);
+                 border-bottom: 1px solid rgba(0,0,0,.05);
+                 -webkit-transition: all .1s ease-in;
+                 -o-transition: all .1s ease-in;
+                 transition: all .1s ease-in;
+             }
+            .col6-no {
+                -ms-flex-preferred-size: calc(100% / 6);
+                flex-basis: calc(100% / 6);
+                width: calc(100% / 6);
+            }
+            .main-wrapper .ct-item-a {
+                display: block;
+                height: 100%;
+            }
+            .st-cate .cate-item {
+                padding: 15px 15px;
+            }
+            .st-cate .cate-item picture {
+                position: relative;
+                display: -webkit-inline-box;
+                display: -ms-inline-flexbox;
+                display: inline-flex;
+                -webkit-box-pack: center;
+                -ms-flex-pack: center;
+                justify-content: center;
+                -webkit-box-align: center;
+                -ms-flex-align: center;
+                align-items: center;
+                border-radius: 50%;
+                background-color: #f4f4f4;
+                width: 95px;
+                height: 95px;
+            }
+            .st-cate .cate-item picture img {
+                position: absolute;
+                right: 0;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                margin: auto;
+                max-width: 60px;
+                max-height: 60px;
+                -o-object-fit: contain;
+                object-fit: contain;
+            }
+            .row-flex {
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -ms-flex-wrap: wrap;
+                flex-wrap: wrap;
+            }
+            .main-wrapper .cate-box {
+                border-radius: 6px;
+                -webkit-box-shadow: 0 0 3px 0 #dee2e6;
+                box-shadow: 0 0 3px 0 #dee2e6;
+            }
+        </style>
+
+        <div class="banner-area section-pt">
+            <div class="container">
+                <div class="tgdh-sale">
+                    <section class="section-box st-cate margin-30"><div class="category-container">
+                            <div class="cate-box">
+                                <div class="row-flex bg-white">
+                                    @foreach($productCategories as $p_cate)
+                                    <div class="col6-no col-border">
+                                        <a href="{{route('front.category_product', $p_cate->slug)}}" class="ct-item-a ct-transition">
+                                            <div class="cate-item text-center">
+                                                <picture class="picture margin-10">
+                                                    <img src="{{$p_cate->image->path ?? null}}" alt="{{$p_cate->name}}">
+                                                </picture>
+                                                <div class="cate-item-name f15-bold">
+                                                    {{$p_cate->name}}
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+
         <!-- Banner Area Start -->
         <div class="banner-area section-pt">
             <div class="container">
@@ -231,7 +327,6 @@
         </div>
 
 
-
         <!-- Modal -->
         <div class="modal fade modal-wrapper" id="modalProductDetail2" >
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -299,7 +394,7 @@
 
 @push('scripts')
     <script>
-        app.controller('indexPage', function ($scope) {
+        app.controller('indexPage', function ($rootScope, $scope, $interval, cartItemSync) {
             $scope.qty = 1;
             $scope.cart = {}
 
@@ -374,6 +469,14 @@
                     success: function (response) {
                         if (response.success) {
                             $.toast('Đã thêm vào giỏ hàng');
+
+                            $interval.cancel($rootScope.promise);
+
+                            $rootScope.promise = $interval(function(){
+                                cartItemSync.items = response.items;
+                                cartItemSync.total = response.total;
+                                cartItemSync.count = response.count;
+                            }, 1000);
                         }
                     },
                     error: function () {

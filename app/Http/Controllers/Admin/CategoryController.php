@@ -29,7 +29,6 @@ class CategoryController extends Controller
 		return view($this->view.'.index', compact('categories'));
 	}
 
-
 	public function nestedSort(Request $request)
     {
         if ($request->ajax()) {

@@ -76,7 +76,7 @@
 
 @push('scripts')
     <script>
-        app.controller('Cart', function ($rootScope, $scope, $http) {
+        app.controller('Cart', function ($rootScope, $scope, $interval, cartItemSync) {
             $scope.items = @json($cartCollection);
             $scope.total = "{{$total}}";
             $scope.checkCart = true;
@@ -106,6 +106,15 @@
                         if (response.success) {
                             $scope.items = response.items;
                             $scope.total = response.total;
+
+                            $interval.cancel($rootScope.promise);
+
+                            $rootScope.promise = $interval(function(){
+                                cartItemSync.items = response.items;
+                                cartItemSync.total = response.total;
+                                cartItemSync.count = response.count;
+                            }, 1000);
+
                             $scope.$applyAsync();
                         }
                     },
@@ -132,6 +141,15 @@
                             if ($scope.total == 0) {
                                 $scope.checkCart = false;
                             }
+
+                            $interval.cancel($rootScope.promise);
+
+                            $rootScope.promise = $interval(function(){
+                                cartItemSync.items = response.items;
+                                cartItemSync.total = response.total;
+                                cartItemSync.count = response.count;
+                            }, 1000);
+
                             $scope.$applyAsync();
                         }
                     },
