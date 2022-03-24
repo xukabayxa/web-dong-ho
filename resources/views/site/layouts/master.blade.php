@@ -50,6 +50,7 @@
 <script src="https://cdn.tutorialjinni.com/jquery-toast-plugin/1.3.2/jquery.toast.js"></script>
 <script src="https://cdn.tutorialjinni.com/jquery-toast-plugin/1.3.2/jquery.toast.min.js"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script>
     app.controller('headerPartial', function ($rootScope, $scope, cartItemSync, $interval) {
         $scope.checkCart = true;
@@ -93,16 +94,16 @@
 
         $scope.search = {};
         $scope.search.category_id = 'all';
-        $scope.searchProduct = function () {
-            var keyword = $('#keyword').val();
+        $("button.btn-search").on("click", function() {
+            var keyword = $(this).parents('form').find('.keyword').val();
 
-            if (keyword.length < 2 || keyword == 'Nhập từ khóa tìm kiếm') {
+            if (keyword.length < 2) {
                 $.toast('Từ khóa phải nhiều hơn 1 ký tự.');
                 return;
             }
 
             location.href = '/tim-kiem?keyword=' + (keyword) + '&category_id=' + $scope.search.category_id;
-        }
+        });
     });
 
     app.factory('cartItemSync', function ($interval) {

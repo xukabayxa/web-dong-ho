@@ -214,6 +214,8 @@ class FrontController extends Controller
         $categories = $categories->map(function($cate) {
             // áp dụng cho category cha
             $cate->child_categories = $this->categoryService->getChildCategory($cate, 1);
+            $cate->products_count = $cate->child_categories->sum('products_count');
+
             return $cate;
         });
 
@@ -243,7 +245,6 @@ class FrontController extends Controller
                 })
                 ->latest()->paginate(9);
         }
-
 
         return view('site.search', compact('categories', 'products', 'viewGrid', 'viewList',
           'categorySlug', 'sort', 'tags', 'minPrice', 'maxPrice', 'keyword', 'category_id'));

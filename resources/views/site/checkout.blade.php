@@ -11,14 +11,10 @@
 
     <!-- breadcrumb-area start -->
     @include('site.partials.bread_crumb', ['type' => '','title' => 'Thanh toán' ])
-
     <!-- breadcrumb-area end -->
 
-    <div class="">
-
-    </div>
     <!-- main-content-wrap start -->
-    <div class="main-content-wrap section-ptb checkout-page" ng-controller="checkOut">
+    <div class="main-content-wrap section-ptb checkout-page" ng-controller="checkOut" ng-cloak>
         <div class="container">
             <!-- checkout-details-wrapper start -->
             <div class="checkout-details-wrapper">

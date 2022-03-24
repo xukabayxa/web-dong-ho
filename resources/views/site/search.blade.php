@@ -27,10 +27,10 @@
                                 <div class="category-sub-menu">
                                     <ul>
                                         @foreach($categories as $category)
-                                            <li class="has-sub"><a href="{{route('front.category_product', $category->slug)}}">{{$category->name}}</a>
+                                            <li class="has-sub"><a href="{{route('front.category_product', $category->slug)}}">{{$category->name}} ({{$category->products_count}})</a>
                                                 <ul>
                                                     @foreach($category->child_categories as $child_category)
-                                                        <li><a href="{{route('front.category_product', $child_category->slug)}}">{{$child_category->name}} (3)</a></li>
+                                                        <li><a href="{{route('front.category_product', $child_category->slug)}}">{{$child_category->name}} ({{$child_category->products_count}})</a></li>
                                                     @endforeach
                                                 </ul>
                                             </li>
@@ -252,7 +252,7 @@
     <script src="https://cdn.tutorialjinni.com/jquery-toast-plugin/1.3.2/jquery.toast.min.js"></script>
 
     <script>
-        app.controller('SearchProducts', function ($scope) {
+        app.controller('SearchProducts', function ($rootScope, $scope, $interval, cartItemSync) {
             $scope.viewGrid = {{$viewGrid}};
             $scope.viewList = null;
             $scope.sort_type = null;
@@ -391,43 +391,7 @@
             // end
 
             // add to cart
-            $scope.addToCart = function (productId = null, qty = null) {
-                if (productId) {
-                    url = url.replace('productId', productId);
-                } else {
-                    url = url.replace('productId', $scope.product.id);
-                }
-
-                if(qty) {
-                    quantity = qty;
-                } else {
-                    quantity =  parseInt($scope.qty)
-                }
-
-                $.ajax({
-                    type: 'POST',
-                    url: url,
-                    headers: {
-                        'X-CSRF-TOKEN': "{{csrf_token()}}"
-                    },
-                    data: {
-                        'qty': quantity
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            $.toast('Đã thêm vào giỏ hàng')
-                        }
-                    },
-                    error: function() {
-                        $.toast('Lỗi')
-                    },
-                    complete: function() {
-                        $scope.$applyAsync();
-                    }
-                });
-
-            }
-
+            @include('site.partials.cart.add_to_cart');
         })
 
     </script>
