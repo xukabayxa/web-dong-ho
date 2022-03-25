@@ -24,8 +24,8 @@ $scope.addToCart = function (productId = null, qty = null) {
         success: function (response) {
             if (response.success) {
                 toastr.options = {
-                    timeOut : 0,
-                    extendedTimeOut : 100,
+                    timeOut : 1000,
+                    extendedTimeOut : 1000,
                     tapToDismiss : true,
                     debug : false,
                     fadeOut: 10,
