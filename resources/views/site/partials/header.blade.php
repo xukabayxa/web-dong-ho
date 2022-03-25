@@ -1,5 +1,5 @@
 <!--  Header Start -->
-<header class="header" ng-controller="headerPartial">
+<header class="header" ng-controller="headerPartial" ng-cloak>
 
     <!-- Header Top Start -->
     <div class="header-top-area d-none d-lg-block text-color-white bg-gren border-bm-1">

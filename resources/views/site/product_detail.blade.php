@@ -311,7 +311,7 @@
                                 fadeOut: 10,
                                 positionClass : "toast-top-center"
                             };
-                            toastr.success('Đã thêm vào giỏ hàng');
+                            toastr.success('Thêm vào giỏ hàng thành công !');
 
                             $interval.cancel($rootScope.promise);
 

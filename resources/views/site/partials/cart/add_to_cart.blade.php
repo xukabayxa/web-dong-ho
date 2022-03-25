@@ -25,13 +25,13 @@ $scope.addToCart = function (productId = null, qty = null) {
             if (response.success) {
                 toastr.options = {
                     timeOut : 0,
-                extendedTimeOut : 100,
-                tapToDismiss : true,
-                debug : false,
-                fadeOut: 10,
-                positionClass : "toast-top-center"
+                    extendedTimeOut : 100,
+                    tapToDismiss : true,
+                    debug : false,
+                    fadeOut: 10,
+                    positionClass : "toast-top-center"
                 };
-            toastr.success('Đã thêm vào giỏ hàng');
+            toastr.success('Thêm vào giỏ hàng thành công !');
         // $.toast('Đã thêm vào giỏ hàng');
             $interval.cancel($rootScope.promise);
 

@@ -43,6 +43,7 @@
 
     <style>
         #toast-container {
+            text-align: center;
             z-index: 9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
         }
 
@@ -52,9 +53,24 @@
             top: 0;
             bottom: 0;
             margin: auto;
-            width: 50px;
+            /*width: 50px;*/
             height: 50px;
+        }
 
+        #toast-container.toast-bottom-center>div, #toast-container.toast-top-center>div {
+            width: 400px;
+            height: 70px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        #toast-container>div{
+            padding: 20px 0 0 0;
+
+        }
+        #toast-container>.toast-success {
+            font-weight: bold;
+            background-color: #cf834f !important;
+            background-image: none !important;
         }
     </style>
 </head>
