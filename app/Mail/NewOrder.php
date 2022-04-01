@@ -40,6 +40,6 @@ class NewOrder extends Mailable
             $title = 'Thông báo đơn hàng mới #';
         }
 
-        return $this->subject($title . $this->data->code)->view('front2.mails.new-order', ['data' => $this->data, 'config' => $this->config, 'type' => $this->type]);
+        return $this->subject($title . $this->data->code)->view('site.mails.new-order', ['data' => $this->data, 'config' => $this->config, 'type' => $this->type]);
     }
 }

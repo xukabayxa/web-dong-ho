@@ -9,8 +9,8 @@
                 <div class="col-12">
                     <!-- breadcrumb-list start -->
                     <ul class="breadcrumb-list">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item active">Checkout Success</li>
+                        <li class="breadcrumb-item"><a href="{{route('front.home_page')}}">Trang chủ</a></li>
+                        <li class="breadcrumb-item active">Đặt hàng thành công</li>
                     </ul>
                     <!-- breadcrumb-list end -->
                 </div>

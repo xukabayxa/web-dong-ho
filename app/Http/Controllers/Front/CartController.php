@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Front;
 
+use App\Mail\NewOrder;
 use App\Model\Admin\Config;
 use App\Model\Admin\Order;
 use App\Model\Admin\OrderDetail;
@@ -155,7 +156,7 @@ class CartController extends Controller
         if ($order) {
             Cache::put($order->code, $order, 5);
             if (Cache::has($order->code)) {
-                return view('front2.checkout_success');
+                return view('site.checkout_success');
             } else {
                 return redirect()->route('homePage');
             }
