@@ -1,8 +1,8 @@
 <!--  Header Start -->
-<header class="header" ng-controller="headerPartial">
+<header class="header" ng-controller="headerPartial" ng-cloak>
 
     <!-- Header Top Start -->
-    <div class="header-top-area d-none d-lg-block text-color-white bg-gren border-bm-1">
+    <div class="header-top-area d-none d-lg-block border-bm-1">
 
         <div class="container">
             <div class="row">
@@ -15,19 +15,18 @@
                 <div class="col-lg-6">
                     <div class="top-info-wrap text-right">
                         <ul class="my-account-container">
-                            <li><a href="{{route('cart')}}">Giỏ hàng</a></li>
-                            <li><a href="{{route('cart.get.checkout')}}">Thanh toán</a></li>
+                            <li><a href="call: {{ $config->hotline }}"><i class="icon-phone" style="font-size: 18px; margin-right: 5px"></i>{{ $config->hotline }}</a></li>
+                            <li><a href="mailto: {{ $config->hotline }}"><i class="icon-envelope-open" style="font-size: 18px; margin-right: 5px"></i>{{ $config->email }}</a></li>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
     <!-- Header Top End -->
 
     <!-- haeader Mid Start -->
-    <div class="haeader-mid-area bg-gren border-bm-1 d-none d-lg-block ">
+    <div class="haeader-mid-area bg-white border-bm-1 d-none d-lg-block ">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-3 col-md-4 col-5">
@@ -62,7 +61,7 @@
                     </div>
                 </div>
                 <div class="col-lg-3">
-                    <div class="right-blok-box text-white d-flex">
+                    <div class="right-blok-box d-flex">
 
                         <div class="user-wrap">
                             <a href="#"><span class="cart-total">2</span> <i class="icon-heart"></i></a>
@@ -110,13 +109,13 @@
     <!-- haeader Mid End -->
 
     <!-- haeader bottom Start -->
-    <div class="haeader-bottom-area bg-gren header-sticky">
+    <div class="haeader-bottom-area bg-white header-sticky">
         <div class="container">
-            <div class="row align-items-center">
+            <div class="row align-items-left">
                 <div class="col-lg-12 d-none d-lg-block">
-                    <div class="main-menu-area white_text">
+                    <div class="main-menu-area green_text">
                         <!--  Start Mainmenu Nav-->
-                        <nav class="main-navigation text-center">
+                        <nav class="main-navigation">
                             <ul>
                                 <li class="active"><a href="{{route('front.home_page')}}">Trang chủ</a>
                                 </li>
@@ -352,4 +351,3 @@
 
 </header>
 <!--  Header Start -->
-

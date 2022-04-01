@@ -10,7 +10,7 @@
     </style>
     <div class="col-sm-8">
         <div class="form-group custom-group mb-4">
-            <label class="form-label required-label">Danh mục cấp cha</label>
+            <label class="form-label">Danh mục cấp cha</label>
             <ui-select class="" remove-selected="true" ng-model="form.parent_id" theme="select2">
                 <ui-select-match placeholder="Chọn danh mục">
                     <% $select.selected.name %>

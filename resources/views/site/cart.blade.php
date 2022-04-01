@@ -7,7 +7,7 @@
     <!-- breadcrumb-area end -->
 
     <!-- main-content-wrap start -->
-    <div class="main-content-wrap section-ptb cart-page" ng-controller="Cart">
+    <div class="main-content-wrap section-ptb cart-page" ng-controller="Cart" ng-cloak>
         <div class="container">
             <div class="row" ng-if="checkCart">
                 <div class="col-12">

@@ -13,7 +13,9 @@
                                 <label class="form-label required-label">Tên khách</label>
                                 <input class="form-control" type="text" name="name" placeholder="Tên khách (*)" ng-model="form.name">
                                 <span class="invalid-feedback d-block" role="alert">
-                                    <strong><% errors.name[0] %></strong>
+                                    <strong>
+                                        <% errors.name[0] %>
+                                    </strong>
                                 </span>
                             </div>
 
@@ -21,7 +23,9 @@
                                 <label class="form-label required-label">Số điện thoại</label>
                                 <input class="form-control" type="text" name="mobile" placeholder="Điện thoại (*)" ng-model="form.mobile">
                                 <span class=" invalid-feedback d-block" role="alert" ng-if="errors && errors.mobile">
-                                    <strong><% errors.mobile[0] %></strong>
+                                    <strong>
+                                        <% errors.mobile[0] %>
+                                    </strong>
                                 </span>
                             </div>
 
@@ -29,7 +33,9 @@
                                 <label class="form-label">Email</label>
                                 <input class="form-control" type="text" name="email" placeholder="Email" ng-model="form.email">
                                 <span class="invalid-feedback d-block" role="alert" ng-if="errors && errors.email">
-                                    <strong><% errors.email[0] %></strong>
+                                    <strong>
+                                        <% errors.email[0] %>
+                                    </strong>
                                 </span>
                             </div>
 
@@ -37,7 +43,9 @@
                                 <label class="form-label">Ngày sinh</label>
                                 <input class="form-control" date type="text" name="birth_day" ng-model="form.birth_day">
                                 <span class="invalid-feedback d-block" role="alert" ng-if="errors && errors.birth_day">
-                                    <strong><% errors.birth_day[0] %></strong>
+                                    <strong>
+                                        <% errors.birth_day[0] %>
+                                    </strong>
                                 </span>
                             </div>
 
@@ -48,7 +56,9 @@
                                     <option value="0">Nữ</option>
                                 </select>
                                 <span class="invalid-feedback d-block" role="alert" ng-if="errors && errors.gender">
-                                    <strong><% errors.gender[0] %></strong>
+                                    <strong>
+                                        <% errors.gender[0] %>
+                                    </strong>
                                 </span>
                             </div>
                         </div>
@@ -58,7 +68,9 @@
                                 <div class="input-group mb-3">
                                     <select class="form-control custom-select" name="customer_group_id" ng-model="form.customer_group_id">
                                         <option value="">Chọn nhóm khách hàng</option>
-                                        <option ng-repeat="g in form.customer_groups" ng-value="g.id" ng-selected="g.id == form.customer_group_id"><% g.name %></option>
+                                        <option ng-repeat="g in form.customer_groups" ng-value="g.id" ng-selected="g.id == form.customer_group_id">
+                                            <% g.name %>
+                                        </option>
                                     </select>
                                     @if(Auth::user()->type == 1)
                                     <div class="input-group-append">
@@ -69,7 +81,9 @@
                                     @endif
                                 </div>
                                 <span class="invalid-feedback d-block" role="alert" ng-if="errors && errors.customer_group_id">
-                                    <strong><% errors.customer_group_id[0] %></strong>
+                                    <strong>
+                                        <% errors.customer_group_id[0] %>
+                                    </strong>
                                 </span>
                             </div>
                             <div class="form-group custom-group">
@@ -83,7 +97,9 @@
                                     </ui-select-choices>
                                 </ui-select>
                                 <span class="invalid-feedback d-block" role="alert" ng-if="errors && errors.province_id">
-                                    <strong><% errors.province_id[0] %></strong>
+                                    <strong>
+                                        <% errors.province_id[0] %>
+                                    </strong>
                                 </span>
                             </div>
                             <div class="form-group custom-group">
@@ -97,7 +113,9 @@
                                     </ui-select-choices>
                                 </ui-select>
                                 <span class="invalid-feedback d-block" role="alert" ng-if="errors && errors.district_id">
-                                    <strong><% errors.district_id[0] %></strong>
+                                    <strong>
+                                        <% errors.district_id[0] %>
+                                    </strong>
                                 </span>
                             </div>
                             <div class="form-group custom-group">
@@ -111,7 +129,9 @@
                                     </ui-select-choices>
                                 </ui-select>
                                 <span class="invalid-feedback d-block" role="alert" ng-if="errors && errors.ward_id">
-                                    <strong><% errors.ward_id[0] %></strong>
+                                    <strong>
+                                        <% errors.ward_id[0] %>
+                                    </strong>
                                 </span>
                             </div>
 
@@ -119,7 +139,9 @@
                                 <label class="form-label">Địa chỉ</label>
                                 <input class="form-control" type="text" name="adress" placeholder="Địa chỉ" ng-model="form.adress">
                                 <span class="invalid-feedback d-block" role="alert" ng-if="errors && errors.adress">
-                                    <strong><% errors.adress[0] %></strong>
+                                    <strong>
+                                        <% errors.adress[0] %>
+                                    </strong>
                                 </span>
                             </div>
                         </div>
@@ -157,7 +179,6 @@
             $scope.form.customer_group_id = response.id;
             $rootScope.$emit("CreateCustomerGroup", response);
         }
-
 
         @include('common.customers.formJs')
          // Submit Form tạo mới
