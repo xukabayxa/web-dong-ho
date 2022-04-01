@@ -34,38 +34,28 @@
                 </div>
                 <div class="col-lg-2 col-md-6 col-sm-6">
                     <div class="widget-footer mt-40">
-                        <h6 class="title-widget">Information</h6>
+                        <h6 class="title-widget">Sản phẩm</h6>
                         <ul class="footer-list">
-                            <li><a href="index.html">Trang chủ</a></li>
-                            <li><a href="about-us.html">About Us</a></li>
-                            <li><a href="contact.html">Quick Contact</a></li>
-                            <li><a href="blog.html">Blog Pages</a></li>
-                            <li><a href="#">Concord History</a></li>
-                            <li><a href="#">Client Feed</a></li>
+                           @foreach($product_categories as $p_cate)
+                                <li><a href="{{route('front.category_product', $p_cate->slug)}}">{{$p_cate->name}}</a></li>
+                            @endforeach
                         </ul>
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-6 col-sm-6">
                     <div class="widget-footer mt-40">
-                        <h6 class="title-widget">Extras</h6>
+                        <h6 class="title-widget">Blog</h6>
                         <ul class="footer-list">
-
-                            <li><a href="#">Concord History</a></li>
-                            <li><a href="#">Client Feed</a></li>
-                            <li><a href="about-us.html">About Us</a></li>
-                            <li><a href="contact.html">Quick Contact</a></li>
-                            <li><a href="blog.html">Blog Pages</a></li>
+                            @foreach($post_categories as $post_cate)
+                            <li><a href="{{route('front.news', $post_cate->slug)}}">{{$post_cate->name}}</a></li>
+                            @endforeach
                         </ul>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <div class="widget-footer mt-40">
-                        <h6 class="title-widget">Get the app</h6>
-                        <p>GreenLife App is now available on Google Play & App Store. Get it now.</p>
-                        <ul class="footer-list">
-                            <li><img src="site/assets/images/brand/img-googleplay.jpg" alt=""></li>
-                            <li><img src="site/assets/images/brand/img-appstore.jpg" alt=""></li>
-                        </ul>
+                        <h6 class="title-widget">Về chúng tôi</h6>
+                        <p>{{$config->web_des}}</p>
                     </div>
                 </div>
             </div>
@@ -77,7 +67,7 @@
             <div class="row align-items-center">
                 <div class="col-lg-6 col-md-6">
                     <div class="copy-left-text">
-                        <p>Copyright &copy; <a href="#">Ruiz</a> 2019. All Right Reserved.</p>
+                        <p>Copyright &copy; <a href="#">DNS</a> 2022. Thegioidongho.com</p>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6">

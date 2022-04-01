@@ -313,9 +313,9 @@
 
                                 <div class="col-lg-5 col-md-7">
                                     <div class="newsletter-footer mb-30">
-                                        <input type="text" placeholder="Your email address...">
+                                        <input type="text" placeholder="Để lại email đăng ký...">
                                         <div class="subscribe-button">
-                                            <button class="subscribe-btn">Subscribe</button>
+                                            <button class="subscribe-btn">Đăng ký</button>
                                         </div>
                                     </div>
                                 </div>

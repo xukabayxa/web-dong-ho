@@ -13,7 +13,6 @@
 
     @include('site.partials.footer')
 
-
 </div>
 
 <!-- Modernizer JS -->
