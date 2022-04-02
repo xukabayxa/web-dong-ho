@@ -82,8 +82,8 @@ class CategoryController extends Controller
 				'name' => 'required|max:255',
 				'short_des' => 'nullable|max:255',
 				'intro' => 'nullable',
-				'image' => 'required|file|mimes:jpg,jpeg,png|max:3000',
-				'banner' => 'nullable|file|mimes:jpg,jpeg,png|max:3000',
+				'image' => 'required|file|mimes:jpg,jpeg,png,webp|max:3000',
+				'banner' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:3000',
 
 			]
 		);
@@ -178,8 +178,8 @@ class CategoryController extends Controller
 				'name' => 'required|max:255',
 				'short_des' => 'nullable|max:255',
 				'intro' => 'nullable',
-				'image' => 'nullable|file|mimes:jpg,jpeg,png|max:3000',
-				'banner' => 'nullable|file|mimes:jpg,jpeg,png|max:3000',
+				'image' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:3000',
+				'banner' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:3000',
 			]
 		);
 		$json = new stdClass();

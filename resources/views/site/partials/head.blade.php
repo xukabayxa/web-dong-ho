@@ -8,8 +8,7 @@
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="/site/assets/images/favicon.ico">
 
-    <!-- CSS
-	============================================ -->
+    <!-- CSS ============================================ -->
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="/site/assets/css/vendor/bootstrap.min.css">

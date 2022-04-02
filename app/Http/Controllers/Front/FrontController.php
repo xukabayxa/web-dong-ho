@@ -56,7 +56,7 @@ class FrontController extends Controller
             'type' => CategorySpecial::PRODUCT,
             'show_home_page' => 1,
         ])->whereNotNull('order_number')->orderBy('order_number')->get();
-
+        // dd($categoriesSpecial)
         // bài viết mới nhất
         $postsRecent = Post::query()->where('status', 1)->latest()->take(3)->get();
 
