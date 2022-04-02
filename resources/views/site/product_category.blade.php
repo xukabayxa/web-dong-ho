@@ -179,7 +179,7 @@
                                                     <!-- single-product-wrap start -->
                                                     <div class="single-product">
                                                         <div class="product-image">
-                                                            <a href="product-details.html"><img
+                                                            <a href="{{route('front.product.detail', $product->slug)}}"><img
                                                                     src="{{$product->image->path ?? '/site/assets/images/product/product-01.png'}}"
                                                                     alt="{{$product->name}}"></a>
                                                         </div>
@@ -190,7 +190,7 @@
                                                 <div class="col-lg-6 col-md-6">
                                                     <div class="product-content-list text-left">
 
-                                                        <h4><a href="product-details.html"
+                                                        <h4><a href="{{route('front.product.detail', $product->slug)}}"
                                                                class="product-name">{{$product->name}}</a></h4>
                                                         <div class="price-box">
                                                             <span
@@ -230,7 +230,7 @@
                                                             </ul>
                                                             <div class="add-to-cart">
                                                                 <div class="product-button-action">
-                                                                    <a href="#" class="add-to-cart">Add to cart</a>
+                                                                    <a href="javascript:void(0)" class="add-to-cart" ng-click="addToCart({{$product->id}},1)">Thêm vào giỏ hàng</a>
                                                                 </div>
                                                             </div>
                                                         </div>
