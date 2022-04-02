@@ -67,7 +67,7 @@
             <div class="row align-items-center">
                 <div class="col-lg-6 col-md-6">
                     <div class="copy-left-text">
-                        <p>Copyright &copy; <a href="#">DNS</a> 2022. Thegioidongho.com</p>
+                        <p>Copyright &copy; <a href="#">DNS</a> 2022. {{ucfirst($_SERVER['HTTP_HOST'])}}</p>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6">

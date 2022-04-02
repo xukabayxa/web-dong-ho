@@ -22,6 +22,18 @@
 			if (this.image) this.image.clear();
 		}
 
+        get favicon() {
+            return this._favicon;
+        }
+
+        set favicon(value) {
+            this._favicon= new Image(value, this);
+        }
+
+        clearFavicon() {
+            if (this.favicon) this.favicon.clear();
+        }
+
         get submit_data() {
 
             let data = {
@@ -46,6 +58,10 @@
             data = jsonToFormData(data);
             let image = this.image.submit_data;
             if (image) data.append('image', image);
+
+            let favicon = this.favicon.submit_data;
+            if (favicon) data.append('favicon', favicon);
+
             return data;
         }
     }

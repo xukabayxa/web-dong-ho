@@ -1,4 +1,7 @@
 @extends('site.layouts.master')
+@section('title')
+    <title>{{ "Tin tức - " . ucfirst($_SERVER['HTTP_HOST']) }}</title>
+@endsection
 @section('content')
     <!-- breadcrumb-area start -->
 

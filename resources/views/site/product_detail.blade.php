@@ -1,4 +1,7 @@
 @extends('site.layouts.master')
+@section('title')
+    <title>{{ $product->name . " - " . ucfirst($_SERVER['HTTP_HOST']) }}</title>
+@endsection
 @section('css')
     <link rel="stylesheet" type="text/css" href="https://cdn.tutorialjinni.com/jquery-toast-plugin/1.3.2/jquery.toast.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.tutorialjinni.com/jquery-toast-plugin/1.3.2/jquery.toast.min.css" />

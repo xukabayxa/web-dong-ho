@@ -16,14 +16,19 @@ class Config extends BaseModel
 
     public function image()
     {
-        return $this->morphOne(File::class, 'model');
+        return $this->morphOne(File::class, 'model')->where('custom_field', 'image');
+    }
+
+    public function favicon()
+    {
+        return $this->morphOne(File::class, 'model')->where('custom_field', 'favicon');
     }
 
     public static function getDataForEdit($id)
     {
         return self::where('id', $id)
             ->with([
-                'image'
+                'image', 'favicon'
                 ])
             ->firstOrFail();
     }

@@ -112,6 +112,29 @@
 						<strong><% errors.image[0] %></strong>
 					</span>
 				</div>
+
+                <div style=""></div>
+
+                <div class="form-group text-center mb-4">
+                    <label class="form-label required-label">Favicon</label>
+                    <div class="main-img-preview">
+                        <p class="help-block-img">* Ảnh định dạng: jpg, png không quá 1MB, kích thước 16x16 </p>
+                        <img class="thumbnail img-preview" ng-src="<% form.favicon.path %>">
+                    </div>
+                    <div class="input-group" style="width: 100%; text-align: center">
+                        <div class="input-group-btn" style="margin: 0 auto">
+                            <div class="fileUpload fake-shadow cursor-pointer">
+                                <label class="mb-0" for="<% form.favicon.element_id %>">
+                                    <i class="glyphicon glyphicon-upload"></i> Chọn ảnh
+                                </label>
+                                <input class="d-none" id="<% form.favicon.element_id %>" type="file" class="attachment_upload" accept=".jpg,.jpeg,.png">
+                            </div>
+                        </div>
+                    </div>
+                    <span class="invalid-feedback d-block" role="alert">
+						<strong><% errors.favicon[0] %></strong>
+					</span>
+                </div>
 			</div>
 		</div>
 	</div>
