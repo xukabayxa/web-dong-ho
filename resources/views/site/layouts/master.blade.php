@@ -2,7 +2,6 @@
 <html lang="vi-vn" xml:lang="vi-vn">
 <head>
     @include('site.partials.head')
-    @yield('css')
 </head>
 <body id="body" ng-app="App">
 

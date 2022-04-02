@@ -149,14 +149,14 @@ class CartController extends Controller
 
     }
 
-    public function checkoutSuccess(Request $request)
+    public function checkoutSuccess($orderCode, Request $request)
     {
-        $order = Order::query()->where('code', $request->code)->first();
+        $order = Order::query()->where('code', $orderCode)->first();
 
         if ($order) {
             Cache::put($order->code, $order, 5);
             if (Cache::has($order->code)) {
-                return view('site.checkout_success');
+                return view('site.checkout_success', compact('order'));
             } else {
                 return redirect()->route('homePage');
             }

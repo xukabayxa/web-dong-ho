@@ -213,7 +213,7 @@
                         if (response.success) {
                             $scope.errors = null;
                             location.reload();
-                            window.location.href = "/dat-hang-thanh-cong?code=" + response.order_code;
+                            window.location.href = "/dat-hang-thanh-cong/" + response.order_code;
 
                             // cart.checkout.success
                         } else {

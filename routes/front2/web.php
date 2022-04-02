@@ -7,7 +7,7 @@ Route::group(['namespace' => 'Front'], function () {
     Route::get('/update-cart','CartController@updateItem')->name('cart.update.item');
     Route::get('/thanh-toan','CartController@checkout')->name('cart.get.checkout');
     Route::post('/checkout','CartController@checkoutSubmit')->name('cart.post.checkout');
-    Route::get('/dat-hang-thanh-cong','CartController@checkoutSuccess')->name('cart.checkout.success');
+    Route::get('/dat-hang-thanh-cong/{orderCode}','CartController@checkoutSuccess')->name('cart.checkout.success');
 
     Route::get('/','FrontController@index')->name('front.home_page');
     Route::get('/shop/{categorySlug?}','FrontController@getCategory')->name('front.category_product');
