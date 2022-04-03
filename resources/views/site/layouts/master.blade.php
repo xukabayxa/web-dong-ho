@@ -50,9 +50,10 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script>
-    app.controller('headerPartial', function ($rootScope, $scope, cartItemSync, $interval) {
+    app.controller('headerPartial', function ($rootScope, $scope, cartItemSync, wishlistSync, $interval) {
         $scope.checkCart = true;
         $scope.cart = cartItemSync;
+        $scope.wishlist = wishlistSync;
 
         $scope.removeItem = function (product_id) {
             $.ajax({
@@ -112,7 +113,14 @@
         cart.total = {{$totalCart}};
 
         return cart;
+    }).factory('wishlistSync', function ($interval) {
+        var productWishlist = {count: null};
+
+        productWishlist.count = {{count($productWishlist)}};
+
+        return productWishlist;
     });
+
 
 </script>
 

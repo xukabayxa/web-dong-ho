@@ -59,7 +59,7 @@ class Handler extends ExceptionHandler
 
         // custom error message
         if ($exception instanceof \ErrorException) {
-            return response()->view('site.error', [], 500);
+            return response()->view('site.error', ['error' => $exception->getMessage()], 500);
         } else {
             return parent::render($request, $exception);
         }

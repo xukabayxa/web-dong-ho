@@ -64,7 +64,7 @@
                     <div class="right-blok-box d-flex">
 
                         <div class="user-wrap">
-                            <a href="#"><span class="cart-total">2</span> <i class="icon-heart"></i></a>
+                            <a href="{{route('cart.wishlist')}}" title="Sản phẩm yêu thích"><span class="cart-total"><% wishlist.count %></span> <i class="icon-heart"></i></a>
                         </div>
 
                         <div class="shopping-cart-wrap">

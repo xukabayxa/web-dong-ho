@@ -41,6 +41,12 @@
 
     @yield('css')
     <style>
+        .single-product-area .product-thumb .action-links a.active-wishlist {
+            background-color: #C71201;
+            color: #fff;
+        }
+    </style>
+    <style>
         #toast-container {
             text-align: center;
             z-index: 9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999

@@ -7,8 +7,8 @@
         <div class="action-links">
             <a href="javascript:void(0)" class="cart-btn" title="Add to Cart" ng-click="addToCart({{$product->id}},1)"><i
                     class="icon-basket-loaded"></i></a>
-{{--            <a href="wishlist.html" class="wishlist-btn" title="Add to Wish List"><i--}}
-{{--                    class="icon-heart"></i></a>--}}
+            <a href="javascript:void(0)" class="wishlist-btn {{in_array($product->id, $productWishlist) ? 'active-wishlist' : ''}}" title="{{in_array($product->id, $productWishlist) ? 'Gỡ khỏi danh sách yêu thích' : 'Thêm vào danh sách yêu thích'}}"><i
+                    class="icon-heart" ng-click="addToWishList($event, {{$product->id}})"></i></a>
             <a href="javascript:void(0)" class="quick-view" title="Quick View"  ng-click="showModalDetail({{$product->id}})"
                ><i class="icon-magnifier icons"></i></a>
         </div>

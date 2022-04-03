@@ -328,7 +328,7 @@
 
 @push('scripts')
     <script>
-        app.controller('indexPage', function ($rootScope, $scope, $interval, cartItemSync) {
+        app.controller('indexPage', function ($rootScope, $scope, $interval, cartItemSync, wishlistSync) {
             $scope.qty = 1;
             $scope.cart = {}
 
@@ -379,6 +379,9 @@
 
             // add to cart
             @include('site.partials.cart.add_to_cart');
+
+            // add to wishlist
+            @include('site.partials.cart.add_to_wishlist');
 
         })
     </script>

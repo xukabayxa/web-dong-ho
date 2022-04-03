@@ -65,5 +65,10 @@ class AppServiceProvider extends ServiceProvider
             'site.layouts.master',
             HeaderComposer::class
         );
+
+        View::composer(
+            'site.partials.single_product',
+            HeaderComposer::class
+        );
     }
 }

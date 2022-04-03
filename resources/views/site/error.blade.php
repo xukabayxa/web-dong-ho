@@ -12,6 +12,7 @@
                     <ul class="breadcrumb-list">
                         <li class="breadcrumb-item"><a href="{{route('front.home_page')}}">Trang chủ</a></li>
                         <li class="breadcrumb-item active">Lỗi</li>
+                        <input type="hidden" value="{{$error}}">
                     </ul>
                     <!-- breadcrumb-list end -->
                 </div>

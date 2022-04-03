@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Validator;
 
 class CartController extends Controller
 {
+    // trang giỏ hàng
     public function index()
     {
         $cartCollection = \Cart::getContent();
@@ -65,6 +66,7 @@ class CartController extends Controller
             'count' => \Cart::getContent()->sum('quantity')]);
     }
 
+    // trang thanh toán
     public function checkout(Request $request) {
         $cartCollection = \Cart::getContent();
         $total = \Cart::getTotal();
@@ -72,6 +74,7 @@ class CartController extends Controller
         return view('site.checkout', compact('cartCollection', 'total'));
     }
 
+    // submit đặt hàng
     public function checkoutSubmit(Request $request)
     {
         DB::beginTransaction();
@@ -149,6 +152,7 @@ class CartController extends Controller
 
     }
 
+    // trả về trang đặt hàng thành công
     public function checkoutSuccess($orderCode, Request $request)
     {
         $order = Order::query()->where('code', $orderCode)->first();
@@ -165,4 +169,56 @@ class CartController extends Controller
         return redirect()->route('homePage');
     }
 
+    // trang sản phẩm yêu thích
+    public function wishList() {
+        $productWishlist = \Cookie::get('productWishList');
+
+        $productWishListArray = json_decode($productWishlist, true);
+
+        if(! $productWishListArray) {
+            $productWishListArray = [];
+        }
+
+        $products = Product::query()->with('image')->whereIn('id', $productWishListArray)->get();
+
+        return view('site.wishlist', compact('products'));
+    }
+
+    // thêm, gỡ sản phẩm yêu thích
+    public function addToWishList($productId, Request $request) {
+        $product = Product::query()->find($productId);
+        $countProductWishList = 1;
+        $message = 'Đã thêm vào danh sách yêu thích';
+
+        $type = 'add';
+
+        $productWishListArray = [];
+
+        if(! $request->cookie('productWishList')) {
+            $collect = collect([$product->id]);
+            $productWishList = cookie()->forever('productWishList', $collect);
+        } else {
+            $productWishList = $request->cookie('productWishList');
+            $productWishListArray = json_decode($productWishList, true);
+
+            if(in_array($product->id, $productWishListArray)) {
+                $productWishListArray = array_filter($productWishListArray, function ($item) use ($product) {
+                    return $item != $product->id;
+                });
+
+                $type = 'remove';
+                $message = 'Đã gỡ khỏi danh sách yêu thích';
+            } else {
+                array_push($productWishListArray, $product->id);
+            }
+
+            $collect = collect(array_unique($productWishListArray));
+            $productWishList = cookie()->forever('productWishList', $collect);
+
+            $countProductWishList = count($productWishListArray);
+        }
+
+        return response()->json(['success' => true, 'message' => $message, 'type' => $type,
+            'countProductWishlist' => $countProductWishList])->withCookie($productWishList);
+    }
 }

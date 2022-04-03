@@ -259,7 +259,7 @@
 @endsection
 @push('scripts')
     <script>
-        app.controller('ListProducts', function ($rootScope, $scope, $interval, cartItemSync) {
+        app.controller('ListProducts', function ($rootScope, $scope, $interval, cartItemSync, wishlistSync) {
             $scope.viewGrid = {{$viewGrid}};
             $scope.viewList = null;
             $scope.sort_type = null;
@@ -408,6 +408,8 @@
             // add to cart
             @include('site.partials.cart.add_to_cart');
 
+            // add to wishlist
+            @include('site.partials.cart.add_to_wishlist');
         })
     </script>
 @endpush

@@ -8,6 +8,8 @@ Route::group(['namespace' => 'Front'], function () {
     Route::get('/thanh-toan','CartController@checkout')->name('cart.get.checkout');
     Route::post('/checkout','CartController@checkoutSubmit')->name('cart.post.checkout');
     Route::get('/dat-hang-thanh-cong/{orderCode}','CartController@checkoutSuccess')->name('cart.checkout.success');
+    Route::post('/{productId}/add-to-wishlist','CartController@addToWishList')->name('cart.add.wishlist');
+    Route::get('/yeu-thich','CartController@wishList')->name('cart.wishlist');
 
     Route::get('/','FrontController@index')->name('front.home_page');
     Route::get('/shop/{categorySlug?}','FrontController@getCategory')->name('front.category_product');
