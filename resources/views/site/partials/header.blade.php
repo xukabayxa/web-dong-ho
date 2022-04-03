@@ -154,7 +154,7 @@
                 </div>
 
                 <div class="col-5 col-md-6 d-block d-lg-none">
-                    <div class="logo"><a href="{{ route('front.homepage') }}"><img src="{{$config->image->path ?? "/site/assets/images/logo/logo.png"}}" alt=""></a></div>
+                    <div class="logo"><a href="{{ route('front.home_page') }}"><img src="{{$config->image->path ?? "/site/assets/images/logo/logo.png"}}" alt=""></a></div>
                 </div>
 
 
