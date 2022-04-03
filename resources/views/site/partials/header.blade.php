@@ -154,12 +154,12 @@
                 </div>
 
                 <div class="col-5 col-md-6 d-block d-lg-none">
-                    <div class="logo"><a href="index.html"><img src="/site/assets/images/logo/logo.png" alt=""></a></div>
+                    <div class="logo"><a href="{{ route('front.homepage') }}"><img src="{{$config->image->path ?? "/site/assets/images/logo/logo.png"}}" alt=""></a></div>
                 </div>
 
 
                 <div class="col-lg-3 col-md-6 col-7 d-block d-lg-none">
-                    <div class="right-blok-box text-white d-flex">
+                    <div class="right-blok-box text-green d-flex">
 
                         <div class="user-wrap">
                             <a href="wishlist.html"><span class="cart-total">2</span> <i class="icon-heart"></i></a>
