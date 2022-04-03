@@ -82,7 +82,7 @@
                         color: $black;
                     }
                     &.pro-addtocart {
-                        // Add To Cart
+                        // Đặt mua hàng
                         & .add-to-cart {
                             position: relative;
                             background-color: #f6f6f6;
@@ -91,7 +91,7 @@
                             display: inline-block;
                             width: 170px;
                             padding: 10px 6px;
-                            transition: all 0.7s; 
+                            transition: all 0.7s;
                             & span {
                                 font-size: 13px;
                                 text-transform: uppercase;
@@ -101,7 +101,7 @@
                                 display: block;
                                 text-align: center;
                             }
-                            
+
                         }
                     }
                     &.pro-remove {

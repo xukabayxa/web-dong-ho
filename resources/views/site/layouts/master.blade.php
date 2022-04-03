@@ -115,8 +115,27 @@
     });
 
 </script>
-
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = 'https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v2.11&appId=288979951594972';
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 @stack('scripts')
+
+@if($config->click_call)
+@include('partial.social.click-call')
+@endif
+
+@if($config->facebook_chat)
+@include('partial.social.facebookchat')
+@endif
+
+@if($config->zalo_chat)
+@include('partial.social.zalo')
+@endif
 
 </body>
 </html>
