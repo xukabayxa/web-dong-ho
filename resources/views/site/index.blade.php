@@ -231,7 +231,7 @@
 {{--        </div>--}}
 {{--        <!-- our-brand-area end -->--}}
 
-        <div class="newletter-area">
+        {{-- <div class="newletter-area">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
@@ -239,7 +239,6 @@
                             <div class="row align-items-center">
                                 <div class="col-lg-7 col-md-12">
                                     <div class="newsletter-title mb-30">
-{{--                                        <h3>Join Our <br><span>Newsletter Now</span></h3>--}}
                                     </div>
                                 </div>
 
@@ -256,7 +255,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
 
         <!-- Modal -->
@@ -375,7 +374,7 @@
             }
             // end
 
-            // add to cart
+            // Đặt mua hàng
             @include('site.partials.cart.add_to_cart');
 
         })

@@ -12,7 +12,7 @@
                             <div class="widget-content mb--20">
                                 <p>Địa chỉ: {{$config->address}}</p>
                                 <p>Phone: <a href="tel:{{$config->zalo}}">{{$config->zalo}}</a></p>
-                                <p>Hotline: <a href="tel:{{$config->zalo}}">{{$config->hotline}}</a></p>
+                                <p>Hotline: <a href="tel:{{$config->hotline}}">{{$config->hotline}}</a></p>
                                 <p>Email: <a href="#">{{$config->email}}</a></p>
                             </div>
                         </div>
@@ -67,13 +67,12 @@
             <div class="row align-items-center">
                 <div class="col-lg-6 col-md-6">
                     <div class="copy-left-text">
-                        <p>Copyright &copy; <a href="#">DNS</a> 2022. Thegioidongho.com</p>
+                        <p>Copyright &copy; <a href="#">SONJAPAN</a> {{ date('Y') }}.</p>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6">
                     <div class="copy-right-image">
-                        <img src="site/assets/images/icon/img-payment.png" alt="">
-
+                        <img src="{{ asset('site/assets/images/icon/img-payment.png') }}" alt="">
                     </div>
                 </div>
             </div>
