@@ -85,7 +85,7 @@ class PostController extends Controller
 				'cate_id' => 'required|exists:post_categories,id',
 				'name' => 'required|unique:posts,name',
 				'status' => 'required|in:0,1',
-				'intro' => 'nullable|max:255',
+				// 'intro' => 'nullable|max:255',
 				'body' => 'required',
 				'image' => 'required|file|mimes:jpg,jpeg,png|max:2000'
 			]
@@ -146,7 +146,7 @@ class PostController extends Controller
 				'cate_id' => 'required|exists:post_categories,id',
 				'name' => 'required|unique:posts,name,'.$id,
 				'status' => 'required|in:0,1',
-				'intro' => 'nullable|max:255',
+				// 'intro' => 'nullable|max:255',
 				'body' => 'required',
 				'image' => 'nullable|file|mimes:jpg,jpeg,png|max:2000'
 			]
