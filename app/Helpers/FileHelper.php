@@ -55,6 +55,7 @@ class FileHelper
             // Type = 4 =>> Danh mục bài viết
             // Type = 5 =>> Logo thương hiệu sản phẩm
             // Type = 6 =>> banners
+            // Type = 7 =>> favicon
 
             if ($type == 1) {
                 Image::make($file)->resize(600, 600)->save($destinationPath . DIRECTORY_SEPARATOR . $destinationFile);
@@ -66,7 +67,9 @@ class FileHelper
                 Image::make($file)->resize(115, 75)->save($destinationPath . DIRECTORY_SEPARATOR . $destinationFile);
             } else if ($type == 6) {
                 Image::make($file)->resize(1920, 700)->save($destinationPath . DIRECTORY_SEPARATOR . $destinationFile);
-            } else {
+            } else if ($type == 7) {
+                Image::make($file)->resize(32, 32)->save($destinationPath . DIRECTORY_SEPARATOR . $destinationFile);
+            }  else {
                 $file->move($destinationPath, $destinationFile);
             }
 

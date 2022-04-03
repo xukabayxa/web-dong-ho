@@ -1,5 +1,7 @@
 @extends('site.layouts.master')
-
+@section('title')
+    <title>{{ "Không tìm thấy yêu cầu - " . ucfirst($_SERVER['HTTP_HOST']) }}</title>
+@endsection
 @section('content')
     <!-- breadcrumb-area start -->
     <div class="breadcrumb-area">

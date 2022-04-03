@@ -1,5 +1,7 @@
 @extends('site.layouts.master')
-
+@section('title')
+    <title>{{ "Giỏ hàng - " . ucfirst($_SERVER['HTTP_HOST']) }}</title>
+@endsection
 @section('content')
     <!-- breadcrumb-area start -->
     @include('site.partials.bread_crumb', ['type' => '','title' => 'Giỏ hàng' ])

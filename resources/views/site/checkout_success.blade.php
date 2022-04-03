@@ -1,5 +1,7 @@
 @extends('site.layouts.master')
-
+@section('title')
+    <title>{{ "Đặt hàng thành công - " . ucfirst($_SERVER['HTTP_HOST']) }}</title>
+@endsection
 @section('css')
     <style>
         .checkout-col {
@@ -130,7 +132,7 @@
                                                     <div class="row align-items-center">
                                                         <div class="col-md-12">
                                                             <div class="newsletter-title mb-30" style="text-align: center">
-                                                                <h4 style="font-size: 17px">Cảm ơn bạn đã mua hàng Thegioidongho.com. Chúng tôi sẽ xác nhận
+                                                                <h4 style="font-size: 17px">Cảm ơn bạn đã mua hàng {{ucfirst($_SERVER['HTTP_HOST'])}}. Chúng tôi sẽ xác nhận
                                                                 và liên hệ với bạn sớm nhất</h4>
                                                             </div>
                                                         </div>

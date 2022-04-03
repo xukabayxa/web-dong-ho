@@ -1,5 +1,7 @@
 @extends('site.layouts.master')
-
+@section('title')
+    <title>{{ "Về chúng tôi - " . ucfirst($_SERVER['HTTP_HOST']) }}</title>
+@endsection
 @section('content')
     @include('site.partials.bread_crumb', ['type' => '','title' => 'Về chúng tôi' ])
 
@@ -134,14 +136,14 @@
                                 </div>
                             </div>
 
-                            <div class="col-lg-5 col-md-7">
-                                <div class="newsletter-footer mb-30">
-                                    <input type="text" placeholder="Để lại email đăng ký...">
-                                    <div class="subscribe-button">
-                                        <button class="subscribe-btn">Đăng ký</button>
-                                    </div>
-                                </div>
-                            </div>
+{{--                            <div class="col-lg-5 col-md-7">--}}
+{{--                                <div class="newsletter-footer mb-30">--}}
+{{--                                    <input type="text" placeholder="Để lại email đăng ký...">--}}
+{{--                                    <div class="subscribe-button">--}}
+{{--                                        <button class="subscribe-btn">Đăng ký</button>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
                         </div>
                     </div>
                 </div>

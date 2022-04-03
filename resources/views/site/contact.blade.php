@@ -1,5 +1,7 @@
 @extends('site.layouts.master')
-
+@section('title')
+    <title>{{ "Liên hệ - " . ucfirst($_SERVER['HTTP_HOST']) }}</title>
+@endsection
 @section('content')
     <!-- breadcrumb-area start -->
     @include('site.partials.bread_crumb', ['type' => '','title' => 'Liên hệ' ])

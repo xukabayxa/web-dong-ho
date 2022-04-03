@@ -37,7 +37,8 @@ class ConfigController extends Controller
 				'email' => 'required|email',
 				'facebook' => 'nullable|max:255',
 				'image' => 'nullable|file|mimes:jpg,jpeg,png|max:3000',
-				'location' => 'nullable|max:255'
+                'favicon' => 'nullable|file|mimes:jpg,jpeg,png|max:3000',
+                'location' => 'nullable|max:255'
 			]
 		);
 
@@ -79,6 +80,13 @@ class ConfigController extends Controller
 				}
 				FileHelper::uploadFile($request->image, 'configs', $object->id, ThisModel::class, 'image',5);
 			}
+
+            if($request->favicon) {
+                if($object->favicon) {
+                    FileHelper::forceDeleteFiles($object->favicon->id, $object->id, ThisModel::class, 'favicon');
+                }
+                FileHelper::uploadFile($request->favicon, 'configs', $object->id, ThisModel::class, 'favicon',7);
+            }
 
 			DB::commit();
 			$json->success = true;

@@ -1,5 +1,7 @@
 @extends('site.layouts.master')
-
+@section('title')
+    <title>{{ ucfirst($_SERVER['HTTP_HOST']) . ' - '. $config->web_title }}</title>
+@endsection
 @section('content')
     <div ng-controller="indexPage">
         <!-- Hero Section Start -->
@@ -242,14 +244,14 @@
                                     </div>
                                 </div>
 
-                                <div class="col-lg-5 col-md-7">
-                                    <div class="newsletter-footer mb-30">
-                                        <input type="text" placeholder="Để lại email đăng ký...">
-                                        <div class="subscribe-button">
-                                            <button class="subscribe-btn">Đăng ký</button>
-                                        </div>
-                                    </div>
-                                </div>
+{{--                                <div class="col-lg-5 col-md-7">--}}
+{{--                                    <div class="newsletter-footer mb-30">--}}
+{{--                                        <input type="text" placeholder="Để lại email đăng ký...">--}}
+{{--                                        <div class="subscribe-button">--}}
+{{--                                            <button class="subscribe-btn">Đăng ký</button>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
                             </div>
                         </div>
                     </div>
