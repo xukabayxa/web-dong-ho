@@ -53,10 +53,6 @@
                     <label class="form-label">Youtube</label>
                     <input class="form-control" ng-model="form.youtube" type="text">
                 </div>
-                <div class="form-group custom-group">
-                    <label class="form-label">Địa chỉ</label>
-                    <input class="form-control" ng-model="form.address" type="text">
-                </div>
 				<div class="form-group custom-group">
 					<label class="form-label required-label">Link map</label>
 					<input class="form-control" ng-model="form.location" type="text">

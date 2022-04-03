@@ -1,258 +1,247 @@
 @extends('site.layouts.master')
 @section('css')
-    <link rel="stylesheet" type="text/css" href="https://cdn.tutorialjinni.com/jquery-toast-plugin/1.3.2/jquery.toast.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.tutorialjinni.com/jquery-toast-plugin/1.3.2/jquery.toast.min.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.tutorialjinni.com/jquery-toast-plugin/1.3.2/jquery.toast.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.tutorialjinni.com/jquery-toast-plugin/1.3.2/jquery.toast.min.css" />
 @endsection
 @section('content')
-    @include('site.partials.bread_crumb', ['type' => '','title' => 'Tìm kiếm' ])
-    <!-- main-content-wrap start -->
-    <div class="main-content-wrap shop-page section-ptb" ng-controller="SearchProducts" style="padding-top: 30px">
-        <div class="container">
-            <div class="row" style="margin-bottom: 10px">
-                <div class="col-lg-12">
-                    <span style="font-size: 14px; font-weight: bold">Tìm thấy {{$products->count()}} kết quả phù hợp với từ khóa "{{$keyword}}"</span>
-                </div>
-
+@include('site.partials.bread_crumb', ['type' => '','title' => 'Tìm kiếm' ])
+<!-- main-content-wrap start -->
+<div class="main-content-wrap shop-page section-ptb" ng-controller="SearchProducts" style="padding-top: 30px">
+    <div class="container">
+        <div class="row" style="margin-bottom: 10px">
+            <div class="col-lg-12">
+                <span style="font-size: 14px; font-weight: bold">Tìm thấy {{$products->count()}} kết quả phù hợp với từ khóa "{{$keyword}}"</span>
             </div>
-            <div class="row">
-                <div class="col-lg-3 order-lg-1 order-2">
-                    <!-- shop-sidebar-wrap start -->
-                    <div class="shop-sidebar-wrap">
-                        <div class="shop-box-area">
 
-                            <!--sidebar-categores-box start  -->
-                            <div class="sidebar-categores-box shop-sidebar mb-30">
-                                <h4 class="title">Danh mục</h4>
-                                <!-- category-sub-menu start -->
-                                <div class="category-sub-menu">
-                                    <ul>
-                                        @foreach($categories as $category)
-                                            <li class="has-sub"><a href="{{route('front.category_product', $category->slug)}}">{{$category->name}} ({{$category->products_count}})</a>
-                                                <ul>
-                                                    @foreach($category->child_categories as $child_category)
-                                                        <li><a href="{{route('front.category_product', $child_category->slug)}}">{{$child_category->name}} ({{$child_category->products_count}})</a></li>
-                                                    @endforeach
-                                                </ul>
-                                            </li>
-                                        @endforeach
+        </div>
+        <div class="row">
+            <div class="col-lg-3 order-lg-1 order-2">
+                <!-- shop-sidebar-wrap start -->
+                <div class="shop-sidebar-wrap">
+                    <div class="shop-box-area">
 
-                                    </ul>
-                                </div>
-                                <!-- category-sub-menu end -->
+                        <!--sidebar-categores-box start  -->
+                        <div class="sidebar-categores-box shop-sidebar mb-30">
+                            <h4 class="title">Danh mục</h4>
+                            <!-- category-sub-menu start -->
+                            <div class="category-sub-menu">
+                                <ul>
+                                    @foreach($categories as $category)
+                                    <li class="has-sub"><a href="{{route('front.category_product', $category->slug)}}">{{$category->name}} ({{$category->products_count}})</a>
+                                        <ul>
+                                            @foreach($category->child_categories as $child_category)
+                                            <li><a href="{{route('front.category_product', $child_category->slug)}}">{{$child_category->name}} ({{$child_category->products_count}})</a></li>
+                                            @endforeach
+                                        </ul>
+                                    </li>
+                                    @endforeach
+
+                                </ul>
                             </div>
-                            <!--sidebar-categores-box end  -->
+                            <!-- category-sub-menu end -->
+                        </div>
+                        <!--sidebar-categores-box end  -->
 
-                            <!-- shop-sidebar start -->
-                            <div class="shop-sidebar mb-30">
-                                <h4 class="title">Lọc theo giá</h4>
-                                <!-- filter-price-content start -->
-                                <div class="filter-price-content">
-                                    <form action="#" method="post">
-                                        <div id="price-slider" class="price-slider"></div>
-                                        <div class="filter-price-wapper">
+                        <!-- shop-sidebar start -->
+                        <div class="shop-sidebar mb-30">
+                            <h4 class="title">Lọc theo giá</h4>
+                            <!-- filter-price-content start -->
+                            <div class="filter-price-content">
+                                <form action="#" method="post">
+                                    <div id="price-slider" class="price-slider"></div>
+                                    <div class="filter-price-wapper">
 
-                                            <a class="add-to-cart-button" ng-click="filterPrice()">
-                                                <span>Lọc</span>
-                                            </a>
-                                            <div class="filter-price-cont">
+                                        <a class="add-to-cart-button" ng-click="filterPrice()">
+                                            <span>Lọc</span>
+                                        </a>
+                                        <div class="filter-price-cont">
 
-                                                <span>Price:</span>
-                                                <div class="input-type">
-                                                    <input type="text" id="min-price" readonly=""  style="width: 90px !important;"/>
-                                                </div>
-                                                <span>—</span>
-                                                <div class="input-type">
-                                                    <input type="text" id="max-price" readonly="" style="width: 90px !important;"/>
-                                                </div>
-
-                                                <input type="hidden" id="min-price-hidden">
-                                                <input type="hidden" id="max-price-hidden">
+                                            <span>Price:</span>
+                                            <div class="input-type">
+                                                <input type="text" id="min-price" readonly="" style="width: 90px !important;" />
                                             </div>
+                                            <span>—</span>
+                                            <div class="input-type">
+                                                <input type="text" id="max-price" readonly="" style="width: 90px !important;" />
+                                            </div>
+
+                                            <input type="hidden" id="min-price-hidden">
+                                            <input type="hidden" id="max-price-hidden">
                                         </div>
-                                    </form>
-                                </div>
-                                <!-- filter-price-content end -->
+                                    </div>
+                                </form>
                             </div>
-                            <!-- shop-sidebar end -->
-
-                            <!-- shop-sidebar start -->
-                        {{--                            <div class="shop-sidebar mb-30">--}}
-                        {{--                                <h4 class="title">Filter by Color</h4>--}}
-
-                        {{--                                <ul class="category-widget-list">--}}
-                        {{--                                    <li><a href="#">Red (1)</a></li>--}}
-                        {{--                                    <li><a href="#">White (1)</a></li>--}}
-                        {{--                                </ul>--}}
-
-                        {{--                            </div>--}}
+                            <!-- filter-price-content end -->
+                        </div>
                         <!-- shop-sidebar end -->
 
-                            <!-- shop-sidebar start -->
-                            <div class="shop-sidebar mb-30">
-                                <h4 class="title">Tags</h4>
+                        <!-- shop-sidebar start -->
+                        {{-- <div class="shop-sidebar mb-30">--}}
+                            {{-- <h4 class="title">Filter by Color</h4>--}}
 
-                                <ul class="sidebar-tag">
-                                    @foreach($tags as $tag)
-                                        <li><a href="#">{{$tag->name}}</a></li>
-                                    @endforeach
-                                </ul>
+                            {{-- <ul class="category-widget-list">--}}
+                                {{-- <li><a href="#">Red (1)</a></li>--}}
+                                {{-- <li><a href="#">White (1)</a></li>--}}
+                                {{-- </ul>--}}
 
+                            {{-- </div>--}}
+                        <!-- shop-sidebar end -->
+
+                        <!-- shop-sidebar start -->
+                        <div class="shop-sidebar mb-30">
+                            <h4 class="title">Tags</h4>
+
+                            <ul class="sidebar-tag">
+                                @foreach($tags as $tag)
+                                <li><a href="#">{{$tag->name}}</a></li>
+                                @endforeach
+                            </ul>
+
+                        </div>
+                        <!-- shop-sidebar end -->
+
+                    </div>
+                </div>
+                <!-- shop-sidebar-wrap end -->
+            </div>
+            <div class="col-lg-9 order-lg-2 order-1">
+
+                <!-- shop-product-wrapper start -->
+                <div class="shop-product-wrapper">
+                    <div class="row align-itmes-center">
+                        <div class="col">
+                            <!-- shop-top-bar start -->
+                            <div class="shop-top-bar">
+                                <!-- product-view-mode start -->
+
+                                <div class="product-mode">
+                                    <!--shop-item-filter-list-->
+                                    <ul class="nav shop-item-filter-list" role="tablist">
+                                        <li class="active"><a class="{{$viewGrid == 'true' ? 'active' : ''}} grid-view" data-toggle="tab" ng-click="chooseView(1)" href="#grid"><i class="fa fa-th"></i></a></li>
+                                        <li><a class="list-view {{$viewList == 'true' ? 'active' : ''}}" data-toggle="tab" href="#list" ng-click="chooseView(2)"><i class="fa fa-th-list"></i></a></li>
+                                    </ul>
+                                    <!-- shop-item-filter-list end -->
+                                </div>
+                                <!-- product-view-mode end -->
+                                <!-- product-short start -->
+                                <div class="product-short">
+                                    <p>Sắp xếp theo :</p>
+                                    <select class="nice-select" name="sortby" ng-change="sortBy()" ng-model="sort_type">
+                                        <option value="lasted" {{'lasted'==$sort ? 'selected' : '' }}>Mới nhất</option>
+                                        <option value="priceAsc" {{'priceAsc'==$sort ? 'selected' : '' }}>Giá (từ thấp đến cao)</option>
+                                        <option value="priceDesc" {{'priceDesc'==$sort ? 'selected' : '' }}>Giá (từ cao đến thấp)</option>
+                                    </select>
+                                </div>
+                                <!-- product-short end -->
                             </div>
-                            <!-- shop-sidebar end -->
-
+                            <!-- shop-top-bar end -->
                         </div>
                     </div>
-                    <!-- shop-sidebar-wrap end -->
-                </div>
-                <div class="col-lg-9 order-lg-2 order-1">
 
-                    <!-- shop-product-wrapper start -->
-                    <div class="shop-product-wrapper">
-                        <div class="row align-itmes-center">
-                            <div class="col">
-                                <!-- shop-top-bar start -->
-                                <div class="shop-top-bar">
-                                    <!-- product-view-mode start -->
-
-                                    <div class="product-mode">
-                                        <!--shop-item-filter-list-->
-                                        <ul class="nav shop-item-filter-list" role="tablist">
-                                            <li class="active"><a class="{{$viewGrid == 'true' ? 'active' : ''}} grid-view"
-                                                                  data-toggle="tab" ng-click="chooseView(1)"
-                                                                  href="#grid"><i class="fa fa-th"></i></a></li>
-                                            <li><a class="list-view {{$viewList == 'true' ? 'active' : ''}}" data-toggle="tab"
-                                                   href="#list" ng-click="chooseView(2)"><i
-                                                        class="fa fa-th-list"></i></a></li>
-                                        </ul>
-                                        <!-- shop-item-filter-list end -->
-                                    </div>
-                                    <!-- product-view-mode end -->
-                                    <!-- product-short start -->
-                                    <div class="product-short">
-                                        <p>Sắp xếp theo :</p>
-                                        <select class="nice-select" name="sortby" ng-change="sortBy()"
-                                                ng-model="sort_type"
-                                        >
-                                            <option value="lasted" {{'lasted' == $sort ? 'selected' : ''}}>Mới nhất</option>
-                                            <option value="priceAsc" {{'priceAsc' == $sort ? 'selected' : ''}}>Giá (từ thấp đến cao)</option>
-                                            <option value="priceDesc" {{'priceDesc' == $sort ? 'selected' : ''}}>Giá (từ cao đến thấp)</option>
-                                        </select>
-                                    </div>
-                                    <!-- product-short end -->
-                                </div>
-                                <!-- shop-top-bar end -->
-                            </div>
-                        </div>
-
-                        <!-- shop-products-wrap start -->
-                        <div class="shop-products-wrap">
-                            <div class="tab-content">
-                                <div class="tab-pane {{$viewGrid == 'true' ? 'active' : ''}}" id="grid">
-                                    <div class="shop-product-wrap">
-                                        <div class="row">
-                                            @foreach($products as $product)
-                                                <div class="col-lg-4 col-md-6">
-                                                    <!-- single-product-area start -->
-                                                @include('site.partials.single_product', ['product' => $product])
-                                                <!-- single-product-area end -->
-                                                </div>
-                                            @endforeach
+                    <!-- shop-products-wrap start -->
+                    <div class="shop-products-wrap">
+                        <div class="tab-content">
+                            <div class="tab-pane {{$viewGrid == 'true' ? 'active' : ''}}" id="grid">
+                                <div class="shop-product-wrap">
+                                    <div class="row">
+                                        @foreach($products as $product)
+                                        <div class="col-lg-4 col-md-6">
+                                            <!-- single-product-area start -->
+                                            @include('site.partials.single_product', ['product' => $product])
+                                            <!-- single-product-area end -->
                                         </div>
+                                        @endforeach
                                     </div>
                                 </div>
-                                <div class="tab-pane  {{$viewList == 'true' ? 'active' : ''}}" id="list">
-                                    @foreach($products as $product)
-                                        <div class="shop-product-list-wrap">
-                                            <div class="row product-layout-list mt-30">
-                                                <div class="col-lg-3 col-md-3">
-                                                    <!-- single-product-wrap start -->
-                                                    <div class="single-product">
-                                                        <div class="product-image">
-                                                            <a href="product-details.html"><img
-                                                                    src="{{$product->image->path ?? '/site/assets/images/product/product-01.png'}}"
-                                                                    alt="{{$product->name}}"></a>
-                                                        </div>
-                                                    </div>
-                                                    <!-- single-product-wrap end -->
+                            </div>
+                            <div class="tab-pane  {{$viewList == 'true' ? 'active' : ''}}" id="list">
+                                @foreach($products as $product)
+                                <div class="shop-product-list-wrap">
+                                    <div class="row product-layout-list mt-30">
+                                        <div class="col-lg-3 col-md-3">
+                                            <!-- single-product-wrap start -->
+                                            <div class="single-product">
+                                                <div class="product-image">
+                                                    <a href="product-details.html"><img src="{{$product->image->path ?? '/site/assets/images/product/product-01.png'}}" alt="{{$product->name}}"></a>
+                                                </div>
+                                            </div>
+                                            <!-- single-product-wrap end -->
+                                        </div>
+
+                                        <div class="col-lg-6 col-md-6">
+                                            <div class="product-content-list text-left">
+
+                                                <h4><a href="product-details.html" class="product-name">{{$product->name}}</a></h4>
+                                                <div class="price-box">
+                                                    <span class="new-price">{{number_format($product->price)}}đ</span>
+                                                    @if($product->base_price)
+                                                    <span class="old-price">{{number_format($product->base_price)}}đ</span>
+                                                    @endif
                                                 </div>
 
-                                                <div class="col-lg-6 col-md-6">
-                                                    <div class="product-content-list text-left">
-
-                                                        <h4><a href="product-details.html"
-                                                               class="product-name">{{$product->name}}</a></h4>
-                                                        <div class="price-box">
-                                                            <span
-                                                                class="new-price">{{number_format($product->price)}}đ</span>
-                                                            @if($product->base_price)
-                                                                <span class="old-price">{{number_format($product->base_price)}}đ</span>
-                                                            @endif
-                                                        </div>
-
-                                                        <div class="product-rating">
-                                                            {{--                                                            <ul class="d-flex">--}}
-                                                            {{--                                                                <li><a href="#"><i class="icon-star"></i></a></li>--}}
-                                                            {{--                                                                <li><a href="#"><i class="icon-star"></i></a></li>--}}
-                                                            {{--                                                                <li><a href="#"><i class="icon-star"></i></a></li>--}}
-                                                            {{--                                                                <li><a href="#"><i class="icon-star"></i></a></li>--}}
-                                                            {{--                                                                <li class="bad-reting"><a href="#"><i class="icon-star"></i></a></li>--}}
-                                                            {{--                                                            </ul>--}}
-                                                        </div>
-
-                                                        <p>{{$product->short_des}}</p>
-                                                    </div>
+                                                <div class="product-rating">
+                                                    {{-- <ul class="d-flex">--}}
+                                                        {{-- <li><a href="#"><i class="icon-star"></i></a></li>--}}
+                                                        {{-- <li><a href="#"><i class="icon-star"></i></a></li>--}}
+                                                        {{-- <li><a href="#"><i class="icon-star"></i></a></li>--}}
+                                                        {{-- <li><a href="#"><i class="icon-star"></i></a></li>--}}
+                                                        {{-- <li class="bad-reting"><a href="#"><i class="icon-star"></i></a></li>--}}
+                                                        {{-- </ul>--}}
                                                 </div>
 
-                                                <div class="col-lg-3 col-md-3">
-                                                    <div class="block2">
-                                                        <ul class="stock-cont">
-                                                            {{--                                                            <li class="product-sku">Sku: <span>P006</span></li>--}}
-                                                            <li class="product-stock-status">Tình trạng: <span
-                                                                    class="in-stock">Còn hàng</span></li>
-                                                        </ul>
-                                                        <div class="product-button">
+                                                <p>{{$product->short_des}}</p>
+                                            </div>
+                                        </div>
 
-                                                            <ul class="actions">
-                                                                <li class="add-to-wishlist">
-                                                                    {{--                                                                    <a href="wishlist.html" class="add_to_wishlist"><i class="icon-heart"></i> Add to Wishlist</a>--}}
-                                                                </li>
-                                                            </ul>
-                                                            <div class="add-to-cart">
-                                                                <div class="product-button-action">
-                                                                    <a href="#" class="add-to-cart">Add to cart</a>
-                                                                </div>
-                                                            </div>
+                                        <div class="col-lg-3 col-md-3">
+                                            <div class="block2">
+                                                <ul class="stock-cont">
+                                                    {{-- <li class="product-sku">Sku: <span>P006</span></li>--}}
+                                                    <li class="product-stock-status">Tình trạng: <span class="in-stock">Còn hàng</span></li>
+                                                </ul>
+                                                <div class="product-button">
+
+                                                    <ul class="actions">
+                                                        <li class="add-to-wishlist">
+                                                            {{-- <a href="wishlist.html" class="add_to_wishlist"><i class="icon-heart"></i> Add to Wishlist</a>--}}
+                                                        </li>
+                                                    </ul>
+                                                    <div class="add-to-cart">
+                                                        <div class="product-button-action">
+                                                            <a href="#" class="add-to-cart">Đặt mua hàng</a>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    @endforeach
-
+                                    </div>
                                 </div>
+                                @endforeach
+
                             </div>
                         </div>
-                        <!-- shop-products-wrap end -->
+                    </div>
+                    <!-- shop-products-wrap end -->
 
-                        <!-- paginatoin-area start -->
+                    <!-- paginatoin-area start -->
                     {{ $products->links('site.pagination.paginate2') }}
                     <!-- paginatoin-area end -->
-                    </div>
-                    <!-- shop-product-wrapper end -->
                 </div>
+                <!-- shop-product-wrapper end -->
             </div>
         </div>
-
     </div>
-    <!-- main-content-wrap end -->
+
+</div>
+<!-- main-content-wrap end -->
 @endsection
 
 @push('scripts')
-    <script src="https://cdn.tutorialjinni.com/jquery-toast-plugin/1.3.2/jquery.toast.js"></script>
-    <script src="https://cdn.tutorialjinni.com/jquery-toast-plugin/1.3.2/jquery.toast.min.js"></script>
+<script src="https://cdn.tutorialjinni.com/jquery-toast-plugin/1.3.2/jquery.toast.js"></script>
+<script src="https://cdn.tutorialjinni.com/jquery-toast-plugin/1.3.2/jquery.toast.min.js"></script>
 
-    <script>
-        app.controller('SearchProducts', function ($rootScope, $scope, $interval, cartItemSync) {
+<script>
+    app.controller('SearchProducts', function ($rootScope, $scope, $interval, cartItemSync) {
             $scope.viewGrid = {{$viewGrid}};
             $scope.viewList = null;
             $scope.sort_type = null;
@@ -390,9 +379,9 @@
             }
             // end
 
-            // add to cart
+            // Đặt mua hàng
             @include('site.partials.cart.add_to_cart');
         })
 
-    </script>
+</script>
 @endpush

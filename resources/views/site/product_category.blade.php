@@ -330,7 +330,6 @@
                     style: 'currency',
                     currency: 'VND'
                 }).format($("#price-slider").slider("values", 1)));
-
                 $("#min-price-hidden").val($("#price-slider").slider("values", 0));
                 $("#max-price-hidden").val($("#price-slider").slider("values", 1));
             });
@@ -412,4 +411,5 @@
             @include('site.partials.cart.add_to_wishlist');
         })
     </script>
+
 @endpush
