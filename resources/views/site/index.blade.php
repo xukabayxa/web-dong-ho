@@ -1,5 +1,7 @@
 @extends('site.layouts.master')
-
+@section('title')
+    <title>{{ ucfirst($_SERVER['HTTP_HOST']) . ' - '. $config->web_title }}</title>
+@endsection
 @section('content')
     <div ng-controller="indexPage">
         <!-- Hero Section Start -->
@@ -231,7 +233,7 @@
 {{--        </div>--}}
 {{--        <!-- our-brand-area end -->--}}
 
-        <div class="newletter-area">
+        {{-- <div class="newletter-area">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
@@ -239,24 +241,23 @@
                             <div class="row align-items-center">
                                 <div class="col-lg-7 col-md-12">
                                     <div class="newsletter-title mb-30">
-{{--                                        <h3>Join Our <br><span>Newsletter Now</span></h3>--}}
                                     </div>
                                 </div>
 
-                                <div class="col-lg-5 col-md-7">
-                                    <div class="newsletter-footer mb-30">
-                                        <input type="text" placeholder="Để lại email đăng ký...">
-                                        <div class="subscribe-button">
-                                            <button class="subscribe-btn">Đăng ký</button>
-                                        </div>
-                                    </div>
-                                </div>
+{{--                                <div class="col-lg-5 col-md-7">--}}
+{{--                                    <div class="newsletter-footer mb-30">--}}
+{{--                                        <input type="text" placeholder="Để lại email đăng ký...">--}}
+{{--                                        <div class="subscribe-button">--}}
+{{--                                            <button class="subscribe-btn">Đăng ký</button>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
 
         <!-- Modal -->
@@ -375,7 +376,7 @@
             }
             // end
 
-            // add to cart
+            // Đặt mua hàng
             @include('site.partials.cart.add_to_cart');
 
         })
