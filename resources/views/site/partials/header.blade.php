@@ -131,13 +131,10 @@
                                                 </ul>
                                             </li>
                                         @endforeach
-
                                     </ul>
-
                                 </li>
 
                                 <li><a href="#">Blog <i class="fa fa-angle-down"></i></a>
-
                                     <ul class="sub-menu">
                                         @foreach($postCategories as $postCategory)
                                         <li><a href="{{route('front.news', $postCategory->slug)}}">{{$postCategory->name}}</a></li>
@@ -162,51 +159,39 @@
                     <div class="right-blok-box text-green d-flex">
 
                         <div class="user-wrap">
-                            <a href="wishlist.html"><span class="cart-total">2</span> <i class="icon-heart"></i></a>
+
+                            <a href="{{route('cart.wishlist')}}" title="Sản phẩm yêu thích"><span class="cart-total"><% wishlist.count %></span> <i class="icon-heart"></i></a>
                         </div>
 
                         <div class="shopping-cart-wrap">
-                            <a href="#"><i class="icon-basket-loaded"></i><span class="cart-total">2</span></a>
-                            <ul class="mini-cart">
-                                <li class="cart-item">
+                            <a href="#"><i class="icon-basket-loaded"></i><span class="cart-total"><% cart.count %></span></a>
+                            <ul class="mini-cart" ng-if="checkCart">
+                                <li class="cart-item" ng-repeat="item in cart.items">
                                     <div class="cart-image">
-                                        <a href="product-details.html"><img alt="" src="/site/assets/images/product/product-02.png"></a>
+                                        <a href=""><img alt="" src="<% item.attributes.image %>"></a>
                                     </div>
                                     <div class="cart-title">
-                                        <a href="product-details.html">
-                                            <h4>Product Name 01</h4>
+                                        <a href="">
+                                            <h4><% item.name %></h4>
                                         </a>
                                         <div class="quanti-price-wrap">
-                                            <span class="quantity">1 ×</span>
-                                            <div class="price-box"><span class="new-price">$130.00</span></div>
+                                            <span class="quantity"><% item.quantity %> ×</span>
+                                            <div class="price-box"><span class="new-price"><% item.price | number %></span></div>
                                         </div>
-                                        <a class="remove_from_cart" href="#"><i class="fa fa-times"></i></a>
+                                        <a class="remove_from_cart" ng-click="removeItem(item.id)"><i class="icon_close"></i></a>
                                     </div>
                                 </li>
-                                <li class="cart-item">
-                                    <div class="cart-image">
-                                        <a href="product-details.html"><img alt="" src="/site/assets/images/product/product-03.png"></a>
-                                    </div>
-                                    <div class="cart-title">
-                                        <a href="product-details.html">
-                                            <h4>Product Name 03</h4>
-                                        </a>
-                                        <div class="quanti-price-wrap">
-                                            <span class="quantity">1 ×</span>
-                                            <div class="price-box"><span class="new-price">$130.00</span></div>
-                                        </div>
-                                        <a class="remove_from_cart" href="#"><i class="icon-trash icons"></i></a>
-                                    </div>
-                                </li>
+
                                 <li class="subtotal-box">
                                     <div class="subtotal-title">
-                                        <h3>Sub-Total :</h3><span>$ 260.99</span>
+                                        <h3>Tổng :</h3><span><% cart.total | number %> đ</span>
                                     </div>
                                 </li>
+
                                 <li class="mini-cart-btns">
                                     <div class="cart-btns">
-                                        <a href="cart.html">View cart</a>
-                                        <a href="checkout.html">Checkout</a>
+                                        <a href="{{route('cart')}}">Giỏ hàng</a>
+                                        <a href="{{route('cart.get.checkout')}}">Thanh toán</a>
                                     </div>
                                 </li>
                             </ul>
@@ -220,8 +205,6 @@
 
                     </div>
                 </div>
-
-
 
             </div>
         </div>

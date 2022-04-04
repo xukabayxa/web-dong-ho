@@ -45,6 +45,12 @@
             background-color: #C71201;
             color: #fff;
         }
+
+        @media only screen and (max-width: 768px) {
+            .action-links {
+                display: none;
+            }
+        }
     </style>
     <style>
         #toast-container {

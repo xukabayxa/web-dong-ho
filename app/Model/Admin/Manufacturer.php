@@ -25,14 +25,10 @@ class Manufacturer extends BaseModel
     public function products() {
         return $this->hasMany(Product::class, 'manufacturer_id');
     }
+
     public function user()
     {
         return $this->belongsTo(User::class, 'created_by', 'id');
-    }
-
-    public function category()
-    {
-        return $this->belongsTo(Category::class, 'category_id');
     }
 
     public function image()
@@ -44,7 +40,7 @@ class Manufacturer extends BaseModel
     {
         $result = self::with([
             'user',
-        ]);
+        ])->withCount('products');
 
         if (!empty($request->name)) {
             $result = $result->where('name', 'like', '%' . $request->name . '%');
@@ -56,7 +52,7 @@ class Manufacturer extends BaseModel
 
     public static function getForSelect()
     {
-        return self::select(['id', 'name', 'code', 'category_id'])
+        return self::select(['id', 'name', 'code'])
             ->orderBy('name', 'ASC')
             ->get();
     }

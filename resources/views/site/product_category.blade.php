@@ -254,6 +254,9 @@
             </div>
         </div>
 
+        <!-- Modal -->
+        @include('site.partials.product_detail_modal_2')
+
     </div>
     <!-- main-content-wrap end -->
 @endsection

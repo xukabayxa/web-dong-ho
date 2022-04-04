@@ -20,7 +20,7 @@ class FooterComposer
         $config = Config::query()->get()->first();
         $policies = Policy::query()->where('status', true)->latest()->get();
 
-        $productCategories = Category::query()->with(['childs', 'manufacturers'])
+        $productCategories = Category::query()->with(['childs'])
             ->where(['type' => 1, 'parent_id' => 0, 'show_home_page' => 1])
             ->orderBy('sort_order')
             ->get();

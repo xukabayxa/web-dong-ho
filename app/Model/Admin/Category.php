@@ -84,10 +84,10 @@ class Category extends BaseModel
         return $this->hasMany('App\Model\Admin\Product', 'cate_id', 'id')->orderBy('created_at', 'desc');
     }
 
-    public function manufacturers()
-    {
-        return $this->hasMany(Manufacturer::class, 'category_id');
-    }
+//    public function manufacturers()
+//    {
+//        return $this->hasMany(Manufacturer::class, 'category_id');
+//    }
 
     public function scopeParent($query) {
         return $query->where('parent_id', 0);

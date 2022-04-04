@@ -20,20 +20,20 @@
                 </div>
             </div>
 
-            <div class="col-md-12 col-sm-12 col-xs-12">
-                <div class="form-group custom-group">
-                    <label class="form-label">Danh mục</label>
-                    <select class="form-control" ng-model="form.category_id">
-                        <option value="">Chọn danh mục</option>
-                        <option ng-repeat="c in categories" ng-value="c.id" ng-selected="c.id == form.category_id">
-                            <% c.name %>
-                        </option>
-                    </select>
-                    <span class="invalid-feedback d-block" role="alert">
-                <strong><% errors.category_id[0] %></strong>
-                         </span>
-                </div>
-            </div>
+{{--            <div class="col-md-12 col-sm-12 col-xs-12">--}}
+{{--                <div class="form-group custom-group">--}}
+{{--                    <label class="form-label">Danh mục</label>--}}
+{{--                    <select class="form-control" ng-model="form.category_id">--}}
+{{--                        <option value="">Chọn danh mục</option>--}}
+{{--                        <option ng-repeat="c in categories" ng-value="c.id" ng-selected="c.id == form.category_id">--}}
+{{--                            <% c.name %>--}}
+{{--                        </option>--}}
+{{--                    </select>--}}
+{{--                    <span class="invalid-feedback d-block" role="alert">--}}
+{{--                <strong><% errors.category_id[0] %></strong>--}}
+{{--                         </span>--}}
+{{--                </div>--}}
+{{--            </div>--}}
 
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <label class="form-label">Ảnh đại diện</label>

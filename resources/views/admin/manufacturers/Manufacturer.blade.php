@@ -27,7 +27,7 @@
             let data = {
                 name: this.name,
                 code: this.code,
-                category_id: this.category_id,
+                // category_id: this.category_id,
             }
             data = jsonToFormData(data);
 

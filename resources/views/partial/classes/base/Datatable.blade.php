@@ -94,7 +94,7 @@
                 }
             })
 
-            if (options.search_by_time || has_column_search || options.create_link) {
+            if (options.search_by_time || has_column_search || options.create_link || options.act) {
                 html += `<div class="col-md-3 mb-3">`;
                 if (options.search_by_time || has_column_search) {
                     html += `<button class="btn btn-primary search-button mr-1"><i class="fa fa-search"></i></button>
@@ -107,6 +107,13 @@
                     html += `<a class="btn btn-info" href="javascript:void(0)" data-toggle="modal" data-target="#${options.create_modal}">
                         <i class="fa fa-plus"></i> Tạo mới
                     </a>`;
+                }
+                if (options.act) {
+                    html += `
+                    <button class="btn btn-info dropdown-toggle btn-remove-product" type="button"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Thao tác
+                     <div class="dropdown-menu"><a href="" title="" class="dropdown-item act-remove-product" onclick="removeProductArr();">Xóa</a></div>
+                    </button>`;
                 }
                 html += `</div>`;
             }

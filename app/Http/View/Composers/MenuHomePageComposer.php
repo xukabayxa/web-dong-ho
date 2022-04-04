@@ -15,7 +15,7 @@ class MenuHomePageComposer
      */
     public function compose(View $view)
     {
-        $productCategories = Category::query()->with(['childs', 'manufacturers'])
+        $productCategories = Category::query()->with(['childs'])
             ->where(['type' => 1, 'parent_id' => 0])
             ->orderBy('sort_order')
             ->get();

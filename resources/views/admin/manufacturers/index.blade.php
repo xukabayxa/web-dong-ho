@@ -1,6 +1,8 @@
 @extends('layouts.main')
 
 @section('css')
+    <link type="text/css" href="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/css/dataTables.checkboxes.css"
+          rel="stylesheet"/>
 @endsection
 
 @section('page_title')
@@ -37,6 +39,10 @@ Quản lý danh mục hãng sản xuất
 @endsection
 
 @section('script')
+
+    <script type="text/javascript"
+            src="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/js/dataTables.checkboxes.min.js"></script>
+
 @include('admin.manufacturers.Manufacturer')
 <script>
     let datatable = new DATATABLE('table-list', {
@@ -46,12 +52,24 @@ Quản lý danh mục hãng sản xuất
                 DATATABLE.mergeSearch(d, context);
             }
         },
+        columnDefs: [
+            {
+                'targets': 0,
+                'checkboxes': {
+                    'selectRow': true
+                }
+            }
+        ],
+        select: {
+            'style': 'multi'
+        },
         columns: [
+            {data: 'id', orderable: false},
             {data: 'DT_RowIndex', orderable: false, title: "STT", className: "text-center"},
             {data: 'code', title: 'Mã'},
             {data: 'name', title: 'Tên hãng sản xuất'},
-            {data: 'category', title: 'Danh mục'},
             {data: 'image', title: 'Ảnh đại diện'},
+            {data: 'products', title: 'Sản phẩm'},
             {data: 'updated_at', title: 'Ngày cập nhật'},
             {data: 'updated_by', title: 'Người cập nhật'},
             {data: 'action', orderable: false, title: "Hành động"}
@@ -59,6 +77,7 @@ Quản lý danh mục hãng sản xuất
         search_columns: [
             {data: 'name', search_type: "text", placeholder: "Tên hãng"},
         ],
+        act: true,
     }).datatable;
 
     createReviewCallback = (response) => {
@@ -107,6 +126,53 @@ Quản lý danh mục hãng sản xuất
 
     })
 
+    function removeProductArr() {
+        var manufacturers_remove_ids = [];
+        var rows_selected = datatable.column(0).checkboxes.selected();
+
+        $.each(rows_selected, function (index, rowId) {
+            manufacturers_remove_ids.push(rowId);
+        });
+
+        if(manufacturers_remove_ids.length == 0) {
+            toastr.warning("Chưa có sản phẩm nào được chọn");
+            return;
+        }
+
+        var manu_ids = manufacturers_remove_ids.join(',');
+
+        swal({
+            title: "Xác nhận xóa!",
+            text: "Bạn chắc chắn muốn xóa "+manufacturers_remove_ids.length+" sản phẩm",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "Xác nhận",
+            cancelButtonText: "Hủy",
+            closeOnConfirm: false
+        }, function(isConfirm) {
+            if (isConfirm) {
+                $.ajax({
+                    type: 'GET',
+                    url: "/admin/manufacturers/check-act-delete/?manu_ids="+manu_ids,
+                    success: function(response) {
+                        if (response.check) {
+                            window.location.href = "{{route('manufacturers.delete.multi')}}?manu_ids="+manu_ids;
+                        } else {
+                            toastr.warning("Tồn tại hãng sản xuất có sản phẩm, không thể xóa !");
+                        }
+                    },
+                    error: function(e) {
+                        toastr.error('Đã có lỗi xảy ra');
+                    },
+                    complete: function() {
+                    }
+                });
+
+                {{--window.location.href = "{{route('manufacturers.delete.multi')}}?manu_ids="+manu_ids;--}}
+            }
+        })
+    }
 
     $(document).on('click', '.export-button', function(event) {
         event.preventDefault();

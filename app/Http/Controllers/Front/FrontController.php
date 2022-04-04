@@ -52,7 +52,9 @@ class FrontController extends Controller
     public function index()
     {
         $banners = Banner::query()->latest()->get();
-        $categoriesSpecial = CategorySpecial::query()->with('products')->where([
+        $categoriesSpecial = CategorySpecial::query()->with(['products' => function($q) {
+            $q->with('manufacturer');
+        }])->where([
             'type' => CategorySpecial::PRODUCT,
             'show_home_page' => 1,
         ])->whereNotNull('order_number')->orderBy('order_number')->get();
@@ -116,7 +118,7 @@ class FrontController extends Controller
         $json = new stdclass();
         $json->success = true;
         $json->data = $product;
-        $json->html = view('site.partials.product_detail_modal', ['product' => $product])->render();
+        $json->html = view('site.partials.product_detail_thumbnail_modal', ['product' => $product])->render();
 
         return Response::json($json);
     }
@@ -193,8 +195,6 @@ class FrontController extends Controller
 
         return view('site.news_detail', compact('post', 'postsRecent', 'postsRelated', 'categories'));
     }
-
-
 
     /**
      * trang danh mục sản phẩm

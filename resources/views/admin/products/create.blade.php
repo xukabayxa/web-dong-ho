@@ -27,8 +27,7 @@
             $scope.tags = @json($tags);
             $scope.arrayInclude = arrayInclude;
             $scope.loading = {};
-            $scope.manufacturers = {};
-            let manufacturers = @json(\App\Model\Admin\Manufacturer::getForSelect());
+            $scope.manufacturers = @json(\App\Model\Admin\Manufacturer::getForSelect());
 
             $scope.form = new Product({}, {scope: $scope});
 
@@ -63,27 +62,6 @@
                 });
             }
 
-            $scope.changeCategory = function (cate_id) {
-                $.ajax({
-                    type: 'GET',
-                    url: "{!! route('Category.get.parent') !!}",
-                    data: {
-                        cate_id: cate_id
-                    },
-                    success: function (response) {
-                        if(response.cate_parent_id) {
-                            $scope.manufacturers = manufacturers.filter(element => element.category_id == response.cate_parent_id);
-                        }else{
-                            $scope.manufacturers = manufacturers.filter(element => element.category_id == cate_id);
-                        }
-                    },
-                    error: function (e) {
-                       console.log(e);
-                    },
-                    complete: function () {
-                    }
-                });
-            };
         });
     </script>
 @endsection

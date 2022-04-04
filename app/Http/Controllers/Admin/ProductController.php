@@ -297,4 +297,18 @@ class ProductController extends Controller
         return Response::json(['success' => true, 'message' => 'Thêm sản phẩm vào danh mục đặc biệt thành công']);
     }
 
+    // xóa nhiều sản phẩm
+    public function actDelete(Request $request) {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+        $product_ids = explode(',', $request->product_ids);
+
+        Product::query()->whereIn('id', $product_ids)->delete();
+
+        $message = array(
+            "message" => "Thao tác thành công!",
+            "alert-type" => "success"
+        );
+
+        return redirect()->route($this->route.'.index')->with($message);
+    }
 }

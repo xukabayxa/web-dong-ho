@@ -57,6 +57,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         Route::get('/exportPDF','Admin\ProductController@exportPDF')->name('Product.exportPDF')->middleware('checkPermission:Xuất pdf sản phẩm');
         Route::post('/add-category-special', 'Admin\ProductController@addToCategorySpecial')->name('Product.add.category.special');
 
+        Route::get('/act-delete', 'Admin\ProductController@actDelete')->name('products.delete.multi');
     });
 
     Route::group(['prefix' => 'post-categories'], function() {
@@ -132,6 +133,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         Route::get('/{id}/delete', 'Admin\ManufacturerController@delete')->name('manufacturers.delete');
         Route::get('/{id}/getDataForEdit', 'Admin\ManufacturerController@getDataForEdit');
         Route::get('/exportExcel','Admin\ManufacturerController@exportExcel')->name('manufacturers.exportExcel');
+
+        Route::get('/act-delete', 'Admin\ManufacturerController@actDelete')->name('manufacturers.delete.multi');
+        Route::get('/check-act-delete', 'Admin\ManufacturerController@checkActDelete')->name('manufacturers.check.delete.multi');
     });
 
     // Origins (xuất xứ)

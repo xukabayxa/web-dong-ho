@@ -168,7 +168,7 @@
 
                 </div>
             </div>
-    @endif
+        @endif
     <!-- Product Area End -->
 
         <!-- letast blog area Start -->
@@ -202,64 +202,6 @@
             </div>
         </div>
         <!-- letast blog area End -->
-
-{{--        <!-- our-brand-area start -->--}}
-{{--        <div class="our-brand-area section-pb">--}}
-{{--            <div class="container">--}}
-{{--                <div class="row our-brand-active">--}}
-{{--                    <div class="brand-single-item">--}}
-{{--                        <a href="#"><img src="site/assets/images/brand/brand-01.png" alt=""></a>--}}
-{{--                    </div>--}}
-{{--                    <div class="brand-single-item">--}}
-{{--                        <a href="#"><img src="site/assets/images/brand/brand-01.png" alt=""></a>--}}
-{{--                    </div>--}}
-{{--                    <div class="brand-single-item">--}}
-{{--                        <a href="#"><img src="site/assets/images/brand/brand-01.png" alt=""></a>--}}
-{{--                    </div>--}}
-{{--                    <div class="brand-single-item">--}}
-{{--                        <a href="#"><img src="site/assets/images/brand/brand-01.png" alt=""></a>--}}
-{{--                    </div>--}}
-{{--                    <div class="brand-single-item">--}}
-{{--                        <a href="#"><img src="site/assets/images/brand/brand-01.png" alt=""></a>--}}
-{{--                    </div>--}}
-{{--                    <div class="brand-single-item">--}}
-{{--                        <a href="#"><img src="site/assets/images/brand/brand-01.png" alt=""></a>--}}
-{{--                    </div>--}}
-{{--                    <div class="brand-single-item">--}}
-{{--                        <a href="#"><img src="site/assets/images/brand/brand-01.png" alt=""></a>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--        </div>--}}
-{{--        <!-- our-brand-area end -->--}}
-
-        {{-- <div class="newletter-area">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="newletter-wrap">
-                            <div class="row align-items-center">
-                                <div class="col-lg-7 col-md-12">
-                                    <div class="newsletter-title mb-30">
-                                    </div>
-                                </div>
-
-{{--                                <div class="col-lg-5 col-md-7">--}}
-{{--                                    <div class="newsletter-footer mb-30">--}}
-{{--                                        <input type="text" placeholder="Để lại email đăng ký...">--}}
-{{--                                        <div class="subscribe-button">--}}
-{{--                                            <button class="subscribe-btn">Đăng ký</button>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
-
-
         <!-- Modal -->
         <div class="modal fade modal-wrapper" id="modalProductDetail2" >
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -301,6 +243,7 @@
                                             </ul>
                                             <ul class="stock-cont">
                                                 <li class="product-stock-status">Danh mục: <a href="#"><% product.category.name %></a></li>
+                                                <li class="product-stock-status">Hãng sản xuất: <a href="#"><% product.manufacturer.name %></a></li>
                                                 <li class="product-stock-status">Tag: <a href="#"><% product.tags_str %></a></li>
                                             </ul>
                                             <div class="share-product-socail-area">
@@ -330,7 +273,7 @@
         app.controller('indexPage', function ($rootScope, $scope, $interval, cartItemSync, wishlistSync) {
             $scope.qty = 1;
             $scope.cart = {}
-
+            $scope.product = {};
             // modal detail product
             $scope.showModalDetail = function (product_id) {
                 url = "{{route('front.product.getData', ['id' => 'product_id'])}}";
@@ -341,6 +284,7 @@
                     success: function (response) {
                         if (response.success) {
                             $scope.product = response.data;
+
                             $("div.product-images").html(response.html);
                         }
 

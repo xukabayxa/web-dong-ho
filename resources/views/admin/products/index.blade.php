@@ -1,6 +1,8 @@
 @extends('layouts.main')
 
 @section('css')
+    <link type="text/css" href="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/css/dataTables.checkboxes.css"
+          rel="stylesheet"/>
 @endsection
 
 @section('page_title')
@@ -90,6 +92,9 @@
 @endsection
 
 @section('script')
+    <script type="text/javascript"
+            src="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/js/dataTables.checkboxes.min.js"></script>
+
     @include('admin.products.Product')
     <script>
         let datatable = new DATATABLE('table-list', {
@@ -99,7 +104,19 @@
                     DATATABLE.mergeSearch(d, context);
                 }
             },
+            columnDefs: [
+                {
+                    'targets': 0,
+                    'checkboxes': {
+                        'selectRow': true
+                    }
+                }
+            ],
+            select: {
+                'style': 'multi'
+            },
             columns: [
+                {data: 'id', orderable: false},
                 {data: 'DT_RowIndex', orderable: false, title: "STT", className: "text-center"},
                 {
                     data: 'image', title: "Hình ảnh", orderable: false, className: "text-center",
@@ -140,6 +157,7 @@
                     column_data: @json(App\Model\Admin\CategorySpecial::getForSelectForProduct())
                 }
             ],
+            act: true,
         }).datatable;
 
         app.controller('Product', function ($scope, $rootScope, $http) {
@@ -278,6 +296,36 @@
             }
 
         })
+
+        function removeProductArr() {
+            var product_remove_ids = [];
+            var rows_selected = datatable.column(0).checkboxes.selected();
+
+            $.each(rows_selected, function (index, rowId) {
+                product_remove_ids.push(rowId);
+            });
+
+            if(product_remove_ids.length == 0) {
+                toastr.warning("Chưa có sản phẩm nào được chọn");
+                return;
+            }
+
+            var product_ids = product_remove_ids.join(',');
+            swal({
+                title: "Xác nhận xóa!",
+                text: "Bạn chắc chắn muốn xóa "+product_remove_ids.length+" sản phẩm",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Xác nhận",
+                cancelButtonText: "Hủy",
+                closeOnConfirm: false
+            }, function(isConfirm) {
+                if (isConfirm) {
+                    window.location.href = "{{route('products.delete.multi')}}?product_ids="+product_ids;
+                }
+            })
+        }
 
         $(document).on('click', '.export-button', function (event) {
             event.preventDefault();

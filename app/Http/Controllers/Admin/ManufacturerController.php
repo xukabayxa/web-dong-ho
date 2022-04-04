@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Model\Admin\Category;
+use App\Model\Admin\Manufacturer;
 use Illuminate\Http\Request;
 use App\Model\Admin\Manufacturer as ThisModel;
 use Illuminate\Support\Facades\Response;
@@ -44,8 +45,10 @@ class ManufacturerController extends Controller
             ->editColumn('updated_at', function ($object) {
                 return formatDate($object->updated_at);
             })
-            ->addColumn('category', function ($object) {
-                return $object->category->name;
+            ->editColumn('products', function ($object) {
+                return '<button class="btn btn-info btn-sm btn-branch" type="button">
+                        ' . $object->products_count. '
+                </button>';
             })
             ->addColumn('image', function ($object) {
                 return '<img class="thumbnail img-preview" src="'.($object->image ? $object->image->path : '').'">';
@@ -57,7 +60,7 @@ class ManufacturerController extends Controller
                 return $result;
             })
             ->addIndexColumn()
-            ->rawColumns(['name', 'action', 'image'])
+            ->rawColumns(['name', 'action', 'image', 'products'])
             ->make(true);
     }
 
@@ -73,9 +76,7 @@ class ManufacturerController extends Controller
             [
                 'name' => 'required|max:255',
                 'code' => 'required|max:255|unique:manufacturers,code',
-                'category_id' => 'required',
                 'image' => 'nullable|file|mimes:jpg,jpeg,png|max:3000',
-
             ]
         );
         $json = new stdClass();
@@ -93,7 +94,6 @@ class ManufacturerController extends Controller
 
             $object->name = $request->name;
             $object->code = $request->code;
-            $object->category_id = $request->category_id;
             $object->created_by = auth()->id();
             $object->save();
 
@@ -127,7 +127,6 @@ class ManufacturerController extends Controller
             [
                 'name' => 'required|max:255',
                 'code' => 'required|unique:manufacturers,code,' . $id,
-                'category_id' => 'required',
                 'image' => 'nullable|file|mimes:jpg,jpeg,png|max:3000',
             ]
         );
@@ -145,7 +144,6 @@ class ManufacturerController extends Controller
             $object = ThisModel::findOrFail($id);
             $object->code = $request->code;
             $object->name = $request->name;
-            $object->category_id = $request->category_id;
 
             $object->save();
 
@@ -217,5 +215,32 @@ class ManufacturerController extends Controller
         return $pdf->download('danh_sach_lich_hen.pdf');
     }
 
+    // xóa nhiều
+    public function checkActDelete(Request $request) {
+        $manu_ids = explode(',', $request->manu_ids);
+        $check = true;
 
+        foreach ($manu_ids as $manu_id) {
+            $manu = Manufacturer::query()->where('id', $manu_id)->first();
+            if(! $manu->canDelete()) {
+                $check = false;
+                break;
+            }
+        }
+
+        return response()->json(['check' => $check]);
+    }
+
+    public function actDelete(Request $request) {
+        $manu_ids = explode(',', $request->manu_ids);
+
+        Manufacturer::query()->whereIn('id', $manu_ids)->delete();
+
+        $message = array(
+            "message" => "Thao tác thành công!",
+            "alert-type" => "success"
+        );
+
+        return redirect()->route($this->route.'.index')->with($message);
+    }
 }

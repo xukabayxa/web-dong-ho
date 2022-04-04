@@ -60,7 +60,6 @@ class Product extends BaseModel
         return Auth::user()->type == User::SUPER_ADMIN || Auth::user()->type == User::QUAN_TRI_VIEN;
     }
 
-
     public function image()
     {
         return $this->morphOne(File::class, 'model')->where('custom_field', 'image');
@@ -155,6 +154,7 @@ class Product extends BaseModel
                     $q->select(['id', 'name']);
                 },
                 'image',
+                'manufacturer',
                 'galleries' => function ($q) {
                     $q->select(['id', 'product_id', 'sort'])
                         ->with(['image'])
