@@ -256,6 +256,7 @@
 
             $scope.keyword = "{{$keyword}}";
             $scope.category ="{{$category_id}}";
+
             // filter
             if( ! $scope.viewGrid && ! $scope.viewList) {
                 $scope.viewGrid = "{{Request::get('viewGrid')}}";

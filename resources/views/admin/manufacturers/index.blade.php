@@ -135,7 +135,7 @@ Quản lý danh mục hãng sản xuất
         });
 
         if(manufacturers_remove_ids.length == 0) {
-            toastr.warning("Chưa có sản phẩm nào được chọn");
+            toastr.warning("Chưa có hãng sản xuất nào được chọn");
             return;
         }
 
@@ -143,7 +143,7 @@ Quản lý danh mục hãng sản xuất
 
         swal({
             title: "Xác nhận xóa!",
-            text: "Bạn chắc chắn muốn xóa "+manufacturers_remove_ids.length+" sản phẩm",
+            text: "Bạn chắc chắn muốn xóa "+manufacturers_remove_ids.length+" hãng sản xuất",
             type: "warning",
             showCancelButton: true,
             confirmButtonClass: "btn-danger",
