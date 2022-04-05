@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="vi-vn" xml:lang="vi-vn">
 <head>
+    @include('site.partials.meta-seo')
     @include('site.partials.head')
 </head>
 <body id="body" ng-app="App">

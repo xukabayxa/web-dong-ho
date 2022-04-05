@@ -8,7 +8,17 @@
 @endsection
 @section('content')
 
-    @include('site.partials.bread_crumb', ['type' => '','title' => 'Sản phẩm' ])
+    <?php
+        if(@$categorySlug) {
+            $type = 'product_category';
+            $title = $category->name;
+        } else {
+            $type = '';
+            $title = 'Sản phẩm';
+        }
+    ?>
+
+    @include('site.partials.bread_crumb', ['type' => $type, 'title' => $title ])
 
     <!-- main-content-wrap start -->
     <div class="main-content-wrap shop-page section-ptb" ng-controller="ListProducts">
@@ -26,7 +36,8 @@
                                 <div class="category-sub-menu">
                                     <ul>
                                         @foreach($categories as $category)
-                                            <li class="has-sub"><a
+                                            <li class="{{count($category->child_categories) > 0 ? 'has-sub' : ''}}" ><a
+                                                    style="padding-bottom: 10px; padding-top: 10px; line-height: 14px "
                                                     href="{{route('front.category_product', $category->slug)}}">{{$category->name}} ({{$category->products_count}})</a>
                                                 <ul>
                                                     @foreach($category->child_categories as $child_category)

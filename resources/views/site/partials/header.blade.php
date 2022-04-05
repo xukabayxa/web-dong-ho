@@ -49,7 +49,7 @@
                                     </select>
                                 </div>
                                 <div class="search-field-wrap">
-                                    <input type="text" class="search-field keyword" placeholder="Tìm kiếm sản phẩm...">
+                                    <input type="text" class="search-field keyword" placeholder="Tên sản phẩm, thương hiệu...">
 
                                     <div class="search-btn">
                                         <button class="btn-search"><i class="icon-magnifier"></i></button>
@@ -223,7 +223,7 @@
 
                 <div class="search-box-offcanvas">
                     <form>
-                        <input type="text" class="keyword" placeholder="Tìm kiếm sản phẩm...">
+                        <input type="text" class="keyword" placeholder="Tên sản phẩm, thương hiệu...">
                         <button class="search-btn btn-search"><i class="icon-magnifier"></i></button>
                     </form>
                 </div>

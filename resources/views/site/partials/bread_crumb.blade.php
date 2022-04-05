@@ -8,6 +8,8 @@
                     <li class="breadcrumb-item"><a href="{{route('front.home_page')}}">Trang chủ</a></li>
                     @if($type == 'product_detail')
                         <li class="breadcrumb-item">Sản phẩm</li>
+                    @elseif($type == 'product_category')
+                        <li class="breadcrumb-item">Sản phẩm</li>
                     @elseif($type == 'post_detail')
                         <li class="breadcrumb-item">Tin tức</li>
                     @endif

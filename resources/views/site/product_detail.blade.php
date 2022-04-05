@@ -2,6 +2,12 @@
 @section('title')
     <title>{{ $product->name . " - " . ucfirst($_SERVER['HTTP_HOST']) }}</title>
 @endsection
+
+@section('title_seo', $product->title_seo ?? $product->name)
+@section('content_seo', $product->content_seo ?? $product->name)
+@section('link_seo', \Illuminate\Support\Facades\URL::current())
+@section('image_seo', $product->image ? url($product->image->path ) : '')
+
 @section('css')
 <link rel="stylesheet" type="text/css" href="https://cdn.tutorialjinni.com/jquery-toast-plugin/1.3.2/jquery.toast.css" />
 <link rel="stylesheet" type="text/css" href="https://cdn.tutorialjinni.com/jquery-toast-plugin/1.3.2/jquery.toast.min.css" />

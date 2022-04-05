@@ -82,12 +82,18 @@ class FrontController extends Controller
         $categories = $categories->map(function($cate) {
             // áp dụng cho category cha
             $cate->child_categories = $this->categoryService->getChildCategory($cate, 1);
-            $cate->products_count = $cate->child_categories->sum('products_count');
+            if($cate->child_categories->isEmpty()) {
+                $cate->products_count = $cate->products()->count();
+            } else {
+                $cate->products_count = $cate->child_categories->sum('products_count');
+            }
+
             return $cate;
         });
 
         $tags = Tag::query()->where('type', Tag::TYPE_PRODUCT)->latest()->get();
 
+        $category = null;
         if($categorySlug) {
             $category = Category::findBySlug($categorySlug);
             // nếu có slug, check xem cate này là cha hay con, nếu cate cha thì trả về tất cả sản phẩm của cate con
@@ -105,7 +111,7 @@ class FrontController extends Controller
         }
 
         return view('site.product_category', compact('categories', 'products', 'viewGrid', 'viewList',
-            'categorySlug', 'sort', 'tags', 'minPrice', 'maxPrice'));
+            'categorySlug', 'sort', 'tags', 'minPrice', 'maxPrice', 'category'));
     }
 
     /**
