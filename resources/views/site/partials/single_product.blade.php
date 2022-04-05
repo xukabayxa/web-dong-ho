@@ -3,7 +3,7 @@
         <a href="{{route('front.product.detail', $product->slug)}}">
             <img class="primary-image" src="{{$product->image->path ?? '/site/assets/images/product/product-02.png'}}" alt="">
         </a>
-        {{-- <div class="label-product label_new">New</div>--}}
+         <div class="label-product label_new" style="background: {{$product->state == 1 ? '#28a745' : '#a73628'}}">{{\App\Model\Admin\Product::STATE[$product->state]}}</div>
         <div class="action-links">
             <a href="javascript:void(0)" class="cart-btn" title="Đặt mua hàng" ng-click="addToCart({{$product->id}},1)"><i
                     class="icon-basket-loaded"></i></a>
@@ -13,12 +13,10 @@
                ><i class="icon-magnifier icons"></i></a>
         </div>
 
-{{--        <div class="price-reponsive" style="position: absolute"></div>--}}
-
-
          <div class="price-reponsive">
             <span style="font-weight: bold; color: white">{{number_format($product->price)}}</span>
          </div>
+
     </div>
     <div class="product-caption">
         <h4 class="product-name"><a href="{{route('front.product.detail', $product->slug)}}">{{$product->name}}</a></h4>

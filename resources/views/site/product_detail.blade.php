@@ -14,6 +14,9 @@
 @endsection
 
 @section('content')
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v13.0&appId=514608355727133&autoLogAppEvents=1" nonce="vhGXjf4P"></script>
+
 <!-- breadcrumb-area start -->
 @include('site.partials.bread_crumb', ['type' => 'product_detail','title' => $product->name ])
 <!-- breadcrumb-area end -->
@@ -93,7 +96,7 @@
                         <div class="share-product-socail-area">
                             <p>Share this product</p>
                             <ul class="single-product-share">
-                                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                                <li><a href="" ><i class="fa fa-facebook"></i></a></li>
                                 <li><a href="#"><i class="fa fa-twitter"></i></a></li>
                                 <li><a href="#"><i class="fa fa-pinterest"></i></a></li>
                             </ul>

@@ -57,6 +57,10 @@
                 display: none;
             }
 
+            .label_new{
+                display: none;
+            }
+
             .col-4-custom {
                 padding-left: 0 !important;
             }

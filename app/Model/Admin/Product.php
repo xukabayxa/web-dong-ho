@@ -25,6 +25,11 @@ class Product extends BaseModel
     const IS_PIN = 1;
     const NOT_PIN = 2;
 
+    const STATE = [
+        1 => 'Còn hàng',
+        2 => 'Hết hàng'
+    ];
+
     protected $fillable = ['name', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at',
         'price', 'cate_id', 'base_price', 'body', 'intro', 'slug', 'short_des', 'manufacturer_id', 'origin_id'];
 
@@ -111,7 +116,7 @@ class Product extends BaseModel
         if ($this->use_url_custom) {
             return '/san-pham/' . $this->url_custom;
         }
-        return route('Product', $this->slug);
+        return route('front.product.detail', $this->slug);
     }
 
     public static function searchByFilter($request)
