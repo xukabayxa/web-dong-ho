@@ -104,10 +104,14 @@ class FrontController extends Controller
                 // trường hợp cate cha có cate con
                 if($category->childs()->count() > 0) {
                     $child_categories = $this->categoryService->getChildCategory($category, 1);
-                    $products = Product::sort($request)->filter($request)->whereIn('cate_id', $child_categories->pluck('id'))->paginate(9);
+                    $product_ids = $child_categories->map(function ($c_cate) {
+                        return $c_cate->products->pluck('id')->toArray();
+                    })->flatten()->toArray();
+
+                    $products = Product::filter($request, $product_ids)->paginate(9);
                 } else {
                     $product_ids = $category->products->pluck('id');
-                    $products = Product::sort($request)->filter($request)->whereIn('id', $product_ids)->paginate(9);
+                    $products = Product::filter($request, $product_ids)->paginate(9);
                     $child_categories = collect([$category]);
                 }
 
@@ -115,13 +119,13 @@ class FrontController extends Controller
                 $parent = $category->getParent();
                 $child_categories = $this->categoryService->getChildCategory($parent, 1);
                 $product_ids = $category->products->pluck('id');
-                $products = Product::sort($request)->filter($request)->whereIn('id', $product_ids)->paginate(9);
 
-//                dd(Product::sort($request)->filter($request)->whereIn('id', $product_ids)->toSql());
+                $products = Product::filter($request, $product_ids)->paginate(9);
             }
         } else {
+            $product_ids = Product::query()->pluck('id')->toArray();
             // trường hợp không có category_slug, lấy toàn bộ các sản phẩm mới nhất
-            $products = Product::sort('status', 1)->filter($request)->paginate(9);
+            $products = Product::filter($request, $product_ids)->paginate(9);
         }
 
         return view('site.product_category', compact('categories', 'products', 'viewGrid', 'viewList',

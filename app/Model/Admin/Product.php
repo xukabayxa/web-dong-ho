@@ -264,8 +264,70 @@ class Product extends BaseModel
         }
     }
 
-    public function scopeFilter($query, $request)
+    public static function filter($request, $product_ids)
     {
+        $productIsPin = self::query()->where('is_pin', 1)->whereIn('id', $product_ids)
+            ->with([
+                'category' => function ($q) {
+                    $q->select(['id', 'name']);
+                },
+                'image',
+                'manufacturer',
+                'galleries' => function ($q) {
+                    $q->select(['id', 'product_id', 'sort'])
+                        ->with(['image'])
+                        ->orderBy('sort', 'ASC');
+                },
+                'attributeValues'
+            ])
+            ->select(['*']);
+
+        $productInStock = self::query()->where('state', 1)->whereIn('id', $product_ids)
+            ->with([
+            'category' => function ($q) {
+                $q->select(['id', 'name']);
+            },
+            'image',
+            'manufacturer',
+            'galleries' => function ($q) {
+                $q->select(['id', 'product_id', 'sort'])
+                    ->with(['image'])
+                    ->orderBy('sort', 'ASC');
+            },
+            'attributeValues'
+        ])
+            ->select(['*']);
+
+        $productOutStock = self::query()->where('state', 2)->whereIn('id', $product_ids)
+            ->with([
+                'category' => function ($q) {
+                    $q->select(['id', 'name']);
+                },
+                'image',
+                'manufacturer',
+                'galleries' => function ($q) {
+                    $q->select(['id', 'product_id', 'sort'])
+                        ->with(['image'])
+                        ->orderBy('sort', 'ASC');
+                },
+                'attributeValues'
+            ])
+            ->select(['*']);
+
+        if($request->get('minPrice')) {
+            $productIsPin->where('price', '>=',  $request->get('minPrice'));
+            $productInStock->where('price', '>=',  $request->get('minPrice'));
+            $productOutStock->where('price', '>=',  $request->get('minPrice'));
+        }
+
+        if($request->get('maxPrice')) {
+            $productIsPin->where('price', '<=',  $request->get('maxPrice'));
+            $productInStock->where('price', '<=',  $request->get('maxPrice'));
+            $productOutStock->where('price', '<=',  $request->get('maxPrice'));
+        }
+
+        $query = $productIsPin->union($productInStock)->union($productOutStock)->orderBy('is_pin')->orderBy('state');
+
         if ($sort = $request->get('sort')) {
             if ($sort == 'lasted') {
                 $query->orderBy('created_at', 'desc');
@@ -274,16 +336,11 @@ class Product extends BaseModel
             } else if ($sort == 'priceDesc') {
                 $query->orderBy('price', 'desc');
             }
+        }else {
+            $query->orderBy('created_at', 'desc');
         }
 
-        if($request->get('minPrice')) {
-            $query->where('price', '>=',  $request->get('minPrice'));
-        }
-
-        if($request->get('maxPrice')) {
-            $query->where('price', '<=',  $request->get('maxPrice'));
-        }
-
+        return $query;
     }
 
     public function scopeSort($query, $request) {
