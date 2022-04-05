@@ -31,16 +31,16 @@ $scope.addToCart = function (productId = null, qty = null) {
                     fadeOut: 10,
                     positionClass : "toast-top-center"
                 };
-            toastr.success('Thêm vào giỏ hàng thành công !');
-        // $.toast('Đã thêm vào giỏ hàng');
+            //toastr.success('Thêm vào giỏ hàng thành công !');
             $interval.cancel($rootScope.promise);
 
-        $rootScope.promise = $interval(function(){
-        cartItemSync.items = response.items;
-        cartItemSync.total = response.total;
-        cartItemSync.count = response.count;
-        }, 1000);
-        }
+            $rootScope.promise = $interval(function(){
+            cartItemSync.items = response.items;
+            cartItemSync.total = response.total;
+            cartItemSync.count = response.count;
+            }, 1000);
+            }
+            window.location.href = "{{ route('cart.get.checkout') }}";
         },
         error: function () {
             $.toast('Lỗi')

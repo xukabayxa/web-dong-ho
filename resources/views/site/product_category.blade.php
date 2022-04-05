@@ -35,12 +35,12 @@
                                 <!-- category-sub-menu start -->
                                 <div class="category-sub-menu">
                                     <ul>
-                                        @foreach($categories as $category)
-                                            <li class="{{count($category->child_categories) > 0 ? 'has-sub' : ''}}" ><a
+                                        @foreach($categories as $cate)
+                                            <li class="{{count($cate->child_categories) > 0 ? 'has-sub' : ''}}" ><a
                                                     style="padding-bottom: 10px; padding-top: 10px; line-height: 14px "
-                                                    href="{{route('front.category_product', $category->slug)}}">{{$category->name}} ({{$category->products_count}})</a>
+                                                    href="{{route('front.category_product', $cate->slug)}}">{{$cate->name}} ({{$cate->products_count}})</a>
                                                 <ul>
-                                                    @foreach($category->child_categories as $child_category)
+                                                    @foreach($cate->child_categories as $child_category)
                                                         <li>
                                                             <a href="{{route('front.category_product', $child_category->slug)}}">{{$child_category->name}}
                                                                 ({{$child_category->products_count}})</a></li>
@@ -48,7 +48,6 @@
                                                 </ul>
                                             </li>
                                         @endforeach
-
                                     </ul>
                                 </div>
                                 <!-- category-sub-menu end -->
@@ -120,7 +119,6 @@
                     <!-- shop-sidebar-wrap end -->
                 </div>
                 <div class="col-lg-9 order-lg-2 order-1">
-
                     <!-- shop-product-wrapper start -->
                     <div class="shop-product-wrapper">
                         <div class="row align-itmes-center">
@@ -165,25 +163,42 @@
                                 <!-- shop-top-bar end -->
                             </div>
                         </div>
-
+                        @if(@$child_categories)
+                        <div class="row align-itmes-center">
+                            <div class="col-12 text-center">
+                                <ul class="nav product-tab-menu" role="tablist">
+                                    @foreach($child_categories as $child_category)
+                                    <li class="product-tab__item nav-item">
+                                        <a class="product-tab__link nav-link {{$category->id == $child_category->id ? 'active' : ''}}" href="{{route('front.category_product', $child_category->slug)}}" role="tab" aria-selected="false">{{$child_category->name}}</a>
+                                    </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                        @endif
                         <!-- shop-products-wrap start -->
                         <div class="shop-products-wrap">
                             <div class="tab-content">
                                 <div class="tab-pane {{$viewGrid == 'true' ? 'active' : ''}}" id="grid">
                                     <div class="shop-product-wrap">
                                         <div class="row">
-                                            @foreach($products as $product)
-                                                <div class="col-lg-4 col-md-6">
+                                            @forelse($products as $product)
+                                                <div class="col-lg-4 col-md-6 col-4">
                                                     <!-- single-product-area start -->
                                                 @include('site.partials.single_product', ['product' => $product])
                                                 <!-- single-product-area end -->
                                                 </div>
-                                            @endforeach
+                                            @empty
+                                                <div class="col-lg-4 col-md-6" style="margin-top: 10px">
+                                                    <span style="font-weight: bold; font-size: 14px">Chưa có sản phẩm</span>
+                                                </div>
+
+                                            @endforelse
                                         </div>
                                     </div>
                                 </div>
                                 <div class="tab-pane  {{$viewList == 'true' ? 'active' : ''}}" id="list">
-                                    @foreach($products as $product)
+                                    @forelse($products as $product)
                                         <div class="shop-product-list-wrap">
                                             <div class="row product-layout-list mt-30">
                                                 <div class="col-lg-3 col-md-3">
@@ -230,7 +245,7 @@
                                                         <ul class="stock-cont">
                                                             {{--                                                            <li class="product-sku">Sku: <span>P006</span></li>--}}
                                                             <li class="product-stock-status">Tình trạng: <span
-                                                                    class="in-stock">Còn hàng</span></li>
+                                                                    class="in-stock">{{$product->state == 1 ? 'Còn hàng' : 'Hết hàng'}}</span></li>
                                                         </ul>
                                                         <div class="product-button">
 
@@ -249,7 +264,11 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    @endforeach
+                                    @empty
+                                        <div class="" style="margin-top: 10px">
+                                            <span style="font-weight: bold; font-size: 14px">Chưa có sản phẩm</span>
+                                        </div>
+                                    @endforelse
 
                                 </div>
                             </div>

@@ -22,6 +22,27 @@
             <div class="checkout-details-wrapper">
                 <h3 ng-if="! checkCart">Bạn chưa có đơn hàng nào</h3>
 
+                <div class="row">
+                    <style>
+                       .btn-prev{
+                           font-size: 14px;
+                           background: url(https://bizweb.sapocdn.net/100/438/408/themes/848101/assets/buy-continue.svg) right 10px center #feeeea no-repeat;
+                           padding: 0 42px 0 20px;
+                           line-height: 40px;
+                           border-radius: 4px;
+                           float: right;
+                           color: #C71201;
+                           margin-top: 10px;
+                       }
+
+                       .btn-prev:hover {
+                            background-color: #efc7bc;
+                       }
+                    </style>
+                    <div class="col-lg-12 col-md-12">
+                        <span class="btn-prev"><a href="{{route('front.home_page')}}"><% checkCart ? 'Tiếp tục mua hàng' : 'Quay lại mua hàng' %></a></span>
+                    </div>
+                </div>
                 <div class="row" ng-if="checkCart">
                     <div class="col-lg-6 col-md-6">
                         <!-- billing-details-wrap start -->
@@ -231,6 +252,16 @@
                         $scope.$applyAsync();
                     },
                 });
+            }
+
+        })
+
+        $(document).on('click', '.btn-prev', function (e) {
+            e.preventDefault();
+            if(!document.referrer) {
+                window.location.href = $(this).attr('href');
+            } else {
+                window.location.href = document.referrer;
             }
 
         })

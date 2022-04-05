@@ -12,11 +12,13 @@
             <a href="javascript:void(0)" class="quick-view" title="Quick View"  ng-click="showModalDetail({{$product->id}})"
                ><i class="icon-magnifier icons"></i></a>
         </div>
-        {{-- <ul class="watch-color">--}}
-            {{-- <li class="twilight"><span></span></li>--}}
-            {{-- <li class="pigeon"><span></span></li>--}}
-            {{-- <li class="portage"><span></span></li>--}}
-            {{-- </ul>--}}
+
+{{--        <div class="price-reponsive" style="position: absolute"></div>--}}
+
+
+         <div class="price-reponsive">
+            <span style="font-weight: bold; color: white">{{number_format($product->price)}}</span>
+         </div>
     </div>
     <div class="product-caption">
         <h4 class="product-name"><a href="{{route('front.product.detail', $product->slug)}}">{{$product->name}}</a></h4>

@@ -190,6 +190,23 @@
             </span>
         </div>
 
+        <div class="form-group custom-group mb-4">
+            <label class="form-label">Tình trạng</label>
+            <select id="my-select" class="form-control custom-select" ng-model="form.state">
+                <option value="">Chọn tình trạng hàng hóa</option>
+                <option value="1">Còn hàng</option>
+                <option value="2">Hết hàng</option>
+            </select>
+        </div>
+
+        <div class="form-group custom-group mb-4">
+            <label class="form-label">Ghim sản phẩm</label>
+            <select id="my-select" class="form-control custom-select" ng-model="form.is_pin">
+                <option value="2">Không ghim</option>
+                <option value="1">Ghim</option>
+            </select>
+        </div>
+
         <div class="row">
             <div class="col-sm-6">
                     <div class="custom-control custom-checkbox">

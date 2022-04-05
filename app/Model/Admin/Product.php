@@ -19,6 +19,12 @@ class Product extends BaseModel
 {
     use HasTagTrait;
 
+    const CON_HANG = 1;
+    const HET_HANG = 2;
+
+    const IS_PIN = 1;
+    const NOT_PIN = 2;
+
     protected $fillable = ['name', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at',
         'price', 'cate_id', 'base_price', 'body', 'intro', 'slug', 'short_des', 'manufacturer_id', 'origin_id'];
 
@@ -133,6 +139,11 @@ class Product extends BaseModel
         if ($request->status === 0 || $request->status === '0' || !empty($request->status)) {
             $result = $result->where('status', $request->status);
         }
+
+        if (!empty($request->state)) {
+            $result = $result->where('state', $request->state);
+        }
+
 
         $result = $result->orderBy('created_at', 'desc')->get();
         return $result;
@@ -258,8 +269,6 @@ class Product extends BaseModel
             } else if ($sort == 'priceDesc') {
                 $query->orderBy('price', 'desc');
             }
-        } else {
-            $query->orderBy('created_at', 'desc');
         }
 
         if($request->get('minPrice')) {
@@ -270,6 +279,10 @@ class Product extends BaseModel
             $query->where('price', '<=',  $request->get('maxPrice'));
         }
 
+    }
+
+    public function scopeSort($query, $request) {
+        $query->orderBy('is_pin')->orderBy('state')->orderBy('updated_at', 'desc');
     }
 
     public function scopeFilterV2($query, $filters)

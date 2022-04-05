@@ -129,6 +129,8 @@
                 use_url_custom: this.use_url_custom,
                 url_custom: this.url_custom,
                 tag_ids: this.tag_ids,
+                state: this.state,
+                is_pin: this.is_pin,
                 attributes: this.attribute_values.map(val => val.submit_data)
             }
 

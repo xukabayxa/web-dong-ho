@@ -45,13 +45,41 @@
             background-color: #C71201;
             color: #fff;
         }
+    </style>
 
+    <style>
         @media only screen and (max-width: 768px) {
             .action-links {
                 display: none;
             }
+
+            .product-caption {
+                display: none;
+            }
+
+            .col-4-custom {
+                padding-left: 0 !important;
+            }
+
+            .price-reponsive {
+                position: absolute;
+                display: block;
+                padding: 2px 8px 2px 4px;
+                border-radius: 0px 20px 20px 0px;
+                left: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.4);
+            }
         }
+
+        @media only screen and (min-width: 768px) {
+            .price-reponsive {
+                display: none;
+            }
+        }
+
     </style>
+
     <style>
         #toast-container {
             text-align: center;

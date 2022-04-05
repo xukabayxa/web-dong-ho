@@ -31,7 +31,10 @@
                                         <td class="plantmore-product-thumbnail"><a href="#"><img src="<% product.image.path %>" alt="" style="max-width: 45% !important;"></a></td>
                                         <td class="plantmore-product-name"><a href="#"><% product.name %></a></td>
                                         <td class="plantmore-product-price"><span class="amount"><% product.price | number:0 %></span></td>
-                                        <td class="plantmore-product-stock-status"><span class="in-stock">còn hàng</span></td>
+
+                                        <td class="plantmore-product-stock-status" ng-if="product.state != 2"><span class="<% product.state !=2 ? 'in-stock' : '' %>"></span>còn hàng</td>
+                                        <td class="plantmore-product-stock-status" ng-if="product.state == 2"><span class="<% product.state ==2 ? 'out-stock' : '' %>"></span>hết hàng</td>
+
                                         <td class="plantmore-product-add-cart"><a href="javascript:void(0)" ng-click="addToCart(product.id,1)">Thêm vào giỏ</a></td>
                                         <td class="plantmore-product-remove"><a href="javascript:void(0)" ng-click="addToWishList($event, product.id)"><i class="fa fa-times"></i></a></td>
                                     </tr>

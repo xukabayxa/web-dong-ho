@@ -117,6 +117,8 @@ class ProductController extends Controller
 			$object->content_seo = $request->content_seo;
             $object->url_custom = $request->url_custom;
             $object->use_url_custom = ($request->use_url_custom == 'true' || $request->use_url_custom == '1') ? 1 : 0;
+            $object->state = $request->state ?? Product::CON_HANG;
+            $object->is_pin = $request->is_pin ?? Product::NOT_PIN;
 
 			$object->save();
 
@@ -185,6 +187,8 @@ class ProductController extends Controller
             $object->content_seo = $request->content_seo;
             $object->url_custom = $request->url_custom;
             $object->use_url_custom = ($request->use_url_custom == 'true' || $request->use_url_custom == '1') ? 1 : 0;
+            $object->state = $request->state ?? Product::CON_HANG;
+            $object->is_pin = $request->is_pin ?? Product::NOT_PIN;
 
 			$object->save();
 

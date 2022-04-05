@@ -94,24 +94,29 @@ class FrontController extends Controller
         $tags = Tag::query()->where('type', Tag::TYPE_PRODUCT)->latest()->get();
 
         $category = null;
+        // danh mục con của 1 danh mục
+        $child_categories = null;
         if($categorySlug) {
             $category = Category::findBySlug($categorySlug);
             // nếu có slug, check xem cate này là cha hay con, nếu cate cha thì trả về tất cả sản phẩm của cate con
             // trường hợp là cate cha, có các cate con level 1
             if($category->childs()->count() > 0) {
                 $child_categories = $this->categoryService->getChildCategory($category, 1);
-                $products = Product::filter($request)->whereIn('cate_id', $child_categories->pluck('id'))->paginate(9);
+                $products = Product::sort($request)->filter($request)->whereIn('cate_id', $child_categories->pluck('id'))->paginate(9);
             } else {
+                $parent = $category->getParent();
+                $child_categories = $this->categoryService->getChildCategory($parent, 1);
                 $product_ids = $category->products->pluck('id');
-                $products = Product::filter($request)->whereIn('id', $product_ids)->paginate(9);
+                $products = Product::sort($request)->filter($request)->whereIn('id', $product_ids)->paginate(9);
+//                dd(Product::sort($request)->filter($request)->whereIn('id', $product_ids)->toSql());
             }
         } else {
             // trường hợp không có category_slug, lấy toàn bộ các sản phẩm mới nhất
-            $products = Product::filter($request)->where('status', 1)->paginate(9);
+            $products = Product::sort('status', 1)->filter($request)->paginate(9);
         }
 
         return view('site.product_category', compact('categories', 'products', 'viewGrid', 'viewList',
-            'categorySlug', 'sort', 'tags', 'minPrice', 'maxPrice', 'category'));
+            'categorySlug', 'sort', 'tags', 'minPrice', 'maxPrice', 'category', 'child_categories'));
     }
 
     /**

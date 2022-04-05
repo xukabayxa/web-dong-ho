@@ -335,7 +335,7 @@
                                 fadeOut: 10,
                                 positionClass : "toast-top-center"
                             };
-                            toastr.success('Thêm vào giỏ hàng thành công !');
+                           // toastr.success('Thêm vào giỏ hàng thành công !');
 
                             $interval.cancel($rootScope.promise);
 
@@ -344,6 +344,10 @@
                                 cartItemSync.total = response.total;
                                 cartItemSync.count = response.count;
                             }, 1000);
+
+                            window.location.href = "{{ route('cart.get.checkout') }}";
+
+
                         }
                     },
                     error: function() {

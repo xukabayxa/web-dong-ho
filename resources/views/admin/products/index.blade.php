@@ -140,6 +140,17 @@
                         }
                     }
                 },
+                {
+                    data: 'state',
+                    title: "Tình trạng",
+                    render: function (data) {
+                        if (data == 1) {
+                            return `<span class="badge badge-success">Còn hàng</span>`;
+                        } else {
+                            return `<span class="badge badge-warning">Hết hàng</span>`;
+                        }
+                    }
+                },
                 {data: 'action', orderable: false, title: "Hành động"}
             ],
             search_columns: [
@@ -147,6 +158,10 @@
                 {
                     data: 'status', search_type: "select", placeholder: "Trạng thái",
                     column_data: [{id: 1, name: "Xuất bản"}, {id: 0, name: "Nháp"}]
+                },
+                {
+                    data: 'state', search_type: "select", placeholder: "Tình trạng",
+                    column_data: [{id: 1, name: "Còn hàng"}, {id: 2, name: "Hết hàng"}]
                 },
                 {
                     data: 'cate_id', search_type: "select", placeholder: "Danh mục",
