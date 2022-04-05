@@ -3,8 +3,8 @@
         <a href="{{route('front.product.detail', $product->slug)}}">
             <img class="primary-image" src="{{$product->image->path ?? '/site/assets/images/product/product-02.png'}}" alt="">
         </a>
-{{--         <div class="label-product label_new" style="background: {{$product->state == 1 ? '#28a745' : '#a73628'}}">{{\App\Model\Admin\Product::STATE[$product->state]}}</div>--}}
-         <div class="label-product label_new" style="background: {{$product->is_pin == 1 ? '#28a745' : '#a73628'}}">{{$product->is_pin == 1 ? 'ghim' : 'không ghim'}}</div>
+         <div class="label-product label_new" style="background: {{$product->state == 1 ? '#28a745' : '#a73628'}}">{{\App\Model\Admin\Product::STATE[$product->state]}}</div>
+{{--         <div class="label-product label_new" style="background: {{$product->is_pin == 1 ? '#28a745' : '#a73628'}}">{{$product->is_pin == 1 ? 'ghim' : 'không ghim'}}</div>--}}
         <div class="action-links">
             <a href="javascript:void(0)" class="cart-btn" title="Đặt mua hàng" ng-click="addToCart({{$product->id}},1)"><i
                     class="icon-basket-loaded"></i></a>
