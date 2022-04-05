@@ -100,14 +100,23 @@ class FrontController extends Controller
             $category = Category::findBySlug($categorySlug);
             // nếu có slug, check xem cate này là cha hay con, nếu cate cha thì trả về tất cả sản phẩm của cate con
             // trường hợp là cate cha, có các cate con level 1
-            if($category->childs()->count() > 0) {
-                $child_categories = $this->categoryService->getChildCategory($category, 1);
-                $products = Product::sort($request)->filter($request)->whereIn('cate_id', $child_categories->pluck('id'))->paginate(9);
+            if($category->childs()->count() > 0 || $category->parent_id == 0) {
+                // trường hợp cate cha có cate con
+                if($category->childs()->count() > 0) {
+                    $child_categories = $this->categoryService->getChildCategory($category, 1);
+                    $products = Product::sort($request)->filter($request)->whereIn('cate_id', $child_categories->pluck('id'))->paginate(9);
+                } else {
+                    $product_ids = $category->products->pluck('id');
+                    $products = Product::sort($request)->filter($request)->whereIn('id', $product_ids)->paginate(9);
+                    $child_categories = collect([$category]);
+                }
+
             } else {
                 $parent = $category->getParent();
                 $child_categories = $this->categoryService->getChildCategory($parent, 1);
                 $product_ids = $category->products->pluck('id');
                 $products = Product::sort($request)->filter($request)->whereIn('id', $product_ids)->paginate(9);
+
 //                dd(Product::sort($request)->filter($request)->whereIn('id', $product_ids)->toSql());
             }
         } else {
