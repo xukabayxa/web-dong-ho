@@ -26,8 +26,8 @@
                                             </span>
                                     </div>
 
-                                    <p>
-                                        <% product.short_des %>
+                                    <p ng-bind-html="trustAsHtml(product.short_des)">
+
                                     </p>
 
                                     <div class="single-add-to-cart">

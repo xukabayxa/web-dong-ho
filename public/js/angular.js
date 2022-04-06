@@ -7,6 +7,12 @@ var app = angular.module(
     }
 );
 
+app.run(function($rootScope, $sce) {
+    $rootScope.trustAsHtml = function(html) {
+        return $sce.trustAsHtml(html);
+    }
+});
+
 // app.factory('cartItemSync', function($interval) {
 //     var cart = {items: null, total: null};
 //

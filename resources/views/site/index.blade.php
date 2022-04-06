@@ -224,7 +224,7 @@
                                                 <span class="old-price" ng-if="product.base_price"><% product.base_price.toLocaleString('en')%></span>
                                             </div>
 
-                                            <p><% product.short_des %></p>
+                                            <p ng-bind-html="trustAsHtml(product.short_des)"></p>
 
                                             <div class="single-add-to-cart">
                                                 <form action="#" class="cart-quantity d-flex">
@@ -270,7 +270,7 @@
 
 @push('scripts')
     <script>
-        app.controller('indexPage', function ($rootScope, $scope, $interval, cartItemSync, wishlistSync) {
+        app.controller('indexPage', function ($rootScope, $scope, $interval, cartItemSync, wishlistSync, $sce) {
             $scope.qty = 1;
             $scope.cart = {}
             $scope.product = {};

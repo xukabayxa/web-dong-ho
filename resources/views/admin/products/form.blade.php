@@ -127,7 +127,7 @@
 
         <div class="form-group custom-group mb-4">
             <label class="form-label">Mô tả ngắn gọn</label>
-            <textarea class="form-control" rows="5" ng-model="form.short_des"></textarea>
+            <textarea class="form-control" ck-editor rows="5" ng-model="form.short_des"></textarea>
             <span class="invalid-feedback d-block" role="alert">
                 <strong>
                     <% errors.short_des[0] %>

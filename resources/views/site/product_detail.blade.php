@@ -75,7 +75,7 @@
                             <span class="old-price">{{number_format($product->base_price)}} đ</span>
                             @endif
                         </div>
-                        <p>{{$product->short_des}}</p>
+                        <p>{!! $product->short_des !!}</p>
 
                         <div class="single-add-to-cart">
                             <form action="#" class="cart-quantity d-flex">
@@ -210,8 +210,7 @@
                                             </span>
                                         </div>
 
-                                        <p>
-                                            <% product.short_des %>
+                                        <p ng-bind-html="product.short_des">
                                         </p>
 
                                         <div class="single-add-to-cart">

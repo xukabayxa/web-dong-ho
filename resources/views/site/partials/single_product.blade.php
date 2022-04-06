@@ -15,7 +15,7 @@
         </div>
 
          <div class="price-reponsive">
-            <span style="font-weight: bold; color: white">{{number_format($product->price)}}</span>
+            <span style="font-weight: bold; font-size:12px; color: white">{{number_format($product->price)}}</span>
          </div>
 
     </div>
