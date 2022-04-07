@@ -14,8 +14,8 @@
 @endsection
 
 @section('content')
-    <div id="fb-root"></div>
-    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v13.0&appId=514608355727133&autoLogAppEvents=1" nonce="vhGXjf4P"></script>
+{{--    <div id="fb-root"></div>--}}
+{{--    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v13.0&appId=514608355727133&autoLogAppEvents=1" nonce="vhGXjf4P"></script>--}}
 
 <!-- breadcrumb-area start -->
 @include('site.partials.bread_crumb', ['type' => 'product_detail','title' => $product->name ])
@@ -96,7 +96,16 @@
                         <div class="share-product-socail-area">
                             <p>Share this product</p>
                             <ul class="single-product-share">
-                                <li><a href="" ><i class="fa fa-facebook"></i></a></li>
+
+{{--                                <div class="fb-share-button"--}}
+{{--                                     data-href="{{$product->link}}" data-layout="button"--}}
+{{--                                     data-size="small"><a target="_blank"--}}
+{{--                                                          href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse"--}}
+{{--                                                          class="fb-xfbml-parse-ignore">Chia sẻ</a></div>--}}
+
+
+
+                                <li id="shareBtn"><a href="#" onclick="return share()"><i class="fa fa-facebook"></i></a></li>
                                 <li><a href="#"><i class="fa fa-twitter"></i></a></li>
                                 <li><a href="#"><i class="fa fa-pinterest"></i></a></li>
                             </ul>
@@ -258,6 +267,53 @@
 @push('scripts')
 <script src="https://cdn.tutorialjinni.com/jquery-toast-plugin/1.3.2/jquery.toast.js"></script>
 <script src="https://cdn.tutorialjinni.com/jquery-toast-plugin/1.3.2/jquery.toast.min.js"></script>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+{{--<script type="text/javascript" src="https://connect.facebook.net/en_US/sdk.js"></script>--}}
+
+<script>
+    document.getElementById('shareBtn').onclick = function() {
+        FB.ui({
+            method: 'share',
+            href: 'https://developers.facebook.com/docs/',
+        }, function(response){});
+    }
+    function share() {
+
+
+        {{--FB.ui({--}}
+        {{--    method: 'share_open_graph',--}}
+        {{--    action_type: 'og.shares',--}}
+        {{--    display: 'popup',--}}
+        {{--    action_properties: JSON.stringify({--}}
+        {{--        object: {--}}
+        {{--            'og:url': "{{route('front.product.detail', $product->slug)}}",--}}
+        {{--            'og:title': 'Title to show',--}}
+        {{--            'og:description': 'The description',--}}
+        {{--            'og:image': 'https://path-to-image.png'--}}
+        {{--        }--}}
+        {{--    })--}}
+        {{--}, function(response) {--}}
+        {{--    // Action after response--}}
+        {{--});--}}
+
+    }
+
+    window.fbAsyncInit = function() {
+        FB.init({
+            appId      : '514608355727133',
+            xfbml      : true,
+            version    : 'v2.3'
+        });
+    };
+
+    (function(d, s, id){
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+</script>
 
 <script>
     app.controller('ProductDetail', function ($rootScope, $scope, $interval, cartItemSync) {
