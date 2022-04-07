@@ -94,18 +94,9 @@
                             <li class="product-stock-status">Tag: <a href="#">{{$product->tags->implode('name', ', ')}}</a></li>
                         </ul>
                         <div class="share-product-socail-area">
-                            <p>Share this product</p>
+                            <p>Chia sẻ</p>
                             <ul class="single-product-share">
-
-{{--                                <div class="fb-share-button"--}}
-{{--                                     data-href="{{$product->link}}" data-layout="button"--}}
-{{--                                     data-size="small"><a target="_blank"--}}
-{{--                                                          href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse"--}}
-{{--                                                          class="fb-xfbml-parse-ignore">Chia sẻ</a></div>--}}
-
-
-
-                                <li id="shareBtn"><a href="#" onclick="return share()"><i class="fa fa-facebook"></i></a></li>
+                                <li id="shareBtn"><a href="#"><i class="fa fa-facebook"></i></a></li>
                                 <li><a href="#"><i class="fa fa-twitter"></i></a></li>
                                 <li><a href="#"><i class="fa fa-pinterest"></i></a></li>
                             </ul>
@@ -274,7 +265,7 @@
     document.getElementById('shareBtn').onclick = function() {
         FB.ui({
             method: 'share',
-            href: 'https://developers.facebook.com/docs/',
+            href: "{{route('front.product.detail', $product->slug)}}",
         }, function(response){});
     }
     function share() {
