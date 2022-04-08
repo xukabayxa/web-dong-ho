@@ -246,28 +246,25 @@ class FrontController extends Controller
         $tags = Tag::query()->where('type', Tag::TYPE_PRODUCT)->latest()->get();
 
         if($request->category_id == 'all') {
-            $products = Product::query()
-                ->where('status', 1)
-                ->where(function($q) use ($keyword) {
-                    $q->where('name', 'like', '%' . $keyword . '%')
-                        ->orWhereHas('manufacturer', function ($q) use ($keyword) {
-                            $q->where('manufacturers.name', 'like', '%' . $keyword . '%');
-                        });
-                })
-                ->latest()->paginate(9);
+            $product_ids = Product::query()->pluck('id')->toArray();
+
+            $products = Product::filter($request, $product_ids)->paginate(9);
         } else {
             $category = Category::query()->where('id', $request->category_id)->first();
-            $child_category_ids = $this->categoryService->getChildCategory($category, 1)->pluck('id')->toArray();
 
-            $products = Product::query()->whereIn('cate_id', array_merge([$category->id], $child_category_ids))
-                ->where('status', 1)
-                ->where(function($q) use ($keyword) {
-                    $q->where('name', 'like', '%' . $keyword . '%')
-                        ->orWhereHas('manufacturer', function ($q) use ($keyword) {
-                            $q->where('manufacturers.name', 'like', '%' . $keyword . '%');
-                        });
-                })
-                ->latest()->paginate(9);
+            // trường hợp cate cha có cate con
+            if($category->childs()->count() > 0) {
+                $child_categories = $this->categoryService->getChildCategory($category, 1);
+                $product_ids = $child_categories->map(function ($c_cate) {
+                    return $c_cate->products->pluck('id')->toArray();
+                })->flatten()->toArray();
+
+                $products = Product::filter($request, $product_ids)->paginate(9);
+            } else {
+                $product_ids = $category->products->pluck('id');
+                $products = Product::filter($request, $product_ids)->paginate(9);
+            }
+
         }
 
         return view('site.search', compact('categories', 'products', 'viewGrid', 'viewList',

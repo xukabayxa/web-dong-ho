@@ -16,4 +16,8 @@ class Tagable extends Model
     public function tag() {
         return $this->belongsTo(Tag::class, 'tag_id');
     }
+
+    public function products() {
+        return $this->morphedByMany(Product::class, 'tagable');
+    }
 }

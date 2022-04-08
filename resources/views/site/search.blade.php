@@ -280,9 +280,9 @@
             $scope.sortBy = function () {
                 let categorySlug = "{{$categorySlug}}";
                 if(categorySlug) {
-                    var url = "{{route('front.category_product', ['categorySlug' => "$categorySlug"])}}"
+                    var url = "{{route('front.search', ['categorySlug' => "$categorySlug"])}}"
                 } else {
-                    var url = "{{route('front.category_product')}}"
+                    var url = "{{route('front.search')}}";
                 }
 
                 window.location.href = url + "?keyword="+$scope.keyword + "&category_id="+$scope.category + "&viewList=" + $scope.viewList +
@@ -316,9 +316,9 @@
             $scope.filterPrice = function () {
                 let categorySlug = "{{$categorySlug}}";
                 if(categorySlug) {
-                    var url = "{{route('front.category_product', ['categorySlug' => "$categorySlug"])}}"
+                    var url = "{{route('front.search', ['categorySlug' => "$categorySlug"])}}"
                 } else {
-                    var url = "{{route('front.category_product')}}"
+                    var url = "{{route('front.search')}}"
                 }
 
                 $scope.minPrice = $( "#min-price-hidden" ).val();

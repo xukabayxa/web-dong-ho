@@ -97,8 +97,7 @@
         $("button.btn-search").on("click", function() {
             var keyword = $(this).parents('form').find('.keyword').val();
 
-            if (keyword.length < 2) {
-                $.toast('Từ khóa phải nhiều hơn 1 ký tự.');
+            if (keyword.length == 0) {
                 return;
             }
 

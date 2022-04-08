@@ -314,6 +314,29 @@ class Product extends BaseModel
             ])
             ->select(['*']);
 
+        if($keyword = $request->get('keyword')) {
+            $productIsPin->where(function($q) use ($keyword) {
+                    $q->where('name', 'like', '%' . $keyword . '%')
+                        ->orWhereHas('manufacturer', function ($q) use ($keyword) {
+                            $q->where('manufacturers.name', 'like', '%' . $keyword . '%');
+                        });
+                });
+
+            $productInStock->where(function($q) use ($keyword) {
+                $q->where('name', 'like', '%' . $keyword . '%')
+                    ->orWhereHas('manufacturer', function ($q) use ($keyword) {
+                        $q->where('manufacturers.name', 'like', '%' . $keyword . '%');
+                    });
+            });
+
+            $productOutStock->where(function($q) use ($keyword) {
+                $q->where('name', 'like', '%' . $keyword . '%')
+                    ->orWhereHas('manufacturer', function ($q) use ($keyword) {
+                        $q->where('manufacturers.name', 'like', '%' . $keyword . '%');
+                    });
+            });
+        }
+
         if($request->get('minPrice')) {
             $productIsPin->where('price', '>=',  $request->get('minPrice'));
             $productInStock->where('price', '>=',  $request->get('minPrice'));
