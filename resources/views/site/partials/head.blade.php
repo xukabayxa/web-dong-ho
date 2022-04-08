@@ -68,7 +68,7 @@
             .price-reponsive {
                 position: absolute;
                 display: block;
-                padding: 2px 8px 2px 4px;
+                padding: 1px 3px 1px 3px;
                 border-radius: 0px 20px 20px 0px;
                 left: 0;
                 bottom: 0;
