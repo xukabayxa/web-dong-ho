@@ -56,6 +56,7 @@
         $scope.cart = cartItemSync;
         $scope.wishlist = wishlistSync;
 
+        // xóa item trong giỏ
         $scope.removeItem = function (product_id) {
             $.ajax({
                 type: 'GET',
@@ -92,10 +93,26 @@
             });
         }
 
+        // tìm kiếm
         $scope.search = {};
-        $scope.search.category_id = 'all';
+
+        jQuery(function($){
+            $('input.keyword').click(function(e){
+                e.stopPropagation();
+            });
+            $(document).click(function() {
+                $scope.hasKeyup = false;
+                $scope.$applyAsync();
+            });
+        });
+
+        // click button search
         $("button.btn-search").on("click", function() {
             var keyword = $(this).parents('form').find('.keyword').val();
+
+            if(! $scope.search.category_id) {
+                $scope.search.category_id = 'all';
+            }
 
             if (keyword.length == 0) {
                 return;
@@ -103,8 +120,68 @@
 
             location.href = '/tim-kiem?keyword=' + (keyword) + '&category_id=' + $scope.search.category_id;
         });
+
+
+        $scope.showAllSearch = function () {
+            if(! $scope.search.category_id) {
+                $scope.search.category_id = 'all';
+            }
+
+            location.href = '/tim-kiem?keyword=' + ($scope.keyword) + '&category_id=' + $scope.search.category_id;
+        }
+
+
+        // keyup input search
+        $scope.hasKeyup = false;
+        $scope.search = function () {
+            $scope.hasKeyup = true;
+            if($scope.keyword.length == 0) {
+                $scope.hasKeyup = false;
+                return;
+            }
+
+            if(! $scope.search.category_id) {
+                $scope.search.category_id = 'all';
+            }
+
+            $.ajax({
+                type: 'GET',
+                url: "{{route('front.get.suggest.search')}}?keyword="+$scope.keyword+'&category_id=' + $scope.search.category_id,
+                success: function (response) {
+                    if (response.products) {
+                       $scope.products_suggest = response.products;
+                    }
+                },
+                error: function (e) {
+                    toastr.error('Đã có lỗi xảy ra');
+                },
+                complete: function () {
+                    $scope.$applyAsync();
+                }
+            });
+        }
+
+        $scope.changeCategorySearch = function () {
+            $.ajax({
+                type: 'GET',
+                url: "{{route('front.get.suggest.search')}}?keyword="+$scope.keyword+'&category_id=' + $scope.search.category_id,
+                success: function (response) {
+                    if (response.products) {
+                        $scope.products_suggest = response.products;
+                    }
+                },
+                error: function (e) {
+                    toastr.error('Đã có lỗi xảy ra');
+                },
+                complete: function () {
+                    $scope.$applyAsync();
+                }
+            });
+        }
+
     });
 
+    // đồng bộ hiển thị số lượng item cart, wishlist
     app.factory('cartItemSync', function ($interval) {
         var cart = {items: null, total: null};
 

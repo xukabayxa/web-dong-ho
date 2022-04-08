@@ -221,7 +221,7 @@ class FrontController extends Controller
     }
 
     /**
-     * trang danh mục sản phẩm
+     * trang kết quả tìm kiếm
      * @param Request $request
      */
     public function search(Request $request, $categorySlug = null)
@@ -269,6 +269,31 @@ class FrontController extends Controller
 
         return view('site.search', compact('categories', 'products', 'viewGrid', 'viewList',
           'categorySlug', 'sort', 'tags', 'minPrice', 'maxPrice', 'keyword', 'category_id'));
+    }
+
+    public function getSuggestSearchResult(Request $request) {
+        if($request->category_id == 'all') {
+            $product_ids = Product::query()->pluck('id')->toArray();
+            $products = Product::filter($request, $product_ids)->get()->take(4);
+        } else {
+            $category = Category::query()->where('id', $request->category_id)->first();
+
+            // trường hợp cate cha có cate con
+            if($category->childs()->count() > 0) {
+                $child_categories = $this->categoryService->getChildCategory($category, 1);
+                $product_ids = $child_categories->map(function ($c_cate) {
+                    return $c_cate->products->pluck('id')->toArray();
+                })->flatten()->toArray();
+
+                $products = Product::filter($request, $product_ids)->get()->take(4);
+            } else {
+                $product_ids = $category->products->pluck('id');
+                $products = Product::filter($request, $product_ids)->get()->take(4);
+            }
+
+        }
+
+        return response()->json(['products' => $products]);
     }
 
     public function introduction() {

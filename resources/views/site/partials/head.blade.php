@@ -116,4 +116,54 @@
             background-image: none !important;
         }
     </style>
+
+    <style>
+        .search-box-inner-wrap .results-box {
+            color: #555;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 9999;
+            width: 100%;
+            background-color: #fff;
+            -webkit-box-shadow: 0 2px 6px 0 rgb(50 50 50 / 33%);
+            -moz-box-shadow: 0 2px 6px 0 rgba(50,50,50,.33);
+            box-shadow: 0 2px 6px 0 rgb(50 50 50 / 33%);
+        }
+
+        .search-box-inner-wrap .results-box a {
+            background-color: #fff;
+            padding: 5px;
+            font-size: 14px;
+            display: block;
+        }
+
+        .search-box-inner-wrap .results-box .history {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-flow: column;
+        }
+
+        .search-box-inner-wrap .results-box a .img {
+            text-align: center;
+            float: left;
+            width: 40px;
+            margin-right: 5px;
+        }
+
+        .search-box-inner-wrap .results-box a .d-title {
+            text-transform: none;
+            margin-bottom: 0;
+            margin-top: 0;
+            color: #303846;
+            line-height: 18px;
+            text-transform: capitalize;
+        }
+
+        .search-box-inner-wrap .results-box a .d-title.d-price {
+            color: #fcaf17!important;
+            font-family: svn-gilroy bold;
+        }
+    </style>
 </head>

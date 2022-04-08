@@ -22,6 +22,7 @@ Route::group(['namespace' => 'Front'], function () {
     Route::get('/lien-he','FrontController@contact')->name('front.contact');
     Route::post('/send-contact','FrontController@sendContact')->name('send.contact');
     Route::get('/tim-kiem','FrontController@search')->name('front.search');
+    Route::get('/suggest-result-search','FrontController@getSuggestSearchResult')->name('front.get.suggest.search');
     Route::get('/gioi-thieu','FrontController@introduction')->name('front.about');
 //
 
