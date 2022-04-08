@@ -236,7 +236,7 @@
                                                             {{--                                                            </ul>--}}
                                                         </div>
 
-                                                        <p>{{$product->short_des}}</p>
+                                                        <p>{!! $product->short_des !!}</p>
                                                     </div>
                                                 </div>
 
@@ -245,7 +245,7 @@
                                                         <ul class="stock-cont">
                                                             {{--                                                            <li class="product-sku">Sku: <span>P006</span></li>--}}
                                                             <li class="product-stock-status">Tình trạng: <span
-                                                                    class="in-stock">{{$product->state == 1 ? 'Còn hàng' : 'Hết hàng'}}</span></li>
+                                                                    class="in-stock" style="color: {{$product->state == 1 ? '#28a745' : '#a73628'}}">{{$product->state == 1 ? 'Còn hàng' : 'Hết hàng'}}</span></li>
                                                         </ul>
                                                         <div class="product-button">
 
