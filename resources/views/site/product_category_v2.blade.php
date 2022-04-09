@@ -275,7 +275,7 @@
                         <!-- shop-products-wrap end -->
 
 {{--                        <button id="loadMore" ng-click="loadMoreProduct()">xem thêm</button>--}}
-{{--                        @if(count($products) > 0)--}}
+                        @if(count($products) > 0)
                         <div class="contact-submit-btn" style="text-align: center; margin-top: 12px" ng-if="checkLoad">
                             <button class="submit-btn" id="loadMore" type="submit" ng-click="loadMoreProduct()" ng-disabled="loading">
                                 <div class="lds-ellipsis" ng-if="loading" style="width: <% loading ? '70px' : '' %>"><div></div><div></div><div></div><div></div></div>
@@ -284,7 +284,7 @@
                             </button>
                             <p class="form-messege"></p>
                         </div>
-{{--                        @endif--}}
+                        @endif
                         <!-- paginatoin-area start -->
 {{--                    {{ $products->links('site.pagination.paginate2') }}--}}
                     <!-- paginatoin-area end -->
