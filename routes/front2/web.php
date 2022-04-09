@@ -13,6 +13,7 @@ Route::group(['namespace' => 'Front'], function () {
 
     Route::get('/','FrontController@index')->name('front.home_page');
     Route::get('/shop/{categorySlug?}','FrontController@getCategory')->name('front.category_product');
+    Route::get('/load-more-products','FrontController@loadMoreProduct')->name('front.loadmore.products');
     Route::get('/product/{id}/getData','FrontController@getDataProduct')->name('front.product.getData');
     Route::get('/san-pham/{slug}','FrontController@detailProduct')->name('front.product.detail');
     Route::get('/tin-tuc/{slug?}/{postSlug?}','FrontController@getPostCategory')->name('front.news');
@@ -24,15 +25,7 @@ Route::group(['namespace' => 'Front'], function () {
     Route::get('/tim-kiem','FrontController@search')->name('front.search');
     Route::get('/suggest-result-search','FrontController@getSuggestSearchResult')->name('front.get.suggest.search');
     Route::get('/gioi-thieu','FrontController@introduction')->name('front.about');
-//
 
-
-//
-//    Route::get('/trang-ho-tro-khach-hang','FrontController@showContact')->name('contact');
-//    Route::post('/gui-ho-tro/send','FrontController@postSupport')->name('postSupport');
-//    Route::get('/chinh-sach/{id}','FrontController@policy')->name('policy');
-//    Route::get('/tim-kiem','FrontController@search')->name('Search');
-//    Route::get('/{slug}','FrontController@getPost')->name('Post.detail');
 });
 
 

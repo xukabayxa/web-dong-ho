@@ -52,7 +52,7 @@ class FrontController extends Controller
     public function index()
     {
         $banners = Banner::query()->latest()->get();
-        $categoriesSpecial = CategorySpecial::query()->with(['products' => function($q) {
+        $categoriesSpecial = CategorySpecial::query()->with(['products' => function ($q) {
             $q->with('manufacturer');
         }])->where([
             'type' => CategorySpecial::PRODUCT,
@@ -60,7 +60,7 @@ class FrontController extends Controller
         ])->whereNotNull('order_number')->orderBy('order_number')->get();
         // dd($categoriesSpecial)
         // bài viết mới nhất
-        $postsRecent = Post::query()->where('status', 1)->latest()->take(3)->get();
+        $postsRecent = Post::query()->where('status', 1)->latest()->limit(3)->get();
 
         return view('site.index', compact('banners', 'categoriesSpecial', 'postsRecent'));
     }
@@ -69,20 +69,20 @@ class FrontController extends Controller
      * trang danh mục sản phẩm
      * @param Request $request
      */
-    public function getCategory(Request $request, $categorySlug = null)
+    public function getCategory_old(Request $request, $categorySlug = null)
     {
         $viewList = $request->get('viewList');
-        $viewGrid = $request->get('viewGrid') ? : 'true';
-        $sort = $request->get('sort') ? : 'lasted';
+        $viewGrid = $request->get('viewGrid') ?: 'true';
+        $sort = $request->get('sort') ?: 'lasted';
         $minPrice = $request->get('minPrice') ?? 0;
         $maxPrice = $request->get('maxPrice') ?? 0;
 
         $categories = Category::parent()->with('products')->orderBy('sort_order')->get();
 
-        $categories = $categories->map(function($cate) {
+        $categories = $categories->map(function ($cate) {
             // áp dụng cho category cha
             $cate->child_categories = $this->categoryService->getChildCategory($cate, 1);
-            if($cate->child_categories->isEmpty()) {
+            if ($cate->child_categories->isEmpty()) {
                 $cate->products_count = $cate->products()->count();
             } else {
                 $cate->products_count = $cate->child_categories->sum('products_count');
@@ -96,13 +96,13 @@ class FrontController extends Controller
         $category = null;
         // danh mục con của 1 danh mục
         $child_categories = null;
-        if($categorySlug) {
+        if ($categorySlug) {
             $category = Category::findBySlug($categorySlug);
             // nếu có slug, check xem cate này là cha hay con, nếu cate cha thì trả về tất cả sản phẩm của cate con
             // trường hợp là cate cha, có các cate con level 1
-            if($category->childs()->count() > 0 || $category->parent_id == 0) {
+            if ($category->childs()->count() > 0 || $category->parent_id == 0) {
                 // trường hợp cate cha có cate con
-                if($category->childs()->count() > 0) {
+                if ($category->childs()->count() > 0) {
                     $child_categories = $this->categoryService->getChildCategory($category, 1);
                     $product_ids = $child_categories->map(function ($c_cate) {
                         return $c_cate->products->pluck('id')->toArray();
@@ -132,11 +132,126 @@ class FrontController extends Controller
             'categorySlug', 'sort', 'tags', 'minPrice', 'maxPrice', 'category', 'child_categories'));
     }
 
+    public function getCategory(Request $request, $categorySlug = null)
+    {
+        $viewList = $request->get('viewList');
+        $viewGrid = $request->get('viewGrid') ?: 'true';
+        $sort = $request->get('sort') ?: 'lasted';
+        $minPrice = $request->get('minPrice') ?? 0;
+        $maxPrice = $request->get('maxPrice') ?? 0;
+
+        $categories = Category::parent()->with('products')->orderBy('sort_order')->get();
+
+        $categories = $categories->map(function ($cate) {
+            // áp dụng cho category cha
+            $cate->child_categories = $this->categoryService->getChildCategory($cate, 1);
+            if ($cate->child_categories->isEmpty()) {
+                $cate->products_count = $cate->products()->count();
+            } else {
+                $cate->products_count = $cate->child_categories->sum('products_count');
+            }
+
+            return $cate;
+        });
+
+        $tags = Tag::query()->where('type', Tag::TYPE_PRODUCT)->latest()->get();
+
+        $category = null;
+        // danh mục con của 1 danh mục
+        $child_categories = null;
+        if ($categorySlug) {
+            $category = Category::findBySlug($categorySlug);
+            // nếu có slug, check xem cate này là cha hay con, nếu cate cha thì trả về tất cả sản phẩm của cate con
+            // trường hợp là cate cha, có các cate con level 1
+            if ($category->childs()->count() > 0 || $category->parent_id == 0) {
+                // trường hợp cate cha có cate con
+                if ($category->childs()->count() > 0) {
+                    $child_categories = $this->categoryService->getChildCategory($category, 1);
+                    $product_ids = $child_categories->map(function ($c_cate) {
+                        return $c_cate->products->pluck('id')->toArray();
+                    })->flatten()->toArray();
+
+                    $products = Product::filter($request, $product_ids)->limit(9)->get();
+                } else {
+                    $product_ids = $category->products->pluck('id');
+                    $products = Product::filter($request, $product_ids)->limit(9)->get();
+                    $child_categories = collect([$category]);
+                }
+
+            } else {
+                $parent = $category->getParent();
+                $child_categories = $this->categoryService->getChildCategory($parent, 1);
+                $product_ids = $category->products->pluck('id');
+
+                $products = Product::filter($request, $product_ids)->limit(9)->get();
+            }
+        } else {
+            $product_ids = Product::query()->pluck('id')->toArray();
+            // trường hợp không có category_slug, lấy toàn bộ các sản phẩm mới nhất
+            $products = Product::filter($request, $product_ids)->limit(9)->get();
+        }
+
+        $product_ids = $products->pluck('id');
+
+        return view('site.product_category_v2', compact('categories', 'products', 'viewGrid', 'viewList',
+            'categorySlug', 'sort', 'tags', 'minPrice', 'maxPrice', 'category', 'child_categories', 'product_ids'));
+    }
+
+
+    public function loadMoreProduct(Request $request)
+    {
+        if ($request->category_id) {
+            $category = Category::find($request->category_id);
+            // nếu có slug, check xem cate này là cha hay con, nếu cate cha thì trả về tất cả sản phẩm của cate con
+            // trường hợp là cate cha, có các cate con level 1
+            if ($category->childs()->count() > 0 || $category->parent_id == 0) {
+                // trường hợp cate cha có cate con
+                if ($category->childs()->count() > 0) {
+                    $child_categories = $this->categoryService->getChildCategory($category, 1);
+
+                    $product_ids = $child_categories->map(function ($c_cate) use ($request) {
+                        return $c_cate->products()->pluck('id')->toArray();
+                    })->flatten()->toArray();
+
+                    $products = Product::filter($request, array_diff($product_ids, $request->product_ids_load_more))->limit(9)->get();
+                } else {
+                    $product_ids = $category->products()->pluck('id')->toArray();
+                    $products = Product::filter($request, array_diff($product_ids, $request->product_ids_load_more))->limit(9)->get();
+                }
+
+            } else {
+                $parent = $category->getParent();
+                $product_ids = $category->products()->pluck('id')->toArray();
+                $products = Product::filter($request, array_diff($product_ids, $request->product_ids_load_more))->limit(9)->get();
+            }
+        } else {
+            $product_ids = Product::query()->pluck('id')->toArray();
+            // trường hợp không có category_slug, lấy toàn bộ các sản phẩm mới nhất
+            $products = Product::filter($request, array_diff($product_ids, $request->product_ids_load_more))->limit(9)->get();
+        }
+
+        $diff =  array_diff($product_ids, $request->product_ids_load_more);
+
+        $html_products_grid = '';
+        $html_products_list = '';
+
+        foreach ($products as $product) {
+            $html_products_grid .= view('site.partials.load_more_product_grid', ['product' => $product])->render();
+            $html_products_list .= view('site.partials.load_more_product_list', ['product' => $product])->render();
+        }
+
+        $product_ids = $products->pluck('id');
+        return response()->json(['success' => true, 'product_render_grid' => $html_products_grid,
+            'product_render_list' => $html_products_list,
+            'product_ids' => $product_ids, 'diff' => $diff]);
+    }
+
     /**
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getDataProduct($id) {
+    public function getDataProduct($id)
+    {
         $product = Product::getDataForEdit($id);
 
         $json = new stdclass();
@@ -180,21 +295,21 @@ class FrontController extends Controller
     public function getPostCategory(Request $request, $slug = null, $postSlug = null)
     {
         $categories = PostCategory::query()->where(['parent_id' => 0, 'show_home_page' => 1])->latest()->get();
-        if(! $postSlug) {
-            if($slug) {
+        if (!$postSlug) {
+            if ($slug) {
                 $category = PostCategory::findBySlug($slug);
                 $posts = $category->posts()->paginate(9);
             } else {
-                $posts = Post::query()->with(['category'])->where('status',1)->latest()->paginate(9);
+                $posts = Post::query()->with(['category'])->where('status', 1)->latest()->paginate(9);
             }
             return view('site.news', compact('categories', 'posts'));
         } else {
             $post = Post::findBySlug($postSlug);
             // bài viết mới nhất
-            $postsRecent = Post::query()->where('status', 1)->latest()->take(3)->get();
+            $postsRecent = Post::query()->where('status', 1)->latest()->limit(3)->get();
             // bài viết liên quan
             $postsRelated = Post::query()->where('cate_id', $post->category->id)
-                ->whereNotIn('id', [$post->id])->latest()->take(3)->get();
+                ->whereNotIn('id', [$post->id])->latest()->limit(3)->get();
 
             return view('site.news_detail', compact('post', 'postsRecent', 'postsRelated', 'categories'));
         }
@@ -212,10 +327,10 @@ class FrontController extends Controller
         $post = Post::findBySlug($slug);
 
         // bài viết mới nhất
-        $postsRecent = Post::query()->where('status', 1)->latest()->take(3)->get();
+        $postsRecent = Post::query()->where('status', 1)->latest()->limit(3)->get();
         // bài viết liên quan
         $postsRelated = Post::query()->where('cate_id', $post->category->id)
-            ->whereNotIn('id', [$post->id])->latest()->take(3)->get();
+            ->whereNotIn('id', [$post->id])->latest()->limit(3)->get();
 
         return view('site.news_detail', compact('post', 'postsRecent', 'postsRelated', 'categories'));
     }
@@ -229,13 +344,13 @@ class FrontController extends Controller
         $keyword = $request->keyword;
         $category_id = $request->category_id;
         $viewList = $request->get('viewList');
-        $viewGrid = $request->get('viewGrid') ? : 'true';
-        $sort = $request->get('sort') ? : 'lasted';
+        $viewGrid = $request->get('viewGrid') ?: 'true';
+        $sort = $request->get('sort') ?: 'lasted';
         $minPrice = $request->get('minPrice') ?? 0;
         $maxPrice = $request->get('maxPrice') ?? 0;
 
         $categories = Category::parent()->with('products')->orderBy('sort_order')->get();
-        $categories = $categories->map(function($cate) {
+        $categories = $categories->map(function ($cate) {
             // áp dụng cho category cha
             $cate->child_categories = $this->categoryService->getChildCategory($cate, 1);
             $cate->products_count = $cate->child_categories->sum('products_count');
@@ -245,7 +360,7 @@ class FrontController extends Controller
 
         $tags = Tag::query()->where('type', Tag::TYPE_PRODUCT)->latest()->get();
 
-        if($request->category_id == 'all') {
+        if ($request->category_id == 'all') {
             $product_ids = Product::query()->pluck('id')->toArray();
 
             $products = Product::filter($request, $product_ids)->paginate(9);
@@ -253,7 +368,7 @@ class FrontController extends Controller
             $category = Category::query()->where('id', $request->category_id)->first();
 
             // trường hợp cate cha có cate con
-            if($category->childs()->count() > 0) {
+            if ($category->childs()->count() > 0) {
                 $child_categories = $this->categoryService->getChildCategory($category, 1);
                 $product_ids = $child_categories->map(function ($c_cate) {
                     return $c_cate->products->pluck('id')->toArray();
@@ -268,27 +383,28 @@ class FrontController extends Controller
         }
 
         return view('site.search', compact('categories', 'products', 'viewGrid', 'viewList',
-          'categorySlug', 'sort', 'tags', 'minPrice', 'maxPrice', 'keyword', 'category_id'));
+            'categorySlug', 'sort', 'tags', 'minPrice', 'maxPrice', 'keyword', 'category_id'));
     }
 
-    public function getSuggestSearchResult(Request $request) {
-        if($request->category_id == 'all') {
+    public function getSuggestSearchResult(Request $request)
+    {
+        if ($request->category_id == 'all') {
             $product_ids = Product::query()->pluck('id')->toArray();
-            $products = Product::filter($request, $product_ids)->get()->take(4);
+            $products = Product::filter($request, $product_ids)->get()->limit(4);
         } else {
             $category = Category::query()->where('id', $request->category_id)->first();
 
             // trường hợp cate cha có cate con
-            if($category->childs()->count() > 0) {
+            if ($category->childs()->count() > 0) {
                 $child_categories = $this->categoryService->getChildCategory($category, 1);
                 $product_ids = $child_categories->map(function ($c_cate) {
                     return $c_cate->products->pluck('id')->toArray();
                 })->flatten()->toArray();
 
-                $products = Product::filter($request, $product_ids)->get()->take(4);
+                $products = Product::filter($request, $product_ids)->get()->limit(4);
             } else {
                 $product_ids = $category->products->pluck('id');
-                $products = Product::filter($request, $product_ids)->get()->take(4);
+                $products = Product::filter($request, $product_ids)->get()->limit(4);
             }
 
         }
@@ -296,27 +412,31 @@ class FrontController extends Controller
         return response()->json(['products' => $products]);
     }
 
-    public function introduction() {
+    public function introduction()
+    {
         $config = Config::query()->first();
 
         return view('site.about', compact('config'));
     }
 
-    public function policy(Request $request, $id) {
+    public function policy(Request $request, $id)
+    {
         // cho mobile
-        $bannersRight = Banner::query()->where(['position' => 'right'])->latest()->take(3)->get();
+        $bannersRight = Banner::query()->where(['position' => 'right'])->latest()->limit(3)->get();
         $policy = Policy::query()->where('status', true)->find($id);
 
-        return view($this->view.'.policy', compact('policy', 'bannersRight'));
+        return view($this->view . '.policy', compact('policy', 'bannersRight'));
     }
 
-    public function contact(Request $request) {
+    public function contact(Request $request)
+    {
         $config = Config::query()->get()->first();
 
         return view('site.contact', compact('config'));
     }
 
-    public function sendContact(Request $request) {
+    public function sendContact(Request $request)
+    {
 
         $rule = [
             'user_name' => 'required',
