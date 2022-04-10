@@ -311,6 +311,42 @@
         </div>
 
         <div class="form-group text-center">
+            <label for="">Video, link</label>
+            <div ng-if="!form.videos || !form.videos.length">Chưa có videos</div>
+
+            <div ng-repeat="video in form.videos track by $index">
+                <div class="mb-2 d-flex align-items-center">
+                    <u>Video <% $index + 1 %></u>
+                    <button class="btn btn-link text-danger ml-auto" ng-click="form.removeVideo($index)"><i class="fa fa-times"></i></button>
+                </div>
+                <div class="form-group custom-group mb-4">
+                    <label class="form-label required-label">Link youtube</label>
+                    <input class="form-control " type="text" ng-model="video.link">
+
+                    <span class="invalid-feedback d-block" role="alert">
+                        <strong>
+                            <% errors['videos.' + $index + '.link' ][0] %>
+                        </strong>
+                    </span>
+                </div>
+
+                <div class="form-group custom-group mb-4">
+                    <label class="form-label required-label">Video</label>
+                    <input class="form-control " type="text" ng-model="video.video">
+                    <span class="invalid-feedback d-block" role="alert">
+                        <strong>
+                            <% errors['videos.' + $index + '.video' ][0] %>
+                        </strong>
+                    </span>
+                </div>
+            </div>
+
+            <button class="btn btn-info btn-sm mt-1" ng-click="form.addVideo()">
+                <i class="fa fa-plus"></i> Thêm video
+            </button>
+        </div>
+
+        <div class="form-group text-center">
             <label for="">Thông số mở rộng</label>
             <div ng-if="!form.attribute_values || !form.attribute_values.length">Chưa có thuộc tính</div>
 

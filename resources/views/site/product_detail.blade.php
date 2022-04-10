@@ -124,6 +124,21 @@
                             <div class="product_description_wrap  mt-30">
                                 <div class="product_desc mb-30">
                                     {!! $product->body !!}
+
+                                    <?php
+                                    $videos = $product->videos->map(function ($v) {
+                                        $v->link = '<a href="'.$v->link.'">'.$v->link.'</a>';
+                                        return $v;
+                                    })
+
+                                    ?>
+                                    @if($videos->count()  > 0)
+                                    <p>Link tham khảo: {!! $videos->implode('link', ',') !!}</p>
+                                    <p>Video sản phẩm: </p>
+                                    @foreach($product->videos as $video)
+                                            {!! $video->video.'<br/>' !!}
+                                    @endforeach
+                                    @endif
                                 </div>
 
                             </div>

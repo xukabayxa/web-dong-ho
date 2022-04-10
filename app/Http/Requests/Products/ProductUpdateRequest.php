@@ -38,6 +38,7 @@ class ProductUpdateRequest extends BaseRequest
             'galleries.*.image' => 'required_without:galleries.*.id|file|mimes:png,jpg,jpeg',
             'post_ids' => 'nullable|array|max:5',
             'attributes' => 'nullable|array',
+            'videos' => 'nullable|array',
             'url_custom' => [
                 [Rule::requiredIf($this->use_url_custom == 'true' || $this->use_url_custom == 1)],
             ],
@@ -50,6 +51,7 @@ class ProductUpdateRequest extends BaseRequest
         }
 
         $attributeInput = $this->get('attributes');
+        $videoInput = $this->get('videos');
 
         if(($attributeInput)) {
             foreach ($attributeInput as $key => $attribute) {
@@ -58,6 +60,12 @@ class ProductUpdateRequest extends BaseRequest
             }
         }
 
+        if(($videoInput)) {
+            foreach ($videoInput as $key => $video) {
+                $rules['videos.'.$key.'.'.'link']   = 'required';
+                $rules['videos.'.$key.'.'.'video']   = 'required';
+            }
+        }
         return $rules;
     }
 

@@ -9,7 +9,9 @@ use App\Model\Admin\Manufacturer;
 use App\Model\Admin\Post;
 use App\Model\Admin\Product;
 use App\Model\Admin\ProductCategorySpecial;
+use App\Model\Admin\ProductVideo;
 use App\Model\Admin\Tag;
+use Cassandra\Exception\ProtocolException;
 use Illuminate\Http\Request;
 use App\Model\Admin\Product as ThisModel;
 use App\Model\Common\Unit;
@@ -136,6 +138,16 @@ class ProductController extends Controller
                 }
             }
 
+            if(isset($request->all()['videos'])) {
+                foreach ($request->all()['videos'] as $video) {
+                    ProductVideo::query()->create([
+                        'link' => $video['link'],
+                        'video' => $video['video'],
+                        'product_id' => $object->id,
+                    ]);
+                }
+            }
+
             if(isset($request->all()['tag_ids'])) {
                 $object->addTags($request->all()['tag_ids']);
             }
@@ -207,6 +219,17 @@ class ProductController extends Controller
                     AttributeValue::query()->create([
                         'attribute_id' => $attribute['attribute_id'],
                         'value' => $attribute['value'],
+                        'product_id' => $object->id,
+                    ]);
+                }
+            }
+
+            if(isset($request->all()['videos'])) {
+                ProductVideo::query()->where('product_id', $object->id)->delete();
+                foreach ($request->all()['videos'] as $video) {
+                    ProductVideo::query()->create([
+                        'link' =>$video['link'],
+                        'video' => $video['video'],
                         'product_id' => $object->id,
                     ]);
                 }

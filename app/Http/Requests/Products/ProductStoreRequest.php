@@ -38,6 +38,7 @@ class ProductStoreRequest extends BaseRequest
             'galleries.*.image' => 'required|file|mimes:png,jpg,jpeg|max:10000',
             'post_ids' => 'nullable|array|max:5',
             'attributes' => 'nullable|array',
+            'videos' => 'nullable|array',
             'url_custom' => [
                 Rule::requiredIf($this->use_url_custom == 'true' || $this->use_url_custom == 1),
             ],
@@ -49,11 +50,19 @@ class ProductStoreRequest extends BaseRequest
         }
 
         $attributeInput = $this->get('attributes');
+        $videoInput = $this->get('videos');
 
         if(($attributeInput)) {
             foreach ($attributeInput as $key => $attribute) {
                 $rules['attributes.'.$key.'.'.'attribute_id']   = 'required';
                 $rules['attributes.'.$key.'.'.'value']   = 'required';
+            }
+        }
+
+        if(($videoInput)) {
+            foreach ($videoInput as $key => $video) {
+                $rules['videos.'.$key.'.'.'link']   = 'required';
+                $rules['videos.'.$key.'.'.'video']   = 'required';
             }
         }
 

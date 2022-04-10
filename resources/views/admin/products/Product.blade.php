@@ -1,5 +1,6 @@
 @include('admin.products.ProductGallery')
 @include('admin.products.ProductAttribute')
+@include('admin.products.ProductVideo')
 <script>
     class Product extends BaseClass {
         no_set = [];
@@ -8,7 +9,8 @@
         before(form) {
             this.image = {};
             this.status = 0;
-            this.attribute_values = form.state_delivery || [];
+            this.attribute_values = form.attribute_values || [];
+            this.videos = form.videos || [];
         }
 
         after(form) {
@@ -80,6 +82,23 @@
             this._attributes.splice(index, 1);
         }
 
+        set videos(value) {
+            this._videos = (value || []).map(val => new ProductVideo(val, this));
+        }
+
+        get videos() {
+            return this._videos;
+        }
+
+        addVideo() {
+            console.log(this._videos)
+            this._videos.push(new ProductVideo({}, this));
+        }
+
+        removeVideo(index) {
+            this._videos.splice(index, 1);
+        }
+
         get use_url_custom() {
             return this._use_url_custom;
         }
@@ -131,7 +150,8 @@
                 tag_ids: this.tag_ids,
                 state: this.state,
                 is_pin: this.is_pin,
-                attributes: this.attribute_values.map(val => val.submit_data)
+                attributes: this.attribute_values.map(val => val.submit_data),
+                videos: this.videos.map(val => val.submit_data)
             }
 
             console.log(this.use_url_custom);

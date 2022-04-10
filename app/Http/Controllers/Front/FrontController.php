@@ -390,7 +390,7 @@ class FrontController extends Controller
     {
         if ($request->category_id == 'all') {
             $product_ids = Product::query()->pluck('id')->toArray();
-            $products = Product::filter($request, $product_ids)->get()->limit(4);
+            $products = Product::filter($request, $product_ids)->limit(4)->get();
         } else {
             $category = Category::query()->where('id', $request->category_id)->first();
 
@@ -401,10 +401,10 @@ class FrontController extends Controller
                     return $c_cate->products->pluck('id')->toArray();
                 })->flatten()->toArray();
 
-                $products = Product::filter($request, $product_ids)->get()->limit(4);
+                $products = Product::filter($request, $product_ids)->limit(4)->get();
             } else {
                 $product_ids = $category->products->pluck('id');
-                $products = Product::filter($request, $product_ids)->get()->limit(4);
+                $products = Product::filter($request, $product_ids)->limit(4)->get();
             }
 
         }

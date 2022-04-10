@@ -111,6 +111,11 @@ class Product extends BaseModel
         return $this->belongsToMany(CategorySpecial::class, 'product_category_special', 'product_id', 'category_special_id');
     }
 
+    public function videos()
+    {
+        return $this->hasMany(ProductVideo::class, 'product_id');
+    }
+
     public function getLinkAttribute()
     {
         if ($this->use_url_custom) {
@@ -118,6 +123,7 @@ class Product extends BaseModel
         }
         return route('front.product.detail', $this->slug);
     }
+
 
     public static function searchByFilter($request)
     {
@@ -171,6 +177,7 @@ class Product extends BaseModel
                 },
                 'image',
                 'manufacturer',
+                'videos',
                 'galleries' => function ($q) {
                     $q->select(['id', 'product_id', 'sort'])
                         ->with(['image'])
@@ -284,18 +291,18 @@ class Product extends BaseModel
 
         $productInStock = self::query()->where('state', 1)->whereIn('id', $product_ids)
             ->with([
-            'category' => function ($q) {
-                $q->select(['id', 'name']);
-            },
-            'image',
-            'manufacturer',
-            'galleries' => function ($q) {
-                $q->select(['id', 'product_id', 'sort'])
-                    ->with(['image'])
-                    ->orderBy('sort', 'ASC');
-            },
-            'attributeValues'
-        ])
+                'category' => function ($q) {
+                    $q->select(['id', 'name']);
+                },
+                'image',
+                'manufacturer',
+                'galleries' => function ($q) {
+                    $q->select(['id', 'product_id', 'sort'])
+                        ->with(['image'])
+                        ->orderBy('sort', 'ASC');
+                },
+                'attributeValues'
+            ])
             ->select(['*']);
 
         $productOutStock = self::query()->where('state', 2)->whereIn('id', $product_ids)
@@ -314,22 +321,22 @@ class Product extends BaseModel
             ])
             ->select(['*']);
 
-        if($keyword = $request->get('keyword')) {
-            $productIsPin->where(function($q) use ($keyword) {
-                    $q->where('name', 'like', '%' . $keyword . '%')
-                        ->orWhereHas('manufacturer', function ($q) use ($keyword) {
-                            $q->where('manufacturers.name', 'like', '%' . $keyword . '%');
-                        });
-                });
-
-            $productInStock->where(function($q) use ($keyword) {
+        if ($keyword = $request->get('keyword')) {
+            $productIsPin->where(function ($q) use ($keyword) {
                 $q->where('name', 'like', '%' . $keyword . '%')
                     ->orWhereHas('manufacturer', function ($q) use ($keyword) {
                         $q->where('manufacturers.name', 'like', '%' . $keyword . '%');
                     });
             });
 
-            $productOutStock->where(function($q) use ($keyword) {
+            $productInStock->where(function ($q) use ($keyword) {
+                $q->where('name', 'like', '%' . $keyword . '%')
+                    ->orWhereHas('manufacturer', function ($q) use ($keyword) {
+                        $q->where('manufacturers.name', 'like', '%' . $keyword . '%');
+                    });
+            });
+
+            $productOutStock->where(function ($q) use ($keyword) {
                 $q->where('name', 'like', '%' . $keyword . '%')
                     ->orWhereHas('manufacturer', function ($q) use ($keyword) {
                         $q->where('manufacturers.name', 'like', '%' . $keyword . '%');
@@ -337,16 +344,16 @@ class Product extends BaseModel
             });
         }
 
-        if($request->get('minPrice')) {
-            $productIsPin->where('price', '>=',  $request->get('minPrice'));
-            $productInStock->where('price', '>=',  $request->get('minPrice'));
-            $productOutStock->where('price', '>=',  $request->get('minPrice'));
+        if ($request->get('minPrice')) {
+            $productIsPin->where('price', '>=', $request->get('minPrice'));
+            $productInStock->where('price', '>=', $request->get('minPrice'));
+            $productOutStock->where('price', '>=', $request->get('minPrice'));
         }
 
-        if($request->get('maxPrice')) {
-            $productIsPin->where('price', '<=',  $request->get('maxPrice'));
-            $productInStock->where('price', '<=',  $request->get('maxPrice'));
-            $productOutStock->where('price', '<=',  $request->get('maxPrice'));
+        if ($request->get('maxPrice')) {
+            $productIsPin->where('price', '<=', $request->get('maxPrice'));
+            $productInStock->where('price', '<=', $request->get('maxPrice'));
+            $productOutStock->where('price', '<=', $request->get('maxPrice'));
         }
 
         $query = $productIsPin->union($productInStock)->union($productOutStock)->orderBy('is_pin')->orderBy('state');
@@ -359,14 +366,15 @@ class Product extends BaseModel
             } else if ($sort == 'priceDesc') {
                 $query->orderBy('price', 'desc');
             }
-        }else {
+        } else {
             $query->orderBy('created_at', 'desc');
         }
 
         return $query;
     }
 
-    public function scopeSort($query, $request) {
+    public function scopeSort($query, $request)
+    {
         $query->orderBy('is_pin')->orderBy('state')->orderBy('updated_at', 'desc');
     }
 
