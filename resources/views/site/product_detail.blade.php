@@ -133,7 +133,7 @@
 
                                     ?>
                                     @if($videos->count()  > 0)
-                                    <p>Link tham khảo: {!! $videos->implode('link', ',') !!}</p>
+                                    <p>Link tham khảo: {!! $videos->implode('link', ', ') !!}</p>
                                     <p>Video sản phẩm: </p>
                                     @foreach($product->videos as $video)
                                             {!! $video->video.'<br/>' !!}
