@@ -58,7 +58,17 @@ class FileHelper
             // Type = 7 =>> favicon
 
             if ($type == 1) {
-                Image::make($file)->resize(600, 600)->save($destinationPath . DIRECTORY_SEPARATOR . $destinationFile);
+//                Image::make($file)->resize(600, 600, function ($constraint) {
+//                    $constraint->aspectRatio();
+//                }
+//                )->save($destinationPath . DIRECTORY_SEPARATOR . $destinationFile);
+                Image::make($file)->resize(600, 600,
+                    function ($constraint) {
+                        $constraint->aspectRatio();
+                    })
+                    ->resizeCanvas(600, 600)
+                ->save($destinationPath . DIRECTORY_SEPARATOR . $destinationFile);
+
             } else if ($type == 2) {
                 Image::make($file)->resize(120, 120)->save($destinationPath . DIRECTORY_SEPARATOR . $destinationFile);
             } else if ($type == 3) {
