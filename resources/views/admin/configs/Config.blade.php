@@ -37,6 +37,8 @@
                 youtube: this.youtube,
                 facebook: this.facebook,
                 hotline: this.hotline,
+                address_company: this.address_company,
+                address_center_insurance: this.address_center_insurance,
                 zalo: this.zalo,
                 location: this.location,
                 click_call: this.click_call,

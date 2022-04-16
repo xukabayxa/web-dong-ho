@@ -10,7 +10,8 @@
 
                         <div class="footer-addres">
                             <div class="widget-content mb--20">
-                                <p>Địa chỉ: {{$config->address}}</p>
+                                <p>Địa chỉ: {{$config->address_company}}</p>
+                                <p>Trung tâm bảo hành: {{$config->address_center_insurance}}</p>
                                 <p>Phone: <a href="tel:{{$config->zalo}}">{{$config->zalo}}</a></p>
                                 <p>Hotline: <a href="tel:{{$config->hotline}}">{{$config->hotline}}</a></p>
                                 <p>Email: <a href="#">{{$config->email}}</a></p>

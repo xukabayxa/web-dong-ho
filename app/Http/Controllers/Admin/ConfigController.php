@@ -58,6 +58,8 @@ class ConfigController extends Controller
 			$object->hotline = $request->hotline;
 			$object->web_des = $request->web_des;
 			$object->zalo = $request->zalo;
+			$object->address_company = $request->address_company;
+			$object->address_center_insurance = $request->address_center_insurance;
 			$object->email = $request->email;
 			$object->facebook = $request->facebook;
 			$object->twitter = $request->twitter;

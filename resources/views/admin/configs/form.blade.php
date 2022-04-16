@@ -27,6 +27,14 @@
 						<strong><% errors.zalo[0] %></strong>
 					</span>
 				</div>
+                <div class="form-group custom-group">
+                    <label class="form-label">Địa chỉ công ty</label>
+                    <input class="form-control" ng-model="form.address_company" type="text">
+                </div>
+                <div class="form-group custom-group">
+                    <label class="form-label">Địa chỉ trung tâm bảo hành</label>
+                    <input class="form-control" ng-model="form.address_center_insurance" type="text">
+                </div>
 				<div class="form-group custom-group">
 					<label class="form-label required-label">Email</label>
 					<input class="form-control" ng-model="form.email" type="text">
