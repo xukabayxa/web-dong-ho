@@ -107,7 +107,7 @@
                                                         {{-- </ul>--}}
                                                 </div>
 
-                                                <p>{{$product->short_des}}</p>
+                                                <p>{!! $product->short_des !!}</p>
                                             </div>
                                         </div>
 
