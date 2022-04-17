@@ -56,7 +56,7 @@
                     </ul>
                     <div class="add-to-cart">
                         <div class="product-button-action">
-                            <a href="javascript:void(0)" class="add-to-cart" ng-click="addToCart({{$product->id}},1)">Thêm vào giỏ hàng</a>
+                            <a href="javascript:void(0)" class="add-to-cart" ng-click="addToCart({{$product->id}},1)">Đặt mua hàng</a>
                         </div>
                     </div>
                 </div>

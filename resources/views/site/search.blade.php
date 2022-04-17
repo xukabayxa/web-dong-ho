@@ -115,7 +115,7 @@
                                             <div class="block2">
                                                 <ul class="stock-cont">
                                                     {{-- <li class="product-sku">Sku: <span>P006</span></li>--}}
-                                                    <li class="product-stock-status">Tình trạng: <span class="in-stock">Còn hàng</span></li>
+                                                    <li class="product-stock-status">Tình trạng: <span class="in-stock" style="color: {{$product->state == 1 ? '#28a745' : '#a73628'}}">{{$product->state == 1 ? 'Còn hàng' : 'Hết hàng'}}</span></li>
                                                 </ul>
                                                 <div class="product-button">
 
@@ -126,7 +126,7 @@
                                                     </ul>
                                                     <div class="add-to-cart">
                                                         <div class="product-button-action">
-                                                            <a href="#" class="add-to-cart">Đặt mua hàng</a>
+                                                            <a href="javascript:void(0)" class="add-to-cart" ng-click="addToCart({{$product->id}},1)">Đặt mua hàng</a>
                                                         </div>
                                                     </div>
                                                 </div>

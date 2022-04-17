@@ -103,7 +103,7 @@
                         <div class="share-product-socail-area">
                             <p>Chia sẻ</p>
                             <ul class="single-product-share">
-                                <li id="shareBtn"><a href="#"><i class="fa fa-facebook"></i></a></li>
+                                <li id="shareBtn"><a href="javascript:void(0)"><i class="fa fa-facebook"></i></a></li>
                                 <li><a href="#"><i class="fa fa-twitter"></i></a></li>
                                 <li><a href="#"><i class="fa fa-pinterest"></i></a></li>
                             </ul>
