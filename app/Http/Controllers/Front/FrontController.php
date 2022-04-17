@@ -357,10 +357,15 @@ class FrontController extends Controller
         $maxPrice = $request->get('maxPrice') ?? 0;
 
         $categories = Category::parent()->with('products')->orderBy('sort_order')->get();
+
         $categories = $categories->map(function ($cate) {
             // áp dụng cho category cha
             $cate->child_categories = $this->categoryService->getChildCategory($cate, 1);
-            $cate->products_count = $cate->child_categories->sum('products_count');
+            if ($cate->child_categories->isEmpty()) {
+                $cate->products_count = $cate->products()->count();
+            } else {
+                $cate->products_count = $cate->child_categories->sum('products_count');
+            }
 
             return $cate;
         });
