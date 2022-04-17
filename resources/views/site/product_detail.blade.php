@@ -91,7 +91,14 @@
                         </ul>
                         <ul class="stock-cont">
                             <li class="product-stock-status">Danh mục: <a href="#">{{$product->category->name}}</a></li>
-                            <li class="product-stock-status">Tag: <a href="#">{{$product->tags->implode('name', ', ')}}</a></li>
+                            <?php
+                            $tags = $product->tags->map(function ($tag) {
+                               $tag->name = '<a href="'.route('front.search').'?keyword='.$tag->name.'">'.$tag->name.'</a>' ;
+                               return $tag;
+                            });
+                            ?>
+                            <li class="product-stock-status"><i class="fa fa-tags" aria-hidden="true"></i>
+                                <a href="#">{!! $tags->implode('name', ', ') !!}</a></li>
                         </ul>
                         <div class="share-product-socail-area">
                             <p>Chia sẻ</p>
@@ -244,9 +251,9 @@
                                             <li class="product-stock-status">Danh mục: <a href="#">
                                                     <% product.category.name %>
                                                 </a></li>
-                                            <li class="product-stock-status">Tag: <a href="#">
-                                                    <% product.tags_str %>
-                                                </a></li>
+                                            <li class="product-stock-status"><i class="fa fa-tags" aria-hidden="true"></i>
+                                                <span ng-bind-html="trustAsHtml(product.tags_str)"></span>
+                                            </li>
                                         </ul>
                                         <div class="share-product-socail-area">
                                         </div>

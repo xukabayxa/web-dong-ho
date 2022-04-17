@@ -154,7 +154,14 @@ class FrontController extends Controller
             return $cate;
         });
 
-        $tags = Tag::query()->where('type', Tag::TYPE_PRODUCT)->latest()->get();
+        $tags = Tag::query()->where('type', Tag::TYPE_PRODUCT);
+        if ($tags->count() > 6) {
+            $random = 6;
+        } else {
+            $random = $tags->count();
+        }
+
+        $tags = Tag::query()->where('type', Tag::TYPE_PRODUCT)->get()->random($random);
 
         $category = null;
         // danh mục con của 1 danh mục
@@ -230,7 +237,7 @@ class FrontController extends Controller
             $products = Product::filter($request, array_diff($product_ids, $request->product_ids_load_more))->limit(9)->get();
         }
 
-        $diff =  array_diff($product_ids, $request->product_ids_load_more);
+        $diff = array_diff($product_ids, $request->product_ids_load_more);
 
         $html_products_grid = '';
         $html_products_list = '';
@@ -342,7 +349,7 @@ class FrontController extends Controller
     public function search(Request $request, $categorySlug = null)
     {
         $keyword = $request->keyword;
-        $category_id = $request->category_id;
+        $category_id = $request->get('category_id', 'all');
         $viewList = $request->get('viewList');
         $viewGrid = $request->get('viewGrid') ?: 'true';
         $sort = $request->get('sort') ?: 'lasted';
@@ -358,12 +365,19 @@ class FrontController extends Controller
             return $cate;
         });
 
-        $tags = Tag::query()->where('type', Tag::TYPE_PRODUCT)->latest()->get();
+        $tags = Tag::query()->where('type', Tag::TYPE_PRODUCT);
+        if ($tags->count() > 6) {
+            $random = 6;
+        } else {
+            $random = $tags->count();
+        }
 
-        if ($request->category_id == 'all') {
+        $tags = Tag::query()->where('type', Tag::TYPE_PRODUCT)->get()->random($random);
+
+        if ($category_id == 'all') {
             $product_ids = Product::query()->pluck('id')->toArray();
 
-            $products = Product::filter($request, $product_ids)->paginate(9);
+            $products = Product::filter($request, $product_ids)->limit(9)->get();
         } else {
             $category = Category::query()->where('id', $request->category_id)->first();
 
@@ -374,10 +388,10 @@ class FrontController extends Controller
                     return $c_cate->products->pluck('id')->toArray();
                 })->flatten()->toArray();
 
-                $products = Product::filter($request, $product_ids)->paginate(9);
+                $products = Product::filter($request, $product_ids)->limit(9)->get();
             } else {
                 $product_ids = $category->products->pluck('id');
-                $products = Product::filter($request, $product_ids)->paginate(9);
+                $products = Product::filter($request, $product_ids)->limit(9)->get();
             }
 
         }

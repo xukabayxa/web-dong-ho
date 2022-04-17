@@ -194,7 +194,12 @@ class Product extends BaseModel
             return $attribute;
         });
 
-        $product->tags_str = $product->tags->implode('name', ', ');
+        $tags = $product->tags->map(function ($tag) {
+            $tag->name = '<a href="'.route('front.search').'?keyword='.$tag->name.'">'.$tag->name.'</a>' ;
+            return $tag;
+        });
+
+        $product->tags_str = $tags->implode('name', ', ');
 
         return $product;
     }
@@ -327,6 +332,8 @@ class Product extends BaseModel
                     ->orWhereHas('manufacturer', function ($q) use ($keyword) {
                         $q->where('manufacturers.name', 'like', '%' . $keyword . '%');
                     });
+            })->orWhereHas('tags', function ($q) use ($keyword){
+                $q->where('tags.name', 'like', '%' . $keyword . '%');
             });
 
             $productInStock->where(function ($q) use ($keyword) {
@@ -334,6 +341,8 @@ class Product extends BaseModel
                     ->orWhereHas('manufacturer', function ($q) use ($keyword) {
                         $q->where('manufacturers.name', 'like', '%' . $keyword . '%');
                     });
+            })->orWhereHas('tags', function ($q) use ($keyword){
+                $q->where('tags.name', 'like', '%' . $keyword . '%');
             });
 
             $productOutStock->where(function ($q) use ($keyword) {
@@ -341,6 +350,8 @@ class Product extends BaseModel
                     ->orWhereHas('manufacturer', function ($q) use ($keyword) {
                         $q->where('manufacturers.name', 'like', '%' . $keyword . '%');
                     });
+            })->orWhereHas('tags', function ($q) use ($keyword){
+                $q->where('tags.name', 'like', '%' . $keyword . '%');
             });
         }
 

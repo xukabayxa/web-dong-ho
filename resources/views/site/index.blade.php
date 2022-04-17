@@ -244,8 +244,9 @@
                                             <ul class="stock-cont">
                                                 <li class="product-stock-status">Danh mục: <a href="#"><% product.category.name %></a></li>
                                                 <li class="product-stock-status">Hãng sản xuất: <a href="#"><% product.manufacturer.name %></a></li>
-                                                <li class="product-stock-status">Tag: <a href="#"><% product.tags_str %></a></li>
-                                            </ul>
+                                                <li class="product-stock-status"><i class="fa fa-tags" aria-hidden="true"></i>
+                                                    <span ng-bind-html="trustAsHtml(product.tags_str)"></span>
+                                                </li>                                            </ul>
                                             <div class="share-product-socail-area">
                                                 {{--                                            <p>Share this product</p>--}}
                                                 {{--                                            <ul class="single-product-share">--}}

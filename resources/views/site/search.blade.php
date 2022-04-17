@@ -18,89 +18,7 @@
             <div class="col-lg-3 order-lg-1 order-2">
                 <!-- shop-sidebar-wrap start -->
                 <div class="shop-sidebar-wrap">
-                    <div class="shop-box-area">
-
-                        <!--sidebar-categores-box start  -->
-                        <div class="sidebar-categores-box shop-sidebar mb-30">
-                            <h4 class="title">Danh mục</h4>
-                            <!-- category-sub-menu start -->
-                            <div class="category-sub-menu">
-                                <ul>
-                                    @foreach($categories as $category)
-                                    <li class="has-sub"><a href="{{route('front.category_product', $category->slug)}}">{{$category->name}} ({{$category->products_count}})</a>
-                                        <ul>
-                                            @foreach($category->child_categories as $child_category)
-                                            <li><a href="{{route('front.category_product', $child_category->slug)}}">{{$child_category->name}} ({{$child_category->products_count}})</a></li>
-                                            @endforeach
-                                        </ul>
-                                    </li>
-                                    @endforeach
-
-                                </ul>
-                            </div>
-                            <!-- category-sub-menu end -->
-                        </div>
-                        <!--sidebar-categores-box end  -->
-
-                        <!-- shop-sidebar start -->
-                        <div class="shop-sidebar mb-30">
-                            <h4 class="title">Lọc theo giá</h4>
-                            <!-- filter-price-content start -->
-                            <div class="filter-price-content">
-                                <form action="#" method="post">
-                                    <div id="price-slider" class="price-slider"></div>
-                                    <div class="filter-price-wapper">
-
-                                        <a class="add-to-cart-button" ng-click="filterPrice()">
-                                            <span>Lọc</span>
-                                        </a>
-                                        <div class="filter-price-cont">
-
-                                            <span>Price:</span>
-                                            <div class="input-type">
-                                                <input type="text" id="min-price" readonly="" style="width: 90px !important;" />
-                                            </div>
-                                            <span>—</span>
-                                            <div class="input-type">
-                                                <input type="text" id="max-price" readonly="" style="width: 90px !important;" />
-                                            </div>
-
-                                            <input type="hidden" id="min-price-hidden">
-                                            <input type="hidden" id="max-price-hidden">
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                            <!-- filter-price-content end -->
-                        </div>
-                        <!-- shop-sidebar end -->
-
-                        <!-- shop-sidebar start -->
-                        {{-- <div class="shop-sidebar mb-30">--}}
-                            {{-- <h4 class="title">Filter by Color</h4>--}}
-
-                            {{-- <ul class="category-widget-list">--}}
-                                {{-- <li><a href="#">Red (1)</a></li>--}}
-                                {{-- <li><a href="#">White (1)</a></li>--}}
-                                {{-- </ul>--}}
-
-                            {{-- </div>--}}
-                        <!-- shop-sidebar end -->
-
-                        <!-- shop-sidebar start -->
-                        <div class="shop-sidebar mb-30">
-                            <h4 class="title">Tags</h4>
-
-                            <ul class="sidebar-tag">
-                                @foreach($tags as $tag)
-                                <li><a href="#">{{$tag->name}}</a></li>
-                                @endforeach
-                            </ul>
-
-                        </div>
-                        <!-- shop-sidebar end -->
-
-                    </div>
+                    @include('site.partials.sidebar_category', ['categories' => $categories, 'tags' => $tags])
                 </div>
                 <!-- shop-sidebar-wrap end -->
             </div>
@@ -145,7 +63,7 @@
                                 <div class="shop-product-wrap">
                                     <div class="row">
                                         @foreach($products as $product)
-                                        <div class="col-lg-4 col-md-6">
+                                        <div class="col-lg-4 col-md-6 col-4">
                                             <!-- single-product-area start -->
                                             @include('site.partials.single_product', ['product' => $product])
                                             <!-- single-product-area end -->
@@ -223,9 +141,17 @@
                     </div>
                     <!-- shop-products-wrap end -->
 
-                    <!-- paginatoin-area start -->
-                    {{ $products->links('site.pagination.paginate2') }}
-                    <!-- paginatoin-area end -->
+                    @if(count($products) >= 9)
+                        <div class="contact-submit-btn" style="text-align: center; margin-top: 12px" ng-if="checkLoad">
+                            <button class="submit-btn" id="loadMore" type="submit" ng-click="loadMoreProduct()" ng-disabled="loading">
+                                <div class="lds-ellipsis" ng-if="loading" style="width: <% loading ? '70px' : '' %>"><div></div><div></div><div></div><div></div></div>
+                                <span ng-if="! loading">xem thêm</span>
+
+                            </button>
+                            <p class="form-messege"></p>
+                        </div>
+                    @endif
+
                 </div>
                 <!-- shop-product-wrapper end -->
             </div>
@@ -244,7 +170,7 @@
 <script src="https://cdn.tutorialjinni.com/jquery-toast-plugin/1.3.2/jquery.toast.min.js"></script>
 
 <script>
-    app.controller('SearchProducts', function ($rootScope, $scope, $interval, cartItemSync) {
+    app.controller('SearchProducts', function ($rootScope, $scope, $interval, cartItemSync, wishlistSync) {
             $scope.viewGrid = {{$viewGrid}};
             $scope.viewList = null;
             $scope.sort_type = null;
@@ -329,13 +255,43 @@
                     + "&maxPrice=" + $scope.maxPrice;
             }
 
-            // click trang
-            $(document).on('click', '.load-product', function (e) {
-                e.preventDefault();
-                window.location.href = $(this).attr('href') + "&keyword="+$scope.keyword + "&category_id="+$scope.category + "&viewList=" + $scope.viewList +
-                    "&viewGrid=" + $scope.viewGrid + "&sort=" + "{{$sort}}" + "&minPrice=" + $scope.minPrice
-                    + "&maxPrice=" + $scope.maxPrice;
+            $scope.loadMoreProduct = function () {
+
+            $.ajax({
+                type: 'GET',
+                url: '{{route('front.loadmore.products')}}',
+                data: {
+                    minPrice: $scope.minPrice,
+                    maxPrice: $scope.maxPrice,
+                    category_id: null,
+                    sort: $scope.sort_type,
+                    product_ids_load_more: $scope.product_ids,
+                    keyword: $scope.keyword,
+                },
+                beforeSend: function() {
+                    $scope.loading = true;
+                },
+                success: function (response) {
+                    if (response.success) {
+                        $("#load-more-product-grid").append($compile(response.product_render_grid)($scope));
+                        $(".load-more-product-list").append($compile(response.product_render_list)($scope));
+                        $scope.product_ids = $scope.product_ids.concat(response.product_ids);
+                        console.log(response.product_ids.length);
+
+                        if(response.product_ids.length < 9) {
+                            $scope.checkLoad = false;
+                        }
+                    }
+                },
+                error: function (e) {
+                },
+                complete: function () {
+                    $scope.loading = false;
+                    $scope.$applyAsync();
+                }
             });
+        }
+
             // end filter
 
             // modal detail product
@@ -385,6 +341,9 @@
 
             // Đặt mua hàng
             @include('site.partials.cart.add_to_cart');
+
+            // add to wishlist
+             @include('site.partials.cart.add_to_wishlist');
         })
 
 </script>
