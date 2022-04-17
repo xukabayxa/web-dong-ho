@@ -241,7 +241,6 @@ class FrontController extends Controller
 
         $html_products_grid = '';
         $html_products_list = '';
-
         foreach ($products as $product) {
             $html_products_grid .= view('site.partials.load_more_product_grid', ['product' => $product])->render();
             $html_products_list .= view('site.partials.load_more_product_list', ['product' => $product])->render();
@@ -382,7 +381,8 @@ class FrontController extends Controller
         if ($category_id == 'all') {
             $product_ids = Product::query()->pluck('id')->toArray();
 
-            $products = Product::filter($request, $product_ids)->limit(9)->get();
+            $products = Product::filter($request, $product_ids)->get();
+
         } else {
             $category = Category::query()->where('id', $request->category_id)->first();
 
@@ -393,16 +393,20 @@ class FrontController extends Controller
                     return $c_cate->products->pluck('id')->toArray();
                 })->flatten()->toArray();
 
-                $products = Product::filter($request, $product_ids)->limit(9)->get();
+                $products = Product::filter($request, $product_ids)->get();
             } else {
                 $product_ids = $category->products->pluck('id');
-                $products = Product::filter($request, $product_ids)->limit(9)->get();
+                $products = Product::filter($request, $product_ids)->get();
             }
 
         }
 
+        $countProducts = $products->count();
+        $products = $products->take(9);
+        $product_ids = $products->pluck('id');
+
         return view('site.search', compact('categories', 'products', 'viewGrid', 'viewList',
-            'categorySlug', 'sort', 'tags', 'minPrice', 'maxPrice', 'keyword', 'category_id'));
+            'categorySlug', 'sort', 'tags', 'minPrice', 'maxPrice', 'keyword', 'category_id', 'countProducts', 'product_ids'));
     }
 
     public function getSuggestSearchResult(Request $request)

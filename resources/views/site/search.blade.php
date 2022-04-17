@@ -10,7 +10,7 @@
     <div class="container">
         <div class="row" style="margin-bottom: 10px">
             <div class="col-lg-12">
-                <span style="font-size: 14px; font-weight: bold">Tìm thấy {{$products->count()}} kết quả phù hợp với từ khóa "{{$keyword}}"</span>
+                <span style="font-size: 14px; font-weight: bold">Tìm thấy {{$countProducts}} kết quả phù hợp với từ khóa "{{$keyword}}"</span>
             </div>
 
         </div>
@@ -61,7 +61,7 @@
                         <div class="tab-content">
                             <div class="tab-pane {{$viewGrid == 'true' ? 'active' : ''}}" id="grid">
                                 <div class="shop-product-wrap">
-                                    <div class="row">
+                                    <div class="row" id="load-more-product-grid">
                                         @foreach($products as $product)
                                         <div class="col-lg-4 col-md-6 col-4">
                                             <!-- single-product-area start -->
@@ -72,7 +72,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane  {{$viewList == 'true' ? 'active' : ''}}" id="list">
+                            <div class="tab-pane  {{$viewList == 'true' ? 'active' : ''}} load-more-product-list" id="list">
                                 @foreach($products as $product)
                                 <div class="shop-product-list-wrap">
                                     <div class="row product-layout-list mt-30">
@@ -170,7 +170,7 @@
 <script src="https://cdn.tutorialjinni.com/jquery-toast-plugin/1.3.2/jquery.toast.min.js"></script>
 
 <script>
-    app.controller('SearchProducts', function ($rootScope, $scope, $interval, cartItemSync, wishlistSync) {
+    app.controller('SearchProducts', function ($rootScope, $scope, $compile, $interval, cartItemSync, wishlistSync) {
             $scope.viewGrid = {{$viewGrid}};
             $scope.viewList = null;
             $scope.sort_type = null;
@@ -182,8 +182,11 @@
 
             $scope.keyword = "{{$keyword}}";
             $scope.category ="{{$category_id}}";
+            $scope.checkLoad = true;
+            $scope.loading = false;
+            $scope.product_ids = {{$product_ids}};
 
-            // filter
+        // filter
             if( ! $scope.viewGrid && ! $scope.viewList) {
                 $scope.viewGrid = "{{Request::get('viewGrid')}}";
                 $scope.viewList = "{{Request::get('viewList')}}";

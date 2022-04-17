@@ -328,31 +328,38 @@ class Product extends BaseModel
 
         if ($keyword = $request->get('keyword')) {
             $productIsPin->where(function ($q) use ($keyword) {
-                $q->where('name', 'like', '%' . $keyword . '%')
-                    ->orWhereHas('manufacturer', function ($q) use ($keyword) {
-                        $q->where('manufacturers.name', 'like', '%' . $keyword . '%');
-                    });
-            })->orWhereHas('tags', function ($q) use ($keyword){
-                $q->where('tags.name', 'like', '%' . $keyword . '%');
+                $q->where(function ($q) use ($keyword) {
+                    $q->where('name', 'like', '%' . $keyword . '%')
+                        ->orWhereHas('manufacturer', function ($q) use ($keyword) {
+                            $q->where('manufacturers.name', 'like', '%' . $keyword . '%');
+                        });
+                })->orWhereHas('tags', function ($q) use ($keyword){
+                    $q->where('tags.name', 'like', '%' . $keyword . '%');
+                });
             });
 
             $productInStock->where(function ($q) use ($keyword) {
-                $q->where('name', 'like', '%' . $keyword . '%')
-                    ->orWhereHas('manufacturer', function ($q) use ($keyword) {
-                        $q->where('manufacturers.name', 'like', '%' . $keyword . '%');
-                    });
-            })->orWhereHas('tags', function ($q) use ($keyword){
-                $q->where('tags.name', 'like', '%' . $keyword . '%');
+                $q->where(function ($q) use ($keyword) {
+                    $q->where('name', 'like', '%' . $keyword . '%')
+                        ->orWhereHas('manufacturer', function ($q) use ($keyword) {
+                            $q->where('manufacturers.name', 'like', '%' . $keyword . '%');
+                        });
+                })->orWhereHas('tags', function ($q) use ($keyword){
+                    $q->where('tags.name', 'like', '%' . $keyword . '%');
+                });
             });
 
             $productOutStock->where(function ($q) use ($keyword) {
-                $q->where('name', 'like', '%' . $keyword . '%')
-                    ->orWhereHas('manufacturer', function ($q) use ($keyword) {
-                        $q->where('manufacturers.name', 'like', '%' . $keyword . '%');
-                    });
-            })->orWhereHas('tags', function ($q) use ($keyword){
-                $q->where('tags.name', 'like', '%' . $keyword . '%');
+                $q->where(function ($q) use ($keyword) {
+                    $q->where('name', 'like', '%' . $keyword . '%')
+                        ->orWhereHas('manufacturer', function ($q) use ($keyword) {
+                            $q->where('manufacturers.name', 'like', '%' . $keyword . '%');
+                        });
+                })->orWhereHas('tags', function ($q) use ($keyword){
+                    $q->where('tags.name', 'like', '%' . $keyword . '%');
+                });
             });
+
         }
 
         if ($request->get('minPrice')) {
