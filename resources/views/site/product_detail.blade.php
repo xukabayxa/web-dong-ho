@@ -274,8 +274,6 @@
 </div>
 <!-- main-content-wrap end -->
 
-
-
 @endsection
 @push('scripts')
 <script src="https://cdn.tutorialjinni.com/jquery-toast-plugin/1.3.2/jquery.toast.js"></script>
